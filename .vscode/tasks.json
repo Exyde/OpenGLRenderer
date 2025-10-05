@@ -13,6 +13,7 @@
                 "${workspaceFolder}/src/main.cpp",
                 "${workspaceFolder}/src/glad.c",
                 "${workspaceFolder}/src/Shader.cpp",
+                "${workspaceFolder}/src/Texture.cpp",
                 "${workspaceFolder}/src/stb_image.cpp",
                 "-lglfw3dll",
                 "-o",

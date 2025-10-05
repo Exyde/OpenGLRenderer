@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
+#include "Texture.h"
 #include "stb_image.h"
 
 void LogMaxVertexAttributes(){
@@ -10,7 +11,7 @@ void LogMaxVertexAttributes(){
     std::cout << "Max Vertex Attributes: " << maxAttributes << std::endl;
 }
 
-
+float userT = 1.0;
 float vertices[] = {
     // positions          // colors           // texture coords
      0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
@@ -58,6 +59,14 @@ void GetInputs(GLFWwindow* window){
         glfwSetWindowShouldClose(window, true);
     }
 
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+        userT += 0.0001;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+        userT -= 0.0001;
+    }
+
 }
 
 int main()
@@ -68,6 +77,7 @@ int main()
         return -1;
     }
 
+    
     uint32_t width = 800, height = 600;
 
     GLFWwindow* window = CreateWindow(width, height);
@@ -96,29 +106,10 @@ int main()
 
     Shader baseShader("../Shaders/vert.vs", "../Shaders/frag.fs");
 
+    Texture wood("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false);
+    Texture face("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true);
 
-    //-- Textures chapter
-    unsigned int woodTexture;
-    glGenTextures(1, &woodTexture);
-    glBindTexture(GL_TEXTURE_2D, woodTexture);
 
-    float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int texWidth, texHeight, nrChannels;
-    unsigned char *data = stbi_load("../Resources/Textures/container.jpg", &texWidth, &texHeight, &nrChannels, 0);
-
-    if (data){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-    } else{
-        std::cerr << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
 
     // -- Element Buffer Object (EBO) for indices
     unsigned int EBO;
@@ -161,6 +152,18 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
 
         baseShader.Use();
+        baseShader.SetInt("mask", 1);
+
+        if (userT < 0) userT = 0;
+        if (userT > 1) userT = 1;
+        baseShader.SetFloat("T", userT);
+
+
+        glActiveTexture(GL_TEXTURE0);
+        wood.Bind();
+        glActiveTexture(GL_TEXTURE1);
+        face.Bind();
+    
 
         //glBindVertexArray(VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

@@ -12,9 +12,11 @@
                 "-L${workspaceFolder}/lib",
                 "${workspaceFolder}/src/main.cpp",
                 "${workspaceFolder}/src/glad.c",
+                "${workspaceFolder}/src/Shader.cpp",
+                "${workspaceFolder}/src/stb_image.cpp",
                 "-lglfw3dll",
                 "-o",
-                "${workspaceFolder}/cutable.exe"
+                "${workspaceFolder}/OpenGlRenderer.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"

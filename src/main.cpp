@@ -2,50 +2,72 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-using namespace std; 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-int main()
-{
-    if (!glfwInit())
-    {
-        cout << "Failed to initialize GLFW" << endl;
-        return -1;
+bool InitializeGLFW(){
+    if (!glfwInit()){
+        return false;
     }
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    return true;
+}
 
-    GLFWwindow* window;
-    window = glfwCreateWindow(800, 600, "ZMMR", NULL, NULL);
+GLFWwindow* CreateWindow(uint32_t width, uint32_t height){
+    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
+    return window;
+}
+
+int main()
+{
+    if (!InitializeGLFW())
+    {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+
+    uint32_t width = 800, height = 600;
+
+    GLFWwindow* window = CreateWindow(width, height);
+
     if (window == NULL)
     {
-        cout << "Failed to open GLFW window" << endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
         return -1;
     }
+
     glfwMakeContextCurrent(window);
 
+    // -- Glad 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        cout << "Failed to initialize GLAD" << endl;
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        glfwDestroyWindow(window);
+        glfwTerminate();
         return -1;
     }
 
-    glViewport(0, 0, 800, 600);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    // -- Viewport dimensions
+    glViewport(0, 0, width, height);
+    glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
 
-    while(!glfwWindowShouldClose(window))
-    {
+    // -- Render Loop
+    while (!glfwWindowShouldClose(window)){
         glfwSwapBuffers(window);
-        glfwPollEvents();    
+        glfwPollEvents(); // We will register event callbacks soon :)
     }
 
+
+    // -- Exit
     glfwTerminate();
     return 0;
+
 }
+

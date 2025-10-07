@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-Texture::Texture(const char* filePath, int clampMode, bool useAlpha){
+Texture::Texture(const char* filePath, int clampMode, bool useAlpha, std::string type){
     glGenTextures(1, &ID);
     Bind();
 
@@ -10,6 +10,8 @@ Texture::Texture(const char* filePath, int clampMode, bool useAlpha){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     unsigned char *data = stbi_load(filePath, &width, &height, &channels, 0);
+
+    this->type = type;
 
     if (data){
         if (useAlpha){

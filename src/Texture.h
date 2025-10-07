@@ -10,8 +10,9 @@ class Texture {
 public:
     GLuint ID;
     int width, height, channels;
+    std::string type;
 
-    Texture (const char* filePath, int clampMode, bool useAlpha);
+    Texture (const char* filePath, int clampMode, bool useAlpha, std::string type);
     ~Texture();
     void Bind();
 

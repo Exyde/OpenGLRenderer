@@ -3,7 +3,10 @@
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include "Texture.h"
+#include "Model.h"
 #include "stb_image.h"
+
+#include <iostream>
 
 void LogMaxVertexAttributes(){
     int maxAttributes;
@@ -90,6 +93,7 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    
 
     // -- Glad 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -100,16 +104,18 @@ int main()
         return -1;
     }
 
+    // -- Model Load
+    Model backpack ("../Resources/Models/backpack/backpack.obj");
+
     // -- Viewport dimensions
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
+    stbi_set_flip_vertically_on_load(true);
 
     Shader baseShader("../Shaders/vert.vs", "../Shaders/frag.fs");
 
-    Texture wood("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false);
-    Texture face("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true);
-
-
+    Texture wood("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+    Texture face("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
 
     // -- Element Buffer Object (EBO) for indices
     unsigned int EBO;
@@ -168,6 +174,15 @@ int main()
         //glBindVertexArray(VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
+        // -- Model
+        glm::mat4 model = glm::mat4(1.0F);
+        model = glm::translate(model, glm::vec3(0.0F, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        //baseShader.setMat4("model", model);
+        backpack.Draw(baseShader);
+
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
         glfwPollEvents(); // We will register event callbacks soon :)

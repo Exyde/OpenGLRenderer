@@ -3,10 +3,24 @@
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include "Texture.h"
-#include "Model.h"
 #include "stb_image.h"
+#include <cmath>
+
 
 #include <iostream>
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+float CAM_SPEED = 5.0F;
+
+glm::vec3 Vec3 (float x, float y, float z) { return glm::vec3(x, y, z);}
+glm::vec3 Vec3(float xyz) { return Vec3(xyz, xyz, xyz);}
+
+float ElapsedTime(){return (float) glfwGetTime();}
+float lerp(float a, float b, float f) 
+{
+    return (a * (1.0 - f)) + (b * f);
+}
 
 void LogMaxVertexAttributes(){
     int maxAttributes;
@@ -14,30 +28,66 @@ void LogMaxVertexAttributes(){
     std::cout << "Max Vertex Attributes: " << maxAttributes << std::endl;
 }
 
-float userT = 1.0;
-float vertices[] = {
-    // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-};
-unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-}; 
+float userUpDown = 1.0;
+float userLeftRight = 1.0;
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-float texCoords[] = {
-    0.0f, 0.0f,  // lower-left corner  
-    1.0f, 0.0f,  // lower-right corner
-    0.5f, 1.0f   // top-center corner
-};
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
 
 void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
+
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraTarget  = Vec3(0);
+glm::vec3 DirectionToCamera = glm::normalize(cameraPos - cameraTarget); // - Change name maybe 
+glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraRight = glm::normalize (glm::cross(WorldUp, DirectionToCamera));
+//glm::vec3 cameraUp = glm::cross (DirectionToCamera, cameraRight);
+glm::vec3 cameraFront = Vec3(0.0f, 0.0f, -1.0F);
+glm::vec3 cameraUp = Vec3(0.0f, 1.0f, 0.0F);
 
 bool InitializeGLFW(){
     if (!glfwInit()){
@@ -63,13 +113,33 @@ void GetInputs(GLFWwindow* window){
     }
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
-        userT += 0.0001;
+        userUpDown += 0.0001;
     }
 
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-        userT -= 0.0001;
+        userUpDown -= 0.0001;
     }
 
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+        userLeftRight += 0.0001;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+        userLeftRight -= 0.0001;
+    }
+
+    const float cameraSpeed = CAM_SPEED * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+
+        // -- Cross for direction between up and forward, normalize to make it a unity vector <3
+        // -- You're getting good with dot & cross I believe ! [Remember the maxim: to understand shit, im-ple-ment]
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 int main()
@@ -80,9 +150,7 @@ int main()
         return -1;
     }
 
-    
     uint32_t width = 800, height = 600;
-
     GLFWwindow* window = CreateWindow(width, height);
 
     if (window == NULL)
@@ -94,7 +162,6 @@ int main()
 
     glfwMakeContextCurrent(window);
     
-
     // -- Glad 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -104,9 +171,6 @@ int main()
         return -1;
     }
 
-    // -- Model Load
-    Model backpack ("../Resources/Models/backpack/backpack.obj");
-
     // -- Viewport dimensions
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
@@ -114,75 +178,116 @@ int main()
 
     Shader baseShader("../Shaders/vert.vs", "../Shaders/frag.fs");
 
-    Texture wood("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture face("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
+    // -- Enable Z Testing 
+    glEnable(GL_DEPTH_TEST);
 
-    // -- Element Buffer Object (EBO) for indices
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // -- Cube Test
+    unsigned int CubeVBO, CubeVAO;
+    glGenVertexArrays(1, &CubeVAO);
+    glGenBuffers(1, &CubeVBO);
+    glBindVertexArray(CubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // -- VAO instead.
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
-    // -- 1 : Bind VAO
-    glBindVertexArray(VAO);
-
-    // -- 2 : Copy data to buffer
-    unsigned int VBO;
-    glGenBuffers (1, &VBO); // Create the buffer behind the scenes and return an ID handle
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); // just binding to GL ARRAY BUFFER
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // copy data to buffer memory - We choose memory opti with STATIC
-
-    
-    // -- Vertex Attribute Setup
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float))); // -- Layout, Size of data, type, normalized, stride, offset pointer
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0));
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // -- Layout, Size of data, type, normalized, stride, offset pointer
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // -- Layout, Size of data, type, normalized, stride, offset pointer
-    glEnableVertexAttribArray(2);
+    glm::vec3 cubePositions[] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f), 
+    glm::vec3( 2.0f,  5.0f, -15.0f), 
+    glm::vec3(-1.5f, -2.2f, -2.5f),  
+    glm::vec3(-3.8f, -2.0f, -12.3f),  
+    glm::vec3( 2.4f, -0.4f, -3.5f),  
+    glm::vec3(-1.7f,  3.0f, -7.5f),  
+    glm::vec3( 1.3f, -2.0f, -2.5f),  
+    glm::vec3( 1.5f,  2.0f, -2.5f), 
+    glm::vec3( 1.5f,  0.2f, -1.5f), 
+    glm::vec3(-1.3f,  1.0f, -1.5f)  
+    
+};
+
+    Texture albedo("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+    Texture mask("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
+    baseShader.Use();
+    baseShader.SetInt("albedo", 0);
+    baseShader.SetInt("mask", 1);
+
+
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
         // -- Input Handling
         GetInputs(window);
 
+        // -- Time Update
+        float currentFrame = ElapsedTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // -- Actual Rendering
-        
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
-
-        baseShader.Use();
-        baseShader.SetInt("mask", 1);
-
-        if (userT < 0) userT = 0;
-        if (userT > 1) userT = 1;
-        baseShader.SetFloat("T", userT);
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
 
         glActiveTexture(GL_TEXTURE0);
-        wood.Bind();
+        albedo.Bind();
         glActiveTexture(GL_TEXTURE1);
-        face.Bind();
-    
+        mask.Bind();
+        baseShader.Use();
 
-        //glBindVertexArray(VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        const float radius = 10.0f;
+        float camX = sin(ElapsedTime()) * radius;
+        float camZ = cos(ElapsedTime())* radius;
+        glm::mat4 view;
+        // -- Update Camera actually o/
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+        if (userUpDown < 0) userUpDown = 0;
+        if (userUpDown > 1) userUpDown = 1;
+        if (userLeftRight < 0) userLeftRight = 0;
+        if (userLeftRight > 1) userLeftRight = 1;
 
 
-        // -- Model
-        glm::mat4 model = glm::mat4(1.0F);
-        model = glm::translate(model, glm::vec3(0.0F, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-        //baseShader.setMat4("model", model);
-        backpack.Draw(baseShader);
+        baseShader.SetFloat("T", userUpDown);
 
+
+
+        float cameraDistance = lerp(-5.0, -100.0f, userUpDown);
+        float cameraX = lerp(-10.0f, 10.f, userLeftRight);
+        float cameraY = lerp(-10.0f, 10.f, userLeftRight);
+        // -- Model // View // Projections
+        glm::mat4 modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::rotate(modelMatrix, ElapsedTime()* glm::radians(50.0f), glm::vec3(0.5f, 1.0, 0.0));
+        glm::mat4 viewMatrix = glm::mat4(1.0F);
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(cameraX, cameraY, cameraDistance));
+
+         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
+        float fov = 90.0f;
+        glm::highp_mat4 perspectiveMatrix = glm::perspective(glm::radians(fov), (float)width/(float)height, 0.1f, 100.0f);
+
+        unsigned int modelLoc = glGetUniformLocation(baseShader.ID, "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+        unsigned int viewLoc = glGetUniformLocation(baseShader.ID, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        unsigned int projLoc = glGetUniformLocation(baseShader.ID, "projection");
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
+
+
+        glBindVertexArray(CubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        for(unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i; 
+            model = glm::rotate(model, glm::radians(angle + ElapsedTime() * 100 ), glm::vec3(1.0f, 0.3f, 0.5f));
+            baseShader.SetMat4("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+     
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
         glfwPollEvents(); // We will register event callbacks soon :)

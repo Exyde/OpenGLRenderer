@@ -1,7 +1,7 @@
 # TODO 
 
 - Vector 3 utilities (up, down, negative up, worldup, etc...)
-- Math Class (Lerp...)
+- Math Class (Lerp, Clamp)
 - Utility Class
 - Color Class
 - Camera Class

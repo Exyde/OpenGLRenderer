@@ -9,12 +9,30 @@
 
 #include <iostream>
 
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-float CAM_SPEED = 5.0F;
 
 glm::vec3 Vec3 (float x, float y, float z) { return glm::vec3(x, y, z);}
 glm::vec3 Vec3(float xyz) { return Vec3(xyz, xyz, xyz);}
+
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+float CAM_SPEED = 5.0F;
+float FOV = 45.0F;
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraTarget  = Vec3(0);
+glm::vec3 DirectionToCamera = glm::normalize(cameraPos - cameraTarget); // - Change name maybe 
+glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraRight = glm::normalize (glm::cross(WorldUp, DirectionToCamera));
+//glm::vec3 cameraUp = glm::cross (DirectionToCamera, cameraRight);
+glm::vec3 cameraFront = Vec3(0.0f, 0.0f, -1.0F);
+glm::vec3 cameraUp = Vec3(0.0f, 1.0f, 0.0F);
+
+bool FIRST_MOUSE = true;
+float MOUSE_SENSITIVITY =  0.1F;
+float lastMouseX = 400;
+float lastMouseY = 300;
+float Pitch, Yaw, Roll;
 
 float ElapsedTime(){return (float) glfwGetTime();}
 float lerp(float a, float b, float f) 
@@ -30,64 +48,95 @@ void LogMaxVertexAttributes(){
 
 float userUpDown = 1.0;
 float userLeftRight = 1.0;
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
 
+
+/// ---- CALLBACK OPEN GL ---- ////////
 void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
+void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset){
+    FOV -= (float)yoffset;
+    if (FOV < 1.0F) FOV = 1.0F;
+    if (FOV > 45.0F) FOV = 45.0f;
+}
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
-glm::vec3 cameraTarget  = Vec3(0);
-glm::vec3 DirectionToCamera = glm::normalize(cameraPos - cameraTarget); // - Change name maybe 
-glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 cameraRight = glm::normalize (glm::cross(WorldUp, DirectionToCamera));
-//glm::vec3 cameraUp = glm::cross (DirectionToCamera, cameraRight);
-glm::vec3 cameraFront = Vec3(0.0f, 0.0f, -1.0F);
-glm::vec3 cameraUp = Vec3(0.0f, 1.0f, 0.0F);
+void Mouse_Callback(GLFWwindow* window, double xpos, double ypos){
+
+    //-- avoid first frame snapping (should have a bool for first frame ?)
+    if (FIRST_MOUSE){
+        FIRST_MOUSE = false;
+        lastMouseX = xpos;
+        lastMouseY = ypos;
+    }
+    float deltaX = xpos - lastMouseX;
+    float deltaY = lastMouseY - ypos;
+    lastMouseX = xpos;
+    lastMouseY = ypos;
+
+    deltaX *= MOUSE_SENSITIVITY;
+    deltaY *= MOUSE_SENSITIVITY;
+
+    Yaw += deltaX;
+    Pitch += deltaY;
+
+    if (Pitch > 89.0f) Pitch = 89.0f;
+    if (Pitch < -89.0f) Pitch = -89.0f;
+
+    glm::vec3 newCameraDirection;
+    newCameraDirection.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    newCameraDirection.y = sin(glm::radians(Pitch));
+    newCameraDirection.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    // -- Update Camera Front
+    cameraFront = glm::normalize(newCameraDirection);
+}
+
+
+
 
 bool InitializeGLFW(){
     if (!glfwInit()){
@@ -173,7 +222,10 @@ int main()
 
     // -- Viewport dimensions
     glViewport(0, 0, width, height);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
+    glfwSetCursorPosCallback(window, Mouse_Callback);
+    glfwSetScrollCallback(window, Scroll_Callback);
     stbi_set_flip_vertically_on_load(true);
 
     Shader baseShader("../Shaders/vert.vs", "../Shaders/frag.fs");
@@ -263,8 +315,7 @@ int main()
         viewMatrix = glm::translate(viewMatrix, glm::vec3(cameraX, cameraY, cameraDistance));
 
          // here FOV, aspect ratio, near and far plane for perspective (w scaled)
-        float fov = 90.0f;
-        glm::highp_mat4 perspectiveMatrix = glm::perspective(glm::radians(fov), (float)width/(float)height, 0.1f, 100.0f);
+        glm::highp_mat4 perspectiveMatrix = glm::perspective(glm::radians(FOV), (float)width/(float)height, 0.1f, 100.0f);
 
         unsigned int modelLoc = glGetUniformLocation(baseShader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));

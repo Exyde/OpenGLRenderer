@@ -1,16 +1,27 @@
 #include <iostream>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Shader.h"
-#include "Texture.h"
-#include "stb_image.h"
-#include "Camera.h"
+#include "engine/Shader.h"
+#include "engine/Texture.h"
+#include "engine/stb_image.h"
+#include "engine/Camera.h"
 #include <cmath>
 #include <iostream>
-#include "SlyMath.H"
+#include "engine/SlyMath.H"
+
+
+/// --- UI Stuffs --------
+bool UI_rotateStuff = false;
+
 
 #pragma region UserShitToMoveLaterAwayFromHere
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
+bool cursorVisible = false;
 float userUpDown = 1.0;
 float userLeftRight = 1.0;
 float vertices[] = {
@@ -80,11 +91,13 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height)
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset){
+    if (cursorVisible) return;
     cam.ProcessMouseScroll(yoffset);
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin){
 
+    if (cursorVisible) return;
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
 
@@ -125,23 +138,33 @@ void GetInputs(GLFWwindow* window){
 
     // -- Escape
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){ // Else is GLFW_RELEASE
-        glfwSetWindowShouldClose(window, true);
+
+        if (!cursorVisible){
+            cursorVisible = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+            return;
+        } else {
+            cursorVisible = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        //glfwSetWindowShouldClose(window, true);
     }
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
-        userUpDown += 0.0001;
+        userUpDown += 0.001;
     }
 
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
-        userUpDown -= 0.0001;
+        userUpDown -= 0.001;
     }
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
-        userLeftRight += 0.0001;
+        userLeftRight -= 0.001;
     }
 
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
-        userLeftRight -= 0.0001;
+        userLeftRight += 0.001;
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -226,6 +249,16 @@ int main()
     baseShader.SetInt("albedo", 0);
     baseShader.SetInt("mask", 1);
 
+    // -- IMGUI INIT
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    float mainTint[4] = {0.0, 1.0f, 0.3f, 1.0F};
+
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
         // -- Input Handling
@@ -240,6 +273,12 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
 
+        // -- UI IMGUI
+        // 1. New Frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         // -- Textures Units ?
         glActiveTexture(GL_TEXTURE0);
         albedo.Bind();
@@ -251,6 +290,7 @@ int main()
         userUpDown = SlyMath::Clamp(userUpDown, 0.0f, 1.0f);
         userLeftRight = SlyMath::Clamp(userLeftRight, 0.0f, 1.0f);
         baseShader.SetFloat("T", userUpDown);
+        glUniform4f(glGetUniformLocation(baseShader.ID, "Tint"), mainTint[0], mainTint[1], mainTint[2], mainTint[3]);
 
         // -- Model // View // Projections
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -277,12 +317,27 @@ int main()
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i; 
-            model = glm::rotate(model, glm::radians(angle + ElapsedTime() * 100 ), glm::vec3(1.0f, 0.3f, 0.5f));
+            float angle = 20.0f * i;
+            if (UI_rotateStuff){
+                model = glm::rotate(model, glm::radians(angle + ElapsedTime() * 100 ), glm::vec3(1.0f, 0.3f, 0.5f));
+            }
             baseShader.SetMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
+
+        // -- UI FOLLOW UP
+            ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
+            ImGui::Text("Hello World ! Have you seen that france has Lecornu Government 2.0 ?");
+            ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
+            ImGui::SliderFloat("User Up Down", &userUpDown, 0.0, 1.0);
+            ImGui::SliderFloat("User Left Right", &userLeftRight, 0.0, 1.0);
+            ImGui::ColorEdit4("Main Tint", mainTint);
+            ImGui::End();
+   
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
@@ -291,6 +346,10 @@ int main()
 
 
     // -- Exit
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
     glfwTerminate();
     return 0;
 

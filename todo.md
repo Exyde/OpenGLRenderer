@@ -1,14 +1,12 @@
 # TODO 
 
-- Relire la partie sur Pitch/Yaw/Roll et le calcul
-- Stay on Ground + LookAt
+- Relire la partie sur Pitch/Yaw/Roll et le calcul + reimplémenter le  LookAt
 - Faire un petit level uniquement a base de Quad en vrai ? ou de cube scaler ? ça peut
-- Wrap up chapter and cleanup before lighting 
-- Refactor and Utilies before attacking rendering, that will help you for sure <3
-- Color Class
-
+- Color Class ? (chapter color, fait ça)
+- Bool for switch from ortho to perspective camera
 - Utility Class
 - Settings system config with plain text and hot reload
-- Improve build system (CMake idk what shit) + vitesse (voir gpt surement aprce que ça me gave)
+- Improve build system (CMake idk what shit) + vitesse (voir gpt surement aprce que ça me gave) (IMPORTANT CA VA COMMENCER A ETRE SLOW)
 - TinyObjLoader : https://github.com/tinyobjloader/tinyobjloader
 - Then Assimp
+

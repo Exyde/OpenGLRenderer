@@ -7,6 +7,7 @@
 #include "Vector.h"
 
 enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT };
+enum CameraType { FPS, TPS };
 
 // -- Default Values -- // 
 const float YAW         = -90.0f;
@@ -14,6 +15,7 @@ const float PITCH       = 0.0f;
 const float SPEED       = 5.0f;
 const float SENSITIVITY = 0.1F;
 const float FOV        = 45.0f;
+CameraType cameraType = CameraType::FPS;
 
 class Camera{
 public:
@@ -54,6 +56,11 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+
+        Position.y = 0;
+        // -- FPS = Grounded
+        //if (CameraType  CameraType::FPS){
+        
     }
 
     void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true)

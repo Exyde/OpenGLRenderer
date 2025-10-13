@@ -12,6 +12,10 @@ struct Light{
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant; /// k1
+    float linear; /// k2
+    float quadratic; /// k3
 };
 
 out vec4 FragColor;  
@@ -25,10 +29,7 @@ in vec3 Normal;
 in vec3 FragPosWorldSpace;
 uniform float uTime;
 uniform float T;
-uniform vec3 LightPos;
 uniform vec3 ViewPos;
-uniform vec3 LightColor;
-uniform vec3 SelfColor;
 
 void main()
 {
@@ -39,7 +40,7 @@ void main()
 
     // -- Diffuse
     vec3 normal = normalize(Normal);
-    vec3 lightDirection = normalize(LightPos - FragPosWorldSpace);
+    vec3 lightDirection = normalize(light.position - FragPosWorldSpace);
     float theta = dot(normal, lightDirection);
     float correctedTheta = max(theta, 0.0);
     vec3 diffuse = light.diffuse * correctedTheta * vec3(texture(mat.diffuse, TexCoord));
@@ -51,10 +52,18 @@ void main()
     vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
     vec3 specular = light.specular * spec * specularSampled;
 
+    // - Emissive
     vec3 mask = (vec3(1.0) - specularSampled);
     vec3 emissive = vec3(texture(mat.emissive, scrollingUV)) * mask;
 
-    vec3 phongLights = (ambient + diffuse + specular + (emissive));
+    // -- Exponential Attenuation
+    float distance = length(light.position - FragPosWorldSpace);
+    float Attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    ambient *= Attenuation;
+    diffuse *= Attenuation;
+    specular *= Attenuation;
+        
+    vec3 phongLights = (ambient + diffuse + specular + (emissive * T));
     FragColor = vec4(phongLights, 1.0);
 }
 

@@ -279,23 +279,18 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    // -- Colours
-    float ambientLightColor[3] = {1.0, 1.0f, 1.0f};
-    float diffuseLightColor[3] = {1.0, 1.0f, 0.3f};
-    float specularLightColor[3] = {0.0, 1.0f, 0.5f};
-    float objectsColor [3] = {1.0, 1.0f, 1.0f};
-    Vector3 LightColor = Vector3::One();
-
-    float lightMoveRadius = 2.0F;
-    
+    // -- IMGUI EXPOSED
+    float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
+    float diffuseLightColor[3] = {1.0, 1.0f, 1.0f};
+    float specularLightColor[3] = {0.5, 0.5f, 0.5f};
+    float attenuation [3] = {1.0, 0.09f, 0.032f};
+    float lightOffsets[]{0.0, 0.0, 0.0};
     static const char* viewModes[]{"Normal", "Wireframe"};
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
         // -- Input Handling
         GetInputs(window);
-
-
 
         // -- Time Update
         float currentFrame = ElapsedTime();
@@ -305,6 +300,9 @@ int main()
         // -- Actual Rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
+
+        // -- Transformed positions
+        auto offsetedLightPos = LightPosition.GLM() + Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM();
 
         // -- UI IMGUI
         // 1. New Frame
@@ -324,21 +322,22 @@ int main()
         // -- Fun Lerp Things
         userUpDown = SlyMath::Clamp(userUpDown, 0.0f, 1.0f);
         userLeftRight = SlyMath::Clamp(userLeftRight, 0.0f, 1.0f);
-        phongShader.SetFloat("T", userUpDown);
 
         // -- Phong Shader 
-        glUniform3f(glGetUniformLocation(phongShader.ID, "SelfColor"), objectsColor[0], objectsColor[1], objectsColor[2]);
         phongShader.SetInt("mat.diffuse", 0);
         phongShader.SetInt("mat.specular", 1);
         phongShader.SetInt("mat.emissive", 2);
         phongShader.SetFloat("mat.shininess", 32.0F);
         phongShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        phongShader.SetFloat("T", userLeftRight);
         phongShader.SetVec3("ViewPos", cam.Position.GLM());
-        phongShader.SetVec3("LightPos", LightPosition.GLM());
-        phongShader.SetVec3("LightColor", LightColor.GLM());
+        phongShader.SetVec3("light.position", offsetedLightPos);
         phongShader.SetVec3("light.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
         phongShader.SetVec3("light.diffuse", glm::vec3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]));
         phongShader.SetVec3("light.specular",glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
+        phongShader.SetFloat("light.constant", attenuation[0]);
+        phongShader.SetFloat("light.linear", attenuation[1]);
+        phongShader.SetFloat("light.quadratic", attenuation[2]);
 
         // -- Model // View // Projections -- GROUND
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -356,8 +355,6 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
         unsigned int projLoc = glGetUniformLocation(phongShader.ID, "projection");
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
-
-
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -385,20 +382,17 @@ int main()
         }
 
         // -- Light Object -- //
-        LightPosition.x = 1.0f + sin(glfwGetTime()) * lightMoveRadius;
-        LightPosition.z = sin(glfwGetTime() / 2.0f) * lightMoveRadius;
         lightShader.Use();
         glm::mat4 lightModel = glm::mat4(1.0f);
-        lightModel = glm::translate(lightModel, LightPosition.GLM());
+        lightModel = glm::translate(lightModel, offsetedLightPos);
         lightModel = glm::scale(lightModel, glm::vec3(0.2f));
         lightShader.SetMat4("model", lightModel);
         lightShader.SetMat4("view", viewMatrix);
         lightShader.SetMat4("projection", perspectiveMatrix);
-        lightShader.SetVec3("LightPos", LightPosition.GLM());
-        lightShader.SetVec3("LightColor", LightColor.GLM());
+        lightShader.SetVec3("LightPos", offsetedLightPos);
+        lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
 
         // -- UI FOLLOW UP
         ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
@@ -407,25 +401,25 @@ int main()
         static int viewMode = -1;
         if (ImGui::Combo("Choose View Mode", &viewMode, viewModes, IM_ARRAYSIZE(viewModes))){
             if (viewMode == 0){
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        } else if (viewMode == 1){
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            } else if (viewMode == 1){
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
         }
         ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
-        ImGui::SliderFloat("Free Variable", &userLeftRight, 0.0, 1.0);
-        ImGui::SliderFloat("Light Radius ", &lightMoveRadius, 0.0, 20.0);
-        ImGui::ColorEdit3("Objects Color", objectsColor);
+        ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+        ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
+        ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
         ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
         ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
         ImGui::ColorEdit3("Specular Light Color", specularLightColor);
+        ImGui::SliderFloat3("Light Offsets", (float*)lightOffsets, -10, 10);
         ImGui::End();
    
         // -- UI Render
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
         glfwPollEvents(); // We will register event callbacks soon :)

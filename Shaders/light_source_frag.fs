@@ -1,11 +1,10 @@
 #version 330 core
 
 out vec4 FragColor;  
-uniform vec4 DiffuseColor;
-uniform float DiffuseForce;
+uniform vec3 LightColor;
 
 void main()
 {
-    FragColor = DiffuseForce * DiffuseColor;
+    FragColor = vec4(LightColor, 1.0);
 }
 

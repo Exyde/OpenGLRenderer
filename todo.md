@@ -9,4 +9,21 @@
 - Improve build system (CMake idk what shit) + vitesse (voir gpt surement aprce que ça me gave) (IMPORTANT CA VA COMMENCER A ETRE SLOW)
 - TinyObjLoader : https://github.com/tinyobjloader/tinyobjloader
 - Then Assimp
+- Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
 
+## Lights
+- Ambiant
+- Diffuse
+- Specular
+- Global Illumination (?) => Contribute to godot ?
+
+-- Todo : Gravitating Lights with cos/sin
+-- wrapup on bluesky with breakdown of the phong model for others + screen
+
+
+Global Goals
+- Shadowmaps
+- ToonShader
+- PS1 Shading ?
+- Global Illumination ?
+- View Mode (Wireframe, normals, heatmaps...)

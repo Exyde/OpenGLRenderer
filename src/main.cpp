@@ -18,6 +18,8 @@
 /// --- UI Stuffs --------
 bool UI_rotateStuff = false;
 
+/// --- Lights Stuff ----
+Vector3 LightPosition (2.0f, 1.5F, 2.0F);
 
 #pragma region UserShitToMoveLaterAwayFromHere
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
@@ -67,6 +69,51 @@ float vertices[] = {
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
+
+float verticesAndNormals[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
+
 #pragma endregion
 
 Camera cam(Vector3(0.0f, 0.0f, -3.0f));
@@ -213,20 +260,23 @@ int main()
     glfwSetScrollCallback(window, Scroll_Callback);
     
     stbi_set_flip_vertically_on_load(true);
+    Shader lightShader("../Shaders/light_source_vertex.vs", "../Shaders/light_source_frag.fs");
     Shader baseShader("../Shaders/vert.vs", "../Shaders/frag.fs");
     glEnable(GL_DEPTH_TEST);
+
 
     // -- Cube Datas
     unsigned int CubeVBO, CubeVAO;
     glGenVertexArrays(1, &CubeVAO);
     glGenBuffers(1, &CubeVBO);
     glBindVertexArray(CubeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0));
+    glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesAndNormals), verticesAndNormals, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glm::vec3 cubePositions[] = {
@@ -239,9 +289,16 @@ int main()
     glm::vec3( 1.3f, -2.0f, -2.5f),  
     glm::vec3( 1.5f,  2.0f, -2.5f), 
     glm::vec3( 1.5f,  0.2f, -1.5f), 
-    glm::vec3(-1.3f,  1.0f, -1.5f)  
-    
-};
+    glm::vec3(-1.3f,  1.0f, -1.5f)   
+    };
+
+    // -- Light Data
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     Texture albedo("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
     Texture mask("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
@@ -257,7 +314,13 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    float mainTint[4] = {0.0, 1.0f, 0.3f, 1.0F};
+    // -- Colours
+    float ambiantColor[4] = {1.0, 1.0f, 1.0f, 1.0F};
+    float diffuseColor[4] = {1.0, 1.0f, 0.3f, 1.0F};
+    float specularColor[4] = {0.0, 1.0f, 0.5f, 1.0F};
+    float objectsColor [4] = {1.0, 1.0f, 1.0f, 1.0F};
+
+    float lightMoveRadius = 2.0F;
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
@@ -269,6 +332,9 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+            
+        LightPosition.x = 1.0f + sin(glfwGetTime()) * lightMoveRadius;
+        LightPosition.z = sin(glfwGetTime() / 2.0f) * lightMoveRadius;
         // -- Actual Rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
@@ -290,12 +356,20 @@ int main()
         userUpDown = SlyMath::Clamp(userUpDown, 0.0f, 1.0f);
         userLeftRight = SlyMath::Clamp(userLeftRight, 0.0f, 1.0f);
         baseShader.SetFloat("T", userUpDown);
-        glUniform4f(glGetUniformLocation(baseShader.ID, "Tint"), mainTint[0], mainTint[1], mainTint[2], mainTint[3]);
+        glUniform4f(glGetUniformLocation(baseShader.ID, "SelfColor"), objectsColor[0], objectsColor[1], objectsColor[2], objectsColor[3]);
+        glUniform4f(glGetUniformLocation(baseShader.ID, "AmbiantColor"), ambiantColor[0], ambiantColor[1], ambiantColor[2], ambiantColor[3]);
+        glUniform4f(glGetUniformLocation(baseShader.ID, "DiffuseColor"), diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
+        glUniform4f(glGetUniformLocation(baseShader.ID, "SpecularColor"), specularColor[0], specularColor[1], specularColor[2], specularColor[3]);
+        glUniform1f(glGetUniformLocation(baseShader.ID, "DiffuseForce"), userLeftRight);
+        baseShader.SetVec3("ViewPos", cam.Position.GLM());
+        baseShader.SetFloat("SpecularIntensity", userUpDown);
+        baseShader.SetVec3("LightPos", LightPosition.GLM());
 
-        // -- Model // View // Projections
+      
+        // -- Model // View // Projections -- GROUND
         glm::mat4 modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::rotate(modelMatrix, ElapsedTime()* glm::radians(50.0f), glm::vec3(0.5f, 1.0, 0.0));
-        
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 2, 100));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
         glm::mat4 viewMatrix = cam.GetViewMatrix();
 
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
@@ -309,6 +383,16 @@ int main()
         unsigned int projLoc = glGetUniformLocation(baseShader.ID, "projection");
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
 
+
+        glBindVertexArray(CubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // -- Central Cube -- 
+        modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
+        baseShader.SetMat4("model", modelMatrix);
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -326,14 +410,34 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
+        // -- Light -- //
+        lightShader.Use();
+        glm::mat4 lightModel = glm::mat4(1.0f);
+        lightModel = glm::translate(lightModel, LightPosition.GLM());
+        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightShader.SetMat4("model", lightModel);
+        lightShader.SetMat4("view", viewMatrix);
+        lightShader.SetMat4("projection", perspectiveMatrix);
+        lightShader.SetVec3("LightPos", LightPosition.GLM());
+        glUniform4f(glGetUniformLocation(lightShader.ID, "DiffuseColor"), diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
+        glUniform1f(glGetUniformLocation(lightShader.ID, "DiffuseForce"), userLeftRight);
+        
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
         // -- UI FOLLOW UP
-            ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
-            ImGui::Text("Hello World ! Have you seen that france has Lecornu Government 2.0 ?");
-            ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
-            ImGui::SliderFloat("User Up Down", &userUpDown, 0.0, 1.0);
-            ImGui::SliderFloat("User Left Right", &userLeftRight, 0.0, 1.0);
-            ImGui::ColorEdit4("Main Tint", mainTint);
-            ImGui::End();
+        ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
+        ImGui::Text("Hello World ! Have you seen that france has Lecornu Government 2.0 ?");
+        ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
+        ImGui::SliderFloat("Specular Intensity", &userUpDown, 0.0, 1.0);
+        ImGui::SliderFloat("Diffuse Intensity", &userLeftRight, 0.0, 1.0);
+        ImGui::SliderFloat("Light Radius ", &lightMoveRadius, 0.0, 20.0);
+        ImGui::ColorEdit4("Objects Color", objectsColor);
+        ImGui::ColorEdit4("Ambiant Light Color", ambiantColor);
+        ImGui::ColorEdit4("Diffuse Light Color", diffuseColor);
+        ImGui::ColorEdit4("Specular Light Color", specularColor);
+        ImGui::End();
    
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

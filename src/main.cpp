@@ -287,6 +287,17 @@ int main()
     float lightOffsets[]{0.0, 0.0, 0.0};
     static const char* viewModes[]{"Normal", "Wireframe"};
 
+    glm::vec3 pointLightPositions[] = {
+	glm::vec3( 0.7f,  0.2f,  2.0f),
+	glm::vec3( 2.3f, -3.3f, -4.0f),
+	glm::vec3(-4.0f,  2.0f, -12.0f),
+	glm::vec3( 0.0f,  0.0f, -3.0f)
+    };
+
+    glm::vec3 pointLightAmbient(0.05f);
+    glm::vec3 pointLightDiffuse(0.8f);
+    glm::vec3 pointLightSpecular(1.0f);
+
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
         // -- Input Handling
@@ -324,20 +335,42 @@ int main()
         userLeftRight = SlyMath::Clamp(userLeftRight, 0.0f, 1.0f);
 
         // -- Phong Shader 
+        // -- Material
         phongShader.SetInt("mat.diffuse", 0);
         phongShader.SetInt("mat.specular", 1);
         phongShader.SetInt("mat.emissive", 2);
         phongShader.SetFloat("mat.shininess", 32.0F);
+
+        // -- User Data
         phongShader.SetFloat("uTime", ElapsedTime() * userUpDown);
         phongShader.SetFloat("T", userLeftRight);
         phongShader.SetVec3("ViewPos", cam.Position.GLM());
-        phongShader.SetVec3("light.position", offsetedLightPos);
-        phongShader.SetVec3("light.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
-        phongShader.SetVec3("light.diffuse", glm::vec3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]));
-        phongShader.SetVec3("light.specular",glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
-        phongShader.SetFloat("light.constant", attenuation[0]);
-        phongShader.SetFloat("light.linear", attenuation[1]);
-        phongShader.SetFloat("light.quadratic", attenuation[2]);
+
+        // -- Directionnal Light
+        phongShader.SetVec3("dirLight.direction", offsetedLightPos);
+        phongShader.SetVec3("dirLight.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
+        phongShader.SetVec3("dirLight.diffuse", glm::vec3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]));
+        phongShader.SetVec3("dirLight.specular",glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
+ 
+        // -- Point Lights
+        for (int i = 0; i < 4; i++){
+            std::string lightTag = "";
+            if (i == 0) lightTag = "pointLights[0]";
+            if (i == 1) lightTag = "pointLights[1]";
+            if (i == 2) lightTag = "pointLights[2]";
+            if (i == 3) lightTag = "pointLights[3]";
+
+            phongShader.SetVec3(lightTag.append(".position"), pointLightPositions[i]);
+            phongShader.SetVec3(lightTag.append(".ambient"), pointLightAmbient);
+            phongShader.SetVec3(lightTag.append(".diffuse"), pointLightDiffuse);
+            phongShader.SetVec3(lightTag.append(".specular"),pointLightSpecular);
+            phongShader.SetFloat(lightTag.append(".constant"), attenuation[0]);
+            phongShader.SetFloat(lightTag.append(".linear"),attenuation[1]);
+            phongShader.SetFloat(lightTag.append(".quadratic"), attenuation[2]);
+        }
+            
+        // -- Todo : SpotLight 
+        // -- Todo : Lamp Torch
 
         // -- Model // View // Projections -- GROUND
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -394,6 +427,17 @@ int main()
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        for (int i = 0; i < 4; i++){
+            lightModel = glm::mat4(1.0F);
+            lightModel = glm::translate(lightModel, pointLightPositions[i]);
+            lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+            lightShader.SetMat4("model", lightModel);
+            lightShader.SetVec3("LightPos", pointLightPositions[i]);
+            lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
         // -- UI FOLLOW UP
         ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
         ImGui::Text("Hello World ! Have you seen that france has Lecornu Government 2.0 ?");
@@ -424,7 +468,6 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents(); // We will register event callbacks soon :)
     }
-
 
     // -- Exit
     ImGui_ImplOpenGL3_Shutdown();

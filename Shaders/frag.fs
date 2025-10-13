@@ -1,49 +1,60 @@
 #version 330 core
 
+struct Mat{
+    sampler2D diffuse;
+    sampler2D specular;
+    sampler2D emissive;
+    float shininess;
+};
+
+struct Light{
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
 out vec4 FragColor;  
+
+uniform Mat mat;
+uniform Light light;
 
 in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPosWorldSpace;
-
-uniform sampler2D albedo;
-uniform sampler2D mask;
+uniform float uTime;
 uniform float T;
 uniform vec3 LightPos;
 uniform vec3 ViewPos;
-uniform vec4 DiffuseColor;
-uniform vec4 AmbiantColor;
-uniform vec4 SpecularColor;
-uniform vec4 SelfColor;
-uniform float DiffuseForce;
-uniform float SpecularIntensity;
-
+uniform vec3 LightColor;
+uniform vec3 SelfColor;
 
 void main()
 {
+
+    vec2 scrollingUV = TexCoord + vec2(0, -uTime);
     // -- Ambiant
-    float ambientStrenght = 0.1;
-    vec4 ambient = ambientStrenght * AmbiantColor;
+    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, TexCoord));
 
     // -- Diffuse
     vec3 normal = normalize(Normal);
     vec3 lightDirection = normalize(LightPos - FragPosWorldSpace);
     float theta = dot(normal, lightDirection);
     float correctedTheta = max(theta, 0.0);
-    vec4 diffuse = correctedTheta * DiffuseColor * DiffuseForce;
+    vec3 diffuse = light.diffuse * correctedTheta * vec3(texture(mat.diffuse, TexCoord));
 
     // -- Specular
     vec3 viewDirection = normalize(ViewPos - FragPosWorldSpace);
     vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float shinyness = 32; 
-    float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , shinyness);
-    vec4 specular = spec * SpecularColor * SpecularIntensity;
+    float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess);
+    vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
+    vec3 specular = light.specular * spec * specularSampled;
 
-    vec4 phongLights = (ambient + diffuse + specular) * SelfColor;
+    vec3 mask = (vec3(1.0) - specularSampled);
+    vec3 emissive = vec3(texture(mat.emissive, scrollingUV)) * mask;
 
-    phongLights.a = 1;
-    FragColor = phongLights;
-    //FragColor = mix(texture(albedo, TexCoord), texture(mask, TexCoord), T) * LightColor * SelfColor;
+    vec3 phongLights = (ambient + diffuse + specular + (emissive));
+    FragColor = vec4(phongLights, 1.0);
 }
 

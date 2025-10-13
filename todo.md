@@ -11,15 +11,13 @@
 - Then Assimp
 - Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
 
+-- Share Progress on Bluesky / Discord / Linkedin ?
+
 ## Lights
 - Ambiant
 - Diffuse
 - Specular
 - Global Illumination (?) => Contribute to godot ?
-
--- Todo : Gravitating Lights with cos/sin
--- wrapup on bluesky with breakdown of the phong model for others + screen
-
 
 Global Goals
 - Shadowmaps

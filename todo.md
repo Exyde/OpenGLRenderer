@@ -27,4 +27,5 @@ Global Goals
 - ToonShader
 - PS1 Shading ?
 - Global Illumination ?
-- View Mode (Wireframe, normals, heatmaps...)
+- View Mode (normals, heatmaps...)
+- Particle System

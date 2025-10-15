@@ -57,7 +57,7 @@ public:
         if (direction == RIGHT)
             Position += Right * velocity;
 
-        //Position.y = 0;
+        Position.y = 0;
         // -- FPS = Grounded
         //if (CameraType  CameraType::FPS){
         

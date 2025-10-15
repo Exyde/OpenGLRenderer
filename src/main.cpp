@@ -22,7 +22,7 @@ ViewMode viewMode = ViewMode::Normal;
 bool UI_rotateStuff = false;
 
 /// --- Lights Stuff ----
-Vector3 LightPosition (2.0f, 1.5F, 2.0F);
+Vector3 LightPosition (-0.2f, -1.5F, 0.3F);
 
 #pragma region UserShitToMoveLaterAwayFromHere
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
@@ -281,8 +281,8 @@ int main()
 
     // -- IMGUI EXPOSED
     float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
-    float diffuseLightColor[3] = {1.0, 1.0f, 1.0f};
-    float specularLightColor[3] = {0.5, 0.5f, 0.5f};
+    float diffuseLightColor[3] = {0.2f, 0.2f, 0.2f};
+    float specularLightColor[3] = {1.0, 0.5f, 1.0f};
     float attenuation [3] = {1.0, 0.09f, 0.032f};
     float lightOffsets[]{0.0, 0.0, 0.0};
     static const char* viewModes[]{"Normal", "Wireframe"};
@@ -295,8 +295,13 @@ int main()
     };
 
     glm::vec3 pointLightAmbient(0.05f);
-    glm::vec3 pointLightDiffuse(0.8f);
+    glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
     glm::vec3 pointLightSpecular(1.0f);
+
+    glm::vec3 flashLightAmbient(0.05f);
+    glm::vec3 flashLightDiffuse(0.8f, 0.2f, 0.6f);
+    glm::vec3 flashLightSpecular(1.0f);
+    float flashLightRadius = 12.0f;
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
@@ -353,24 +358,49 @@ int main()
         phongShader.SetVec3("dirLight.specular",glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
  
         // -- Point Lights
-        for (int i = 0; i < 4; i++){
-            std::string lightTag = "";
-            if (i == 0) lightTag = "pointLights[0]";
-            if (i == 1) lightTag = "pointLights[1]";
-            if (i == 2) lightTag = "pointLights[2]";
-            if (i == 3) lightTag = "pointLights[3]";
+        phongShader.SetVec3("pointLights[0].position", pointLightPositions[0]);
+        phongShader.SetVec3("pointLights[0].ambient", pointLightAmbient);
+        phongShader.SetVec3("pointLights[0].diffuse", pointLightDiffuse);
+        phongShader.SetVec3("pointLights[0].specular", pointLightSpecular); 
+        phongShader.SetFloat("pointLights[0].constant", attenuation[0]);
+        phongShader.SetFloat("pointLights[0].linear", attenuation[1]);
+        phongShader.SetFloat("pointLights[0].quadratic", attenuation[2]);
 
-            phongShader.SetVec3(lightTag.append(".position"), pointLightPositions[i]);
-            phongShader.SetVec3(lightTag.append(".ambient"), pointLightAmbient);
-            phongShader.SetVec3(lightTag.append(".diffuse"), pointLightDiffuse);
-            phongShader.SetVec3(lightTag.append(".specular"),pointLightSpecular);
-            phongShader.SetFloat(lightTag.append(".constant"), attenuation[0]);
-            phongShader.SetFloat(lightTag.append(".linear"),attenuation[1]);
-            phongShader.SetFloat(lightTag.append(".quadratic"), attenuation[2]);
-        }
+        phongShader.SetVec3("pointLights[1].position", pointLightPositions[1]);
+        phongShader.SetVec3("pointLights[1].ambient", pointLightAmbient);
+        phongShader.SetVec3("pointLights[1].diffuse", pointLightDiffuse);
+        phongShader.SetVec3("pointLights[1].specular", pointLightSpecular); 
+        phongShader.SetFloat("pointLights[1].constant", attenuation[0]);
+        phongShader.SetFloat("pointLights[1].linear", attenuation[1]);
+        phongShader.SetFloat("pointLights[1].quadratic", attenuation[2]);
+
+        phongShader.SetVec3("pointLights[2].position", pointLightPositions[2]);
+        phongShader.SetVec3("pointLights[2].ambient", pointLightAmbient);
+        phongShader.SetVec3("pointLights[2].diffuse", pointLightDiffuse);
+        phongShader.SetVec3("pointLights[2].specular", pointLightSpecular); 
+        phongShader.SetFloat("pointLights[2].constant", attenuation[0]);
+        phongShader.SetFloat("pointLights[2].linear", attenuation[1]);
+        phongShader.SetFloat("pointLights[2].quadratic", attenuation[2]);
+
+        phongShader.SetVec3("pointLights[3].position", pointLightPositions[3]);
+        phongShader.SetVec3("pointLights[3].ambient", pointLightAmbient);
+        phongShader.SetVec3("pointLights[3].diffuse", pointLightDiffuse);
+        phongShader.SetVec3("pointLights[3].specular", pointLightSpecular); 
+        phongShader.SetFloat("pointLights[3].constant", attenuation[0]);
+        phongShader.SetFloat("pointLights[3].linear", attenuation[1]);
+        phongShader.SetFloat("pointLights[3].quadratic", attenuation[2]);
             
-        // -- Todo : SpotLight 
-        // -- Todo : Lamp Torch
+        //Lamp Torch
+        phongShader.SetVec3("flashLight.position", cam.Position.GLM());
+        phongShader.SetVec3("flashLight.direction", cam.Front.GLM());
+        phongShader.SetFloat("flashLight.cutOff", glm::cos(glm::radians(flashLightRadius)));
+        phongShader.SetFloat("flashLight.outerCutOff", glm::cos(glm::radians(flashLightRadius + 2.5f)));
+        phongShader.SetVec3("flashLight.ambient", flashLightAmbient);
+        phongShader.SetVec3("flashLight.diffuse", flashLightDiffuse);
+        phongShader.SetVec3("flashLight.specular", flashLightSpecular); 
+        phongShader.SetFloat("flashLight.constant", attenuation[0]);
+        phongShader.SetFloat("flashLight.linear", attenuation[1]);
+        phongShader.SetFloat("flashLight.quadratic", attenuation[2]);
 
         // -- Model // View // Projections -- GROUND
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -433,7 +463,7 @@ int main()
             lightModel = glm::scale(lightModel, glm::vec3(0.2f));
             lightShader.SetMat4("model", lightModel);
             lightShader.SetVec3("LightPos", pointLightPositions[i]);
-            lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
+            lightShader.SetVec3("LightColor", Vector3(pointLightDiffuse[0], pointLightDiffuse[1], pointLightDiffuse[2]).GLM());
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -452,6 +482,7 @@ int main()
         }
         ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
         ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+        ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
         ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
         ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
         ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);

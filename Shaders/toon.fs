@@ -81,7 +81,7 @@ void main()
     result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
     //result += CalculateEmissive(scrollingUV);
 
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    FragColor = vec4(result, 1.0);
 }
 
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
@@ -165,3 +165,4 @@ vec3 CalculateFlashlight(Flashlight light, vec3 normal, vec3 fragPos, vec3 viewD
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
 }
+

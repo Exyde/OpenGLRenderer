@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "engine/Shader.h"
+#include "engine/ShaderReloader.h"
 #include "engine/Texture.h"
 #include "engine/stb_image.h"
 #include "engine/Camera.h"
@@ -81,6 +82,7 @@ float lastFrame = 0.0f;
 bool FIRST_MOUSE = true;
 float lastMouseX = 400;
 float lastMouseY = 300;
+bool shouldReloadShaderNextFrame = false;
 
 float ElapsedTime(){return (float) glfwGetTime();}
 
@@ -157,6 +159,10 @@ void GetInputs(GLFWwindow* window){
         //glfwSetWindowShouldClose(window, true);
     }
 
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+        shouldReloadShaderNextFrame = true;
+    }
+
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
         userUpDown += 0.001;
     }
@@ -219,8 +225,7 @@ int main()
     glfwSetScrollCallback(window, Scroll_Callback);
     
     stbi_set_flip_vertically_on_load(true);
-    Shader lightShader("../Shaders/light_source_vertex.vs", "../Shaders/light_source_frag.fs");
-    Shader phongShader("../Shaders/vert.vs", "../Shaders/frag.fs");
+
     glEnable(GL_DEPTH_TEST);
 
 
@@ -260,6 +265,16 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    Shader lightShader("../Shaders/light_source_vertex.vs", "../Shaders/light_source_frag.fs");
+    Shader phongShader("../Shaders/vert.vs", "../Shaders/frag.fs");
+    Shader toonShader("../Shaders/vert.vs", "../Shaders/toon.fs");
+
+    ShaderReloader mainReloader(phongShader.vertexSaved, phongShader.fragmentSaved);
+
+    auto lastCheck = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds checkInterval(500); // toutes les 500 ms
+
 
     Texture albedo("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
     Texture mask("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
@@ -303,10 +318,27 @@ int main()
     glm::vec3 flashLightSpecular(1.0f);
     float flashLightRadius = 12.0f;
 
+
+
     // -- Render Loop
     while (!glfwWindowShouldClose(window)){
         // -- Input Handling
         GetInputs(window);
+
+        if (shouldReloadShaderNextFrame){
+            phongShader.Reload();
+            lightShader.Reload();
+            toonShader.Reload();
+            shouldReloadShaderNextFrame = false;
+        }
+
+        auto now = std::chrono::steady_clock::now();
+        if (now - lastCheck > checkInterval) {
+            lastCheck = now;
+            if (mainReloader.CheckForChanges()) {
+                phongShader.Reload(); //
+            }
+        }
 
         // -- Time Update
         float currentFrame = ElapsedTime();

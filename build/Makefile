@@ -152,6 +152,30 @@ src/engine/Mesh.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.s
 .PHONY : src/engine/Mesh.cpp.s
 
+src/engine/Model.obj: src/engine/Model.cpp.obj
+.PHONY : src/engine/Model.obj
+
+# target to build an object file
+src/engine/Model.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj
+.PHONY : src/engine/Model.cpp.obj
+
+src/engine/Model.i: src/engine/Model.cpp.i
+.PHONY : src/engine/Model.i
+
+# target to preprocess a source file
+src/engine/Model.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.i
+.PHONY : src/engine/Model.cpp.i
+
+src/engine/Model.s: src/engine/Model.cpp.s
+.PHONY : src/engine/Model.s
+
+# target to generate assembly for a file
+src/engine/Model.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.s
+.PHONY : src/engine/Model.cpp.s
+
 src/engine/Shader.obj: src/engine/Shader.cpp.obj
 .PHONY : src/engine/Shader.obj
 
@@ -247,6 +271,30 @@ src/engine/stb_image.s: src/engine/stb_image.cpp.s
 src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
+
+src/engine/tiny_obj_loader.obj: src/engine/tiny_obj_loader.cpp.obj
+.PHONY : src/engine/tiny_obj_loader.obj
+
+# target to build an object file
+src/engine/tiny_obj_loader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj
+.PHONY : src/engine/tiny_obj_loader.cpp.obj
+
+src/engine/tiny_obj_loader.i: src/engine/tiny_obj_loader.cpp.i
+.PHONY : src/engine/tiny_obj_loader.i
+
+# target to preprocess a source file
+src/engine/tiny_obj_loader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.i
+.PHONY : src/engine/tiny_obj_loader.cpp.i
+
+src/engine/tiny_obj_loader.s: src/engine/tiny_obj_loader.cpp.s
+.PHONY : src/engine/tiny_obj_loader.s
+
+# target to generate assembly for a file
+src/engine/tiny_obj_loader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.s
+.PHONY : src/engine/tiny_obj_loader.cpp.s
 
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
@@ -476,6 +524,9 @@ help:
 	@echo ... src/engine/Mesh.obj
 	@echo ... src/engine/Mesh.i
 	@echo ... src/engine/Mesh.s
+	@echo ... src/engine/Model.obj
+	@echo ... src/engine/Model.i
+	@echo ... src/engine/Model.s
 	@echo ... src/engine/Shader.obj
 	@echo ... src/engine/Shader.i
 	@echo ... src/engine/Shader.s
@@ -488,6 +539,9 @@ help:
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
+	@echo ... src/engine/tiny_obj_loader.obj
+	@echo ... src/engine/tiny_obj_loader.i
+	@echo ... src/engine/tiny_obj_loader.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s

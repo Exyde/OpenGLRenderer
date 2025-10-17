@@ -253,6 +253,9 @@ OpenGLRenderer_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 OpenGLRenderer_SOURCE_DIR:STATIC=C:/Users/youne/Desktop/OpenGLRenderer
 
+//The directory containing a CMake configuration file for assimp.
+assimp_DIR:PATH=assimp_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

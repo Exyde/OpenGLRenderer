@@ -2,10 +2,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+// clang-format on
+
 #include <cmath>
 #include <iostream>
 
 #include "engine/Camera.h"
+#include "engine/Model.h"
 #include "engine/Shader.h"
 #include "engine/ShaderReloader.h"
 #include "engine/SlyMath.H"
@@ -216,6 +219,8 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
+    Model backpackModel("Resources/Models/backpack/backpack.obj");
+
     // -- Cube Datas
     unsigned int CubeVBO, CubeVAO;
     glGenVertexArrays(1, &CubeVAO);
@@ -254,18 +259,18 @@ int main() {
     Shader lightShader("Shaders/light_source_vertex.vs",
                        "Shaders/light_source_frag.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
-    Shader toonShader("Shaders/vert.vs", "Shaders/toon.fs");
+    Shader toonShader("Shaders/toon.vs", "Shaders/frag.fs");
 
     ShaderReloader mainReloader(phongShader.vertexSaved,
                                 phongShader.fragmentSaved);
 
     auto lastCheck = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds checkInterval(500);  // toutes les 500 ms
+    const std::chrono::milliseconds checkInterval(500);
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
-    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER,
-                 true, "diffuse");
+    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true,
+                 "diffuse");
     Texture diffuse("Resources/Textures/container_diffuse.png",
                     GL_CLAMP_TO_BORDER, true, "diffuse");
     Texture specular("Resources/Textures/container_specular.png",
@@ -307,6 +312,8 @@ int main() {
     glm::vec3 flashLightDiffuse(0.8f, 0.2f, 0.6f);
     glm::vec3 flashLightSpecular(1.0f);
     float flashLightRadius = 12.0f;
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)) {
@@ -430,38 +437,34 @@ int main() {
         phongShader.SetFloat("flashLight.linear", attenuation[1]);
         phongShader.SetFloat("flashLight.quadratic", attenuation[2]);
 
-        // -- Model // View // Projections -- GROUND
-        glm::mat4 modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 2, 100));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
-        glm::mat4 viewMatrix = cam.GetViewMatrix();
-
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
         glm::highp_mat4 perspectiveMatrix = glm::perspective(
             glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
             0.1f, 100.0f);
+        glm::mat4 viewMatrix = cam.GetViewMatrix();
+
+        // -- Model // View // Projections -- GROUND
+        glm::mat4 modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 2, 100));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
 
         // -- Sending Matrices to Shader
-        unsigned int modelLoc = glGetUniformLocation(phongShader.ID, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-        unsigned int viewLoc = glGetUniformLocation(phongShader.ID, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-        unsigned int projLoc =
-            glGetUniformLocation(phongShader.ID, "projection");
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE,
-                           glm::value_ptr(perspectiveMatrix));
+        phongShader.SetMat4("model", modelMatrix);
+        phongShader.SetMat4("view", viewMatrix);
+        phongShader.SetMat4("projection", perspectiveMatrix);
+
         glBindVertexArray(CubeVAO);
+
+        //-- DrawGround
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // -- Central Cube --
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
         phongShader.SetMat4("model", modelMatrix);
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE,
-                           glm::value_ptr(perspectiveMatrix));
         glBindVertexArray(CubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //-- Draw Middle Cube
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // -- Multiples Floating Cubes
         for (unsigned int i = 0; i < 10; i++) {
@@ -475,8 +478,90 @@ int main() {
             }
             phongShader.SetMat4("model", model);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            // glDrawArrays(GL_TRIANGLES, 0, 36);
         }
+
+        // -- Backpack --
+        toonShader.Use();
+        toonShader.SetMat4("view", viewMatrix);
+        toonShader.SetMat4("projection", perspectiveMatrix);
+
+        // - Uniforms Woopsy
+        toonShader.SetInt("mat.diffuse", 0);
+        toonShader.SetInt("mat.specular", 1);
+        toonShader.SetInt("mat.emissive", 2);
+        toonShader.SetFloat("mat.shininess", 32.0F);
+
+        // -- User Data
+        toonShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        toonShader.SetFloat("T", userLeftRight);
+        toonShader.SetVec3("ViewPos", cam.Position.GLM());
+
+        // -- Directionnal Light
+        toonShader.SetVec3("dirLight.direction", offsetedLightPos);
+        toonShader.SetVec3("dirLight.ambient",
+                           glm::vec3(ambientLightColor[0], ambientLightColor[1],
+                                     ambientLightColor[2]));
+        toonShader.SetVec3("dirLight.diffuse",
+                           glm::vec3(diffuseLightColor[0], diffuseLightColor[1],
+                                     diffuseLightColor[2]));
+        toonShader.SetVec3(
+            "dirLight.specular",
+            glm::vec3(specularLightColor[0], specularLightColor[1],
+                      specularLightColor[2]));
+
+        // -- Point Lights
+        toonShader.SetVec3("pointLights[0].position", pointLightPositions[0]);
+        toonShader.SetVec3("pointLights[0].ambient", pointLightAmbient);
+        toonShader.SetVec3("pointLights[0].diffuse", pointLightDiffuse);
+        toonShader.SetVec3("pointLights[0].specular", pointLightSpecular);
+        toonShader.SetFloat("pointLights[0].constant", attenuation[0]);
+        toonShader.SetFloat("pointLights[0].linear", attenuation[1]);
+        toonShader.SetFloat("pointLights[0].quadratic", attenuation[2]);
+
+        toonShader.SetVec3("pointLights[1].position", pointLightPositions[1]);
+        toonShader.SetVec3("pointLights[1].ambient", pointLightAmbient);
+        toonShader.SetVec3("pointLights[1].diffuse", pointLightDiffuse);
+        toonShader.SetVec3("pointLights[1].specular", pointLightSpecular);
+        toonShader.SetFloat("pointLights[1].constant", attenuation[0]);
+        toonShader.SetFloat("pointLights[1].linear", attenuation[1]);
+        toonShader.SetFloat("pointLights[1].quadratic", attenuation[2]);
+
+        toonShader.SetVec3("pointLights[2].position", pointLightPositions[2]);
+        toonShader.SetVec3("pointLights[2].ambient", pointLightAmbient);
+        toonShader.SetVec3("pointLights[2].diffuse", pointLightDiffuse);
+        toonShader.SetVec3("pointLights[2].specular", pointLightSpecular);
+        toonShader.SetFloat("pointLights[2].constant", attenuation[0]);
+        toonShader.SetFloat("pointLights[2].linear", attenuation[1]);
+        toonShader.SetFloat("pointLights[2].quadratic", attenuation[2]);
+
+        toonShader.SetVec3("pointLights[3].position", pointLightPositions[3]);
+        toonShader.SetVec3("pointLights[3].ambient", pointLightAmbient);
+        toonShader.SetVec3("pointLights[3].diffuse", pointLightDiffuse);
+        toonShader.SetVec3("pointLights[3].specular", pointLightSpecular);
+        toonShader.SetFloat("pointLights[3].constant", attenuation[0]);
+        toonShader.SetFloat("pointLights[3].linear", attenuation[1]);
+        toonShader.SetFloat("pointLights[3].quadratic", attenuation[2]);
+
+        // Lamp Torch
+        toonShader.SetVec3("flashLight.position", cam.Position.GLM());
+        toonShader.SetVec3("flashLight.direction", cam.Front.GLM());
+        toonShader.SetFloat("flashLight.cutOff",
+                            glm::cos(glm::radians(flashLightRadius)));
+        toonShader.SetFloat("flashLight.outerCutOff",
+                            glm::cos(glm::radians(flashLightRadius + 2.5f)));
+        toonShader.SetVec3("flashLight.ambient", flashLightAmbient);
+        toonShader.SetVec3("flashLight.diffuse", flashLightDiffuse);
+        toonShader.SetVec3("flashLight.specular", flashLightSpecular);
+        toonShader.SetFloat("flashLight.constant", attenuation[0]);
+        toonShader.SetFloat("flashLight.linear", attenuation[1]);
+        toonShader.SetFloat("flashLight.quadratic", attenuation[2]);
+
+        modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5f, 1.0, 0.5));
+        toonShader.SetMat4("model", modelMatrix);
+
+        // backpackModel.Draw(phongShader);
 
         // -- Light Object -- //
         lightShader.Use();
@@ -492,7 +577,7 @@ int main() {
                                     diffuseLightColor[2])
                                 .GLM());
         glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
 
         for (int i = 0; i < 4; i++) {
             lightModel = glm::mat4(1.0F);
@@ -505,7 +590,7 @@ int main() {
                                                       pointLightDiffuse[2])
                                                   .GLM());
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            // glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
         // -- UI FOLLOW UP

@@ -1344,6 +1344,18 @@
 			],
 			"type" : "STATIC",
 			"value" : "C:/Users/youne/Desktop/OpenGLRenderer"
+		},
+		{
+			"name" : "assimp_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for assimp."
+				}
+			],
+			"type" : "PATH",
+			"value" : "assimp_DIR-NOTFOUND"
 		}
 	],
 	"kind" : "cache",

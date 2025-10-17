@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Répertoire de sortie du binaire
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+
 # === Include paths ===
 include_directories(
     ${CMAKE_SOURCE_DIR}/include

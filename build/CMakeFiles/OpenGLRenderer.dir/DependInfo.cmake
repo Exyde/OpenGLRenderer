@@ -10,10 +10,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/youne/Desktop/OpenGLRenderer/src/glad.c" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/tiny_obj_loader.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_demo.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_draw.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj.d"

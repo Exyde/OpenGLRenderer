@@ -19,6 +19,12 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Model.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Model.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Shader.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Shader.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj"
@@ -40,6 +46,12 @@
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\stb_image.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\stb_image.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\tiny_obj_loader.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\tiny_obj_loader.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/tiny_obj_loader.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj"
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",

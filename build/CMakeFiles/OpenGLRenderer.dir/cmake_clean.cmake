@@ -1,0 +1,39 @@
+file(REMOVE_RECURSE
+  "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe"
+  "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe.manifest"
+  "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.pdb"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj.d"
+  "libOpenGLRenderer.dll.a"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C CXX)
+  include(CMakeFiles/OpenGLRenderer.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

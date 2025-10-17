@@ -1,19 +1,19 @@
+// clang-format off
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <cmath>
 #include <iostream>
 
+#include "engine/Camera.h"
+#include "engine/Shader.h"
+#include "engine/ShaderReloader.h"
+#include "engine/SlyMath.H"
+#include "engine/Texture.h"
+#include "engine/stb_image.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include "engine/Shader.h"
-#include "engine/ShaderReloader.h"
-#include "engine/Texture.h"
-#include "engine/stb_image.h"
-#include "engine/Camera.h"
-#include <cmath>
-#include <iostream>
-#include "engine/SlyMath.H"
 
 enum ViewMode { Normal, Wireframe };
 
@@ -23,7 +23,7 @@ ViewMode viewMode = ViewMode::Normal;
 bool UI_rotateStuff = false;
 
 /// --- Lights Stuff ----
-Vector3 LightPosition (-0.2f, -1.5F, 0.3F);
+Vector3 LightPosition(-0.2f, -1.5F, 0.3F);
 
 #pragma region UserShitToMoveLaterAwayFromHere
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
@@ -32,48 +32,41 @@ float userUpDown = 1.0;
 float userLeftRight = 1.0;
 float vertices[] = {
     // positions          // normals           // texture coords
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.5f,  -0.5f,
+    -0.5f, 0.0f,  0.0f,  -1.0f, 1.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 0.0f,
+    0.0f,  -1.0f, 1.0f,  1.0f,  0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f,
+    1.0f,  1.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  1.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+    -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.5f,  -0.5f,
+    0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,
+    0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+    1.0f,  1.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+    -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+    -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.0f,  -0.5f, 0.5f,
+    -0.5f, -1.0f, 0.0f,  0.0f,  1.0f,  1.0f,  -0.5f, -0.5f, -0.5f, -1.0f,
+    0.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f,
+    0.0f,  1.0f,  -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f,  0.0f,  0.0f,  0.0f,
+    -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,
+    -0.5f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,
+    0.0f,  0.0f,  0.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,
+    0.0f,  1.0f,  0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+    0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.5f,  -0.5f,
+    -0.5f, 0.0f,  -1.0f, 0.0f,  1.0f,  1.0f,  0.5f,  -0.5f, 0.5f,  0.0f,
+    -1.0f, 0.0f,  1.0f,  0.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,
+    1.0f,  0.0f,  -0.5f, -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.0f,  1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-};
+    -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.5f,  0.5f,
+    -0.5f, 0.0f,  1.0f,  0.0f,  1.0f,  1.0f,  0.5f,  0.5f,  0.5f,  0.0f,
+    1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    1.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+    -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f,  1.0f};
 #pragma endregion
 
 Camera cam(Vector3(0.0f, 0.0f, -3.0f));
@@ -84,33 +77,31 @@ float lastMouseX = 400;
 float lastMouseY = 300;
 bool shouldReloadShaderNextFrame = false;
 
-float ElapsedTime(){return (float) glfwGetTime();}
+float ElapsedTime() { return (float)glfwGetTime(); }
 
-void LogMaxVertexAttributes(){
+void LogMaxVertexAttributes() {
     int maxAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttributes);
     std::cout << "Max Vertex Attributes: " << maxAttributes << std::endl;
 }
 
 #pragma region CallbackOpenGL
-void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height)
-{
+void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset){
+void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
     if (cursorVisible) return;
     cam.ProcessMouseScroll(yoffset);
 }
 
-void Mouse_Callback(GLFWwindow* window, double xposin, double yposin){
-
+void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
     if (cursorVisible) return;
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
 
     //-- avoid first frame snapping (should have a bool for first frame ?)
-    if (FIRST_MOUSE){
+    if (FIRST_MOUSE) {
         FIRST_MOUSE = false;
         lastMouseX = xpos;
         lastMouseY = ypos;
@@ -125,8 +116,8 @@ void Mouse_Callback(GLFWwindow* window, double xposin, double yposin){
 #pragma endregion
 
 #pragma region Init
-bool InitializeGLFW(){
-    if (!glfwInit()){
+bool InitializeGLFW() {
+    if (!glfwInit()) {
         return false;
     }
 
@@ -136,18 +127,19 @@ bool InitializeGLFW(){
     return true;
 }
 
-GLFWwindow* CreateWindow(uint32_t width, uint32_t height){
-    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
+GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
+    GLFWwindow* window =
+        glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
     return window;
 }
 #pragma endregion
 
-void GetInputs(GLFWwindow* window){
-
+void GetInputs(GLFWwindow* window) {
     // -- Escape
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){ // Else is GLFW_RELEASE
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) ==
+        GLFW_PRESS) {  // Else is GLFW_RELEASE
 
-        if (!cursorVisible){
+        if (!cursorVisible) {
             cursorVisible = true;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
             return;
@@ -156,26 +148,26 @@ void GetInputs(GLFWwindow* window){
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
-        //glfwSetWindowShouldClose(window, true);
+        // glfwSetWindowShouldClose(window, true);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
         shouldReloadShaderNextFrame = true;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
         userUpDown += 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
         userUpDown -= 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
         userLeftRight -= 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
         userLeftRight += 0.001;
     }
 
@@ -189,28 +181,24 @@ void GetInputs(GLFWwindow* window){
         cam.ProcessKeyboardInputs(RIGHT, deltaTime);
 }
 
-int main()
-{
-    if (!InitializeGLFW())
-    {
+int main() {
+    if (!InitializeGLFW()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return -1;
     }
 
     GLFWwindow* window = CreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    if (window == NULL)
-    {
+    if (window == NULL) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
-    
-    // -- Glad 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+
+    // -- Glad
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD" << std::endl;
         glfwDestroyWindow(window);
         glfwTerminate();
@@ -223,11 +211,10 @@ int main()
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
     glfwSetCursorPosCallback(window, Mouse_Callback);
     glfwSetScrollCallback(window, Scroll_Callback);
-    
+
     stbi_set_flip_vertically_on_load(true);
 
     glEnable(GL_DEPTH_TEST);
-
 
     // -- Cube Datas
     unsigned int CubeVBO, CubeVAO;
@@ -238,50 +225,55 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void*)(0));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glm::vec3 cubePositions[] = {
-    glm::vec3( 0.0f,  0.0f,  0.0f), 
-    glm::vec3( 2.0f,  5.0f, -15.0f), 
-    glm::vec3(-1.5f, -2.2f, -2.5f),  
-    glm::vec3(-3.8f, -2.0f, -12.3f),  
-    glm::vec3( 2.4f, -0.4f, -3.5f),  
-    glm::vec3(-1.7f,  3.0f, -7.5f),  
-    glm::vec3( 1.3f, -2.0f, -2.5f),  
-    glm::vec3( 1.5f,  2.0f, -2.5f), 
-    glm::vec3( 1.5f,  0.2f, -1.5f), 
-    glm::vec3(-1.3f,  1.0f, -1.5f)   
-    };
+        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     // -- Light Data
     unsigned int lightVAO;
     glGenVertexArrays(1, &lightVAO);
     glBindVertexArray(lightVAO);
     glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void*)0);
     glEnableVertexAttribArray(0);
 
-    Shader lightShader("../Shaders/light_source_vertex.vs", "../Shaders/light_source_frag.fs");
-    Shader phongShader("../Shaders/vert.vs", "../Shaders/frag.fs");
-    Shader toonShader("../Shaders/vert.vs", "../Shaders/toon.fs");
+    Shader lightShader("Shaders/light_source_vertex.vs",
+                       "Shaders/light_source_frag.fs");
+    Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
+    Shader toonShader("Shaders/vert.vs", "Shaders/toon.fs");
 
-    ShaderReloader mainReloader(phongShader.vertexSaved, phongShader.fragmentSaved);
+    ShaderReloader mainReloader(phongShader.vertexSaved,
+                                phongShader.fragmentSaved);
 
     auto lastCheck = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds checkInterval(500); // toutes les 500 ms
+    const std::chrono::milliseconds checkInterval(500);  // toutes les 500 ms
 
-
-    Texture albedo("../Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture mask("../Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true, "diffuse");
-    Texture diffuse("../Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
-    Texture specular("../Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
-    Texture emissive("../Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture funky("../Resources/Textures/container_funky_specular.png", GL_CLAMP_TO_BORDER, false, "specular");
+    Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
+                   false, "diffuse");
+    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER,
+                 true, "diffuse");
+    Texture diffuse("Resources/Textures/container_diffuse.png",
+                    GL_CLAMP_TO_BORDER, true, "diffuse");
+    Texture specular("Resources/Textures/container_specular.png",
+                     GL_CLAMP_TO_BORDER, true, "specular");
+    Texture emissive("Resources/Textures/container_emmisive.jpg",
+                     GL_CLAMP_TO_BORDER, false, "diffuse");
+    Texture funky("Resources/Textures/container_funky_specular.png",
+                  GL_CLAMP_TO_BORDER, false, "specular");
     phongShader.Use();
     phongShader.SetInt("albedo", 0);
     phongShader.SetInt("mask", 1);
@@ -289,7 +281,8 @@ int main()
     // -- IMGUI INIT
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
@@ -298,16 +291,13 @@ int main()
     float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
     float diffuseLightColor[3] = {0.2f, 0.2f, 0.2f};
     float specularLightColor[3] = {1.0, 0.5f, 1.0f};
-    float attenuation [3] = {1.0, 0.09f, 0.032f};
+    float attenuation[3] = {1.0, 0.09f, 0.032f};
     float lightOffsets[]{0.0, 0.0, 0.0};
     static const char* viewModes[]{"Normal", "Wireframe"};
 
     glm::vec3 pointLightPositions[] = {
-	glm::vec3( 0.7f,  0.2f,  2.0f),
-	glm::vec3( 2.3f, -3.3f, -4.0f),
-	glm::vec3(-4.0f,  2.0f, -12.0f),
-	glm::vec3( 0.0f,  0.0f, -3.0f)
-    };
+        glm::vec3(0.7f, 0.2f, 2.0f), glm::vec3(2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f)};
 
     glm::vec3 pointLightAmbient(0.05f);
     glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
@@ -318,25 +308,16 @@ int main()
     glm::vec3 flashLightSpecular(1.0f);
     float flashLightRadius = 12.0f;
 
-
-
     // -- Render Loop
-    while (!glfwWindowShouldClose(window)){
+    while (!glfwWindowShouldClose(window)) {
         // -- Input Handling
         GetInputs(window);
-
-        if (shouldReloadShaderNextFrame){
-            phongShader.Reload();
-            lightShader.Reload();
-            toonShader.Reload();
-            shouldReloadShaderNextFrame = false;
-        }
 
         auto now = std::chrono::steady_clock::now();
         if (now - lastCheck > checkInterval) {
             lastCheck = now;
             if (mainReloader.CheckForChanges()) {
-                phongShader.Reload(); //
+                phongShader.Reload();  //
             }
         }
 
@@ -347,10 +328,14 @@ int main()
 
         // -- Actual Rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // -- You can clean color, depth and stencil buffer !
+        glClear(GL_COLOR_BUFFER_BIT |
+                GL_DEPTH_BUFFER_BIT);  // -- You can clean color, depth and
+                                       // stencil buffer !
 
         // -- Transformed positions
-        auto offsetedLightPos = LightPosition.GLM() + Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM();
+        auto offsetedLightPos =
+            LightPosition.GLM() +
+            Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM();
 
         // -- UI IMGUI
         // 1. New Frame
@@ -371,7 +356,7 @@ int main()
         userUpDown = SlyMath::Clamp(userUpDown, 0.0f, 1.0f);
         userLeftRight = SlyMath::Clamp(userLeftRight, 0.0f, 1.0f);
 
-        // -- Phong Shader 
+        // -- Phong Shader
         // -- Material
         phongShader.SetInt("mat.diffuse", 0);
         phongShader.SetInt("mat.specular", 1);
@@ -385,15 +370,24 @@ int main()
 
         // -- Directionnal Light
         phongShader.SetVec3("dirLight.direction", offsetedLightPos);
-        phongShader.SetVec3("dirLight.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
-        phongShader.SetVec3("dirLight.diffuse", glm::vec3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]));
-        phongShader.SetVec3("dirLight.specular",glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
- 
+        phongShader.SetVec3(
+            "dirLight.ambient",
+            glm::vec3(ambientLightColor[0], ambientLightColor[1],
+                      ambientLightColor[2]));
+        phongShader.SetVec3(
+            "dirLight.diffuse",
+            glm::vec3(diffuseLightColor[0], diffuseLightColor[1],
+                      diffuseLightColor[2]));
+        phongShader.SetVec3(
+            "dirLight.specular",
+            glm::vec3(specularLightColor[0], specularLightColor[1],
+                      specularLightColor[2]));
+
         // -- Point Lights
         phongShader.SetVec3("pointLights[0].position", pointLightPositions[0]);
         phongShader.SetVec3("pointLights[0].ambient", pointLightAmbient);
         phongShader.SetVec3("pointLights[0].diffuse", pointLightDiffuse);
-        phongShader.SetVec3("pointLights[0].specular", pointLightSpecular); 
+        phongShader.SetVec3("pointLights[0].specular", pointLightSpecular);
         phongShader.SetFloat("pointLights[0].constant", attenuation[0]);
         phongShader.SetFloat("pointLights[0].linear", attenuation[1]);
         phongShader.SetFloat("pointLights[0].quadratic", attenuation[2]);
@@ -401,7 +395,7 @@ int main()
         phongShader.SetVec3("pointLights[1].position", pointLightPositions[1]);
         phongShader.SetVec3("pointLights[1].ambient", pointLightAmbient);
         phongShader.SetVec3("pointLights[1].diffuse", pointLightDiffuse);
-        phongShader.SetVec3("pointLights[1].specular", pointLightSpecular); 
+        phongShader.SetVec3("pointLights[1].specular", pointLightSpecular);
         phongShader.SetFloat("pointLights[1].constant", attenuation[0]);
         phongShader.SetFloat("pointLights[1].linear", attenuation[1]);
         phongShader.SetFloat("pointLights[1].quadratic", attenuation[2]);
@@ -409,7 +403,7 @@ int main()
         phongShader.SetVec3("pointLights[2].position", pointLightPositions[2]);
         phongShader.SetVec3("pointLights[2].ambient", pointLightAmbient);
         phongShader.SetVec3("pointLights[2].diffuse", pointLightDiffuse);
-        phongShader.SetVec3("pointLights[2].specular", pointLightSpecular); 
+        phongShader.SetVec3("pointLights[2].specular", pointLightSpecular);
         phongShader.SetFloat("pointLights[2].constant", attenuation[0]);
         phongShader.SetFloat("pointLights[2].linear", attenuation[1]);
         phongShader.SetFloat("pointLights[2].quadratic", attenuation[2]);
@@ -417,19 +411,21 @@ int main()
         phongShader.SetVec3("pointLights[3].position", pointLightPositions[3]);
         phongShader.SetVec3("pointLights[3].ambient", pointLightAmbient);
         phongShader.SetVec3("pointLights[3].diffuse", pointLightDiffuse);
-        phongShader.SetVec3("pointLights[3].specular", pointLightSpecular); 
+        phongShader.SetVec3("pointLights[3].specular", pointLightSpecular);
         phongShader.SetFloat("pointLights[3].constant", attenuation[0]);
         phongShader.SetFloat("pointLights[3].linear", attenuation[1]);
         phongShader.SetFloat("pointLights[3].quadratic", attenuation[2]);
-            
-        //Lamp Torch
+
+        // Lamp Torch
         phongShader.SetVec3("flashLight.position", cam.Position.GLM());
         phongShader.SetVec3("flashLight.direction", cam.Front.GLM());
-        phongShader.SetFloat("flashLight.cutOff", glm::cos(glm::radians(flashLightRadius)));
-        phongShader.SetFloat("flashLight.outerCutOff", glm::cos(glm::radians(flashLightRadius + 2.5f)));
+        phongShader.SetFloat("flashLight.cutOff",
+                             glm::cos(glm::radians(flashLightRadius)));
+        phongShader.SetFloat("flashLight.outerCutOff",
+                             glm::cos(glm::radians(flashLightRadius + 2.5f)));
         phongShader.SetVec3("flashLight.ambient", flashLightAmbient);
         phongShader.SetVec3("flashLight.diffuse", flashLightDiffuse);
-        phongShader.SetVec3("flashLight.specular", flashLightSpecular); 
+        phongShader.SetVec3("flashLight.specular", flashLightSpecular);
         phongShader.SetFloat("flashLight.constant", attenuation[0]);
         phongShader.SetFloat("flashLight.linear", attenuation[1]);
         phongShader.SetFloat("flashLight.quadratic", attenuation[2]);
@@ -441,35 +437,41 @@ int main()
         glm::mat4 viewMatrix = cam.GetViewMatrix();
 
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
-        glm::highp_mat4 perspectiveMatrix = glm::perspective(glm::radians(cam.Fov), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        glm::highp_mat4 perspectiveMatrix = glm::perspective(
+            glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+            0.1f, 100.0f);
 
         // -- Sending Matrices to Shader
         unsigned int modelLoc = glGetUniformLocation(phongShader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
         unsigned int viewLoc = glGetUniformLocation(phongShader.ID, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-        unsigned int projLoc = glGetUniformLocation(phongShader.ID, "projection");
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
+        unsigned int projLoc =
+            glGetUniformLocation(phongShader.ID, "projection");
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE,
+                           glm::value_ptr(perspectiveMatrix));
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // -- Central Cube -- 
+        // -- Central Cube --
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
         phongShader.SetMat4("model", modelMatrix);
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(perspectiveMatrix));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE,
+                           glm::value_ptr(perspectiveMatrix));
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // -- Multiples Floating Cubes
-        for(unsigned int i = 0; i < 10; i++)
-        {
+        for (unsigned int i = 0; i < 10; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
-            if (UI_rotateStuff){
-                model = glm::rotate(model, glm::radians(angle + ElapsedTime() * 100 ), glm::vec3(1.0f, 0.3f, 0.5f));
+            if (UI_rotateStuff) {
+                model = glm::rotate(model,
+                                    glm::radians(angle + ElapsedTime() * 100),
+                                    glm::vec3(1.0f, 0.3f, 0.5f));
             }
             phongShader.SetMat4("model", model);
 
@@ -485,30 +487,40 @@ int main()
         lightShader.SetMat4("view", viewMatrix);
         lightShader.SetMat4("projection", perspectiveMatrix);
         lightShader.SetVec3("LightPos", offsetedLightPos);
-        lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
+        lightShader.SetVec3("LightColor",
+                            Vector3(diffuseLightColor[0], diffuseLightColor[1],
+                                    diffuseLightColor[2])
+                                .GLM());
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             lightModel = glm::mat4(1.0F);
             lightModel = glm::translate(lightModel, pointLightPositions[i]);
             lightModel = glm::scale(lightModel, glm::vec3(0.2f));
             lightShader.SetMat4("model", lightModel);
             lightShader.SetVec3("LightPos", pointLightPositions[i]);
-            lightShader.SetVec3("LightColor", Vector3(pointLightDiffuse[0], pointLightDiffuse[1], pointLightDiffuse[2]).GLM());
+            lightShader.SetVec3("LightColor", Vector3(pointLightDiffuse[0],
+                                                      pointLightDiffuse[1],
+                                                      pointLightDiffuse[2])
+                                                  .GLM());
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
         // -- UI FOLLOW UP
-        ImGui::Begin("Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
-        ImGui::Text("Hello World ! Have you seen that france has Lecornu Government 2.0 ?");
+        ImGui::Begin(
+            "Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
+        ImGui::Text(
+            "Hello World ! Have you seen that france has Lecornu Government "
+            "2.0 ?");
         ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
         static int viewMode = -1;
-        if (ImGui::Combo("Choose View Mode", &viewMode, viewModes, IM_ARRAYSIZE(viewModes))){
-            if (viewMode == 0){
+        if (ImGui::Combo("Choose View Mode", &viewMode, viewModes,
+                         IM_ARRAYSIZE(viewModes))) {
+            if (viewMode == 0) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            } else if (viewMode == 1){
+            } else if (viewMode == 1) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             }
         }
@@ -516,20 +528,21 @@ int main()
         ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
         ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
         ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
-        ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
+        ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007,
+                           1.8);
         ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
         ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
         ImGui::ColorEdit3("Specular Light Color", specularLightColor);
         ImGui::SliderFloat3("Light Offsets", (float*)lightOffsets, -10, 10);
         ImGui::End();
-   
+
         // -- UI Render
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
-        glfwPollEvents(); // We will register event callbacks soon :)
+        glfwPollEvents();  // We will register event callbacks soon :)
     }
 
     // -- Exit
@@ -539,5 +552,4 @@ int main()
 
     glfwTerminate();
     return 0;
-
 }

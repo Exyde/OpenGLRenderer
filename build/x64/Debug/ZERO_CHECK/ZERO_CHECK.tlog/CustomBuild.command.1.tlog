@@ -1,0 +1,10 @@
+^C:\USERS\YOUNE\DESKTOP\OPENGLRENDERER\BUILD\CMAKEFILES\76E8B08C6627B19CBF1FF39E27FA3516\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/youne/Desktop/OpenGLRenderer -BC:/Users/youne/Desktop/OpenGLRenderer/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/youne/Desktop/OpenGLRenderer/build/OpenGLRenderer.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

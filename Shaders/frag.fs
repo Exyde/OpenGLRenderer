@@ -77,11 +77,12 @@ void main()
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
         result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }
+    
 
-    result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
-    //result += CalculateEmissive(scrollingUV);
+    //result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
+    result += CalculateEmissive(scrollingUV);
+    FragColor = vec4(result, 1.0);
 
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){

@@ -1,13 +1,14 @@
 #pragma once
 
-#include <cmath>
-#include <iostream>
 #include <glad/glad.h>
+
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 class Vector3 {
-public:
+   public:
     float x, y, z;
 
     // Constructors
@@ -16,20 +17,48 @@ public:
     Vector3(float x) : x(x), y(x), z(x) {}
 
     // Operator overloads
-    Vector3 operator+(const Vector3& v) const { return Vector3(x + v.x, y + v.y, z + v.z); }
-    Vector3 operator-(const Vector3& v) const { return Vector3(x - v.x, y - v.y, z - v.z); }
-    Vector3 operator*(float scalar) const { return Vector3(x * scalar, y * scalar, z * scalar); }
-    Vector3 operator/(float scalar) const { return Vector3(x / scalar, y / scalar, z / scalar); }
+    Vector3 operator+(const Vector3& v) const {
+        return Vector3(x + v.x, y + v.y, z + v.z);
+    }
+    Vector3 operator-(const Vector3& v) const {
+        return Vector3(x - v.x, y - v.y, z - v.z);
+    }
+    Vector3 operator*(float scalar) const {
+        return Vector3(x * scalar, y * scalar, z * scalar);
+    }
+    Vector3 operator/(float scalar) const {
+        return Vector3(x / scalar, y / scalar, z / scalar);
+    }
 
-    Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
-    Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-    Vector3& operator*=(float scalar) { x *= scalar; y *= scalar; z *= scalar; return *this; }
-    Vector3& operator/=(float scalar) { x /= scalar; y /= scalar; z /= scalar; return *this; }
+    Vector3& operator+=(const Vector3& v) {
+        x += v.x;
+        y += v.y;
+        z += v.z;
+        return *this;
+    }
+    Vector3& operator-=(const Vector3& v) {
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
+        return *this;
+    }
+    Vector3& operator*=(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return *this;
+    }
+    Vector3& operator/=(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return *this;
+    }
 
     // Vector operations
     float Magnitude() const { return std::sqrt(x * x + y * y + z * z); }
 
-    glm::vec3 GLM() const { return glm::vec3(x, y, z);}
+    glm::vec3 GLM() const { return glm::vec3(x, y, z); }
 
     Vector3 Normalized() const {
         float mag = Magnitude();
@@ -37,11 +66,7 @@ public:
     }
     float Dot(const Vector3& v) const { return x * v.x + y * v.y + z * v.z; }
     Vector3 Cross(const Vector3& v) const {
-        return Vector3(
-            y * v.z - z * v.y,
-            z * v.x - x * v.z,
-            x * v.y - y * v.x
-        );
+        return Vector3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
     }
 
     // Static vectors

@@ -3,7 +3,6 @@
 #include <filesystem>
 
 namespace fs = std::filesystem;
-
 class ShaderReloader
 {
 public:

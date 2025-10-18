@@ -1,6 +1,5 @@
 # TODO 
 
-- Assimp
 - Sun + Skybox ?
 - Tester Toon Like Shader : https://www.lighthouse3d.com/tutorials/glsl-12-tutorial/toon-shader-version-ii/ 
 - Video Update mesh certainement 

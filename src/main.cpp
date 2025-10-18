@@ -219,8 +219,6 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
-    Model backpackModel("Resources/Models/backpack/backpack.obj");
-
     // -- Cube Datas
     unsigned int CubeVBO, CubeVAO;
     glGenVertexArrays(1, &CubeVAO);
@@ -314,6 +312,8 @@ int main() {
     float flashLightRadius = 12.0f;
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    Model backpackModel("Resources/Models/backpack/backpack.obj");
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)) {
@@ -561,7 +561,7 @@ int main() {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5f, 1.0, 0.5));
         toonShader.SetMat4("model", modelMatrix);
 
-        // backpackModel.Draw(phongShader);
+        backpackModel.Draw(toonShader);
 
         // -- Light Object -- //
         lightShader.Use();

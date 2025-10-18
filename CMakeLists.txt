@@ -31,6 +31,12 @@ add_executable(OpenGLRenderer
 target_link_directories(OpenGLRenderer PRIVATE ${CMAKE_SOURCE_DIR}/lib)
 target_link_libraries(OpenGLRenderer PRIVATE ${CMAKE_SOURCE_DIR}/lib/libglfw3dll.a opengl32)
 
+# Assimp
+target_include_directories(OpenGLRenderer PRIVATE "C:/msys64/mingw64/include")
+target_link_directories(OpenGLRenderer PRIVATE "C:/msys64/mingw64/lib")
+target_link_libraries(OpenGLRenderer PRIVATE libassimp.dll.a)
+
+
 # === Copy runtime DLLs after build ===
 add_custom_command(TARGET OpenGLRenderer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

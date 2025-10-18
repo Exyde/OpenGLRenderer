@@ -80,7 +80,7 @@ void main()
     
 
     result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
-    result += CalculateEmissive(scrollingUV);
+    //result += CalculateEmissive(scrollingUV);
     FragColor = vec4(result, 1.0);
     //FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

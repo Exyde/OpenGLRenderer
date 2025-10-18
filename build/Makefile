@@ -272,30 +272,6 @@ src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
 
-src/engine/tiny_obj_loader.obj: src/engine/tiny_obj_loader.cpp.obj
-.PHONY : src/engine/tiny_obj_loader.obj
-
-# target to build an object file
-src/engine/tiny_obj_loader.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj
-.PHONY : src/engine/tiny_obj_loader.cpp.obj
-
-src/engine/tiny_obj_loader.i: src/engine/tiny_obj_loader.cpp.i
-.PHONY : src/engine/tiny_obj_loader.i
-
-# target to preprocess a source file
-src/engine/tiny_obj_loader.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.i
-.PHONY : src/engine/tiny_obj_loader.cpp.i
-
-src/engine/tiny_obj_loader.s: src/engine/tiny_obj_loader.cpp.s
-.PHONY : src/engine/tiny_obj_loader.s
-
-# target to generate assembly for a file
-src/engine/tiny_obj_loader.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.s
-.PHONY : src/engine/tiny_obj_loader.cpp.s
-
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
 
@@ -539,9 +515,6 @@ help:
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
-	@echo ... src/engine/tiny_obj_loader.obj
-	@echo ... src/engine/tiny_obj_loader.i
-	@echo ... src/engine/tiny_obj_loader.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s

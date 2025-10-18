@@ -49,12 +49,6 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
-  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\tiny_obj_loader.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\tiny_obj_loader.cpp",
-  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/tiny_obj_loader.cpp",
-  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj"
-},
-{
-  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\imgui\\imgui.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\imgui\\imgui.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj"

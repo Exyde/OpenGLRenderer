@@ -14,8 +14,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
-  "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj"
-  "CMakeFiles/OpenGLRenderer.dir/src/engine/tiny_obj_loader.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj"

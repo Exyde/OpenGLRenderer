@@ -79,7 +79,6 @@ void main()
     //result += CalculateDirLight(dirLight, normal, viewDirection);
     result += ToonLight(dirLight, normal, viewDirection);
     FragColor = vec4(result, 1.0);
-    return;    
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
         result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }

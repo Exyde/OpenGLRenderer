@@ -8,13 +8,13 @@
 
 #include "Vector.h"
 
-enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT };
+enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
 enum CameraType { FPS, TPS };
 
 // -- Default Values -- //
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 5.0f;
+const float SPEED = 25.0f;
 const float SENSITIVITY = 0.1F;
 const float FOV = 45.0f;
 CameraType cameraType = CameraType::FPS;
@@ -59,6 +59,8 @@ class Camera {
         if (direction == BACKWARD) Position -= Front * velocity;
         if (direction == LEFT) Position -= Right * velocity;
         if (direction == RIGHT) Position += Right * velocity;
+        if (direction == UP) Position += Up * velocity;
+        if (direction == DOWN) Position -= Up * velocity;
 
         //        Position.y = 0;
         // -- FPS = Grounded

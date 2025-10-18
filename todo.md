@@ -4,7 +4,6 @@
 - Tester Toon Like Shader : https://www.lighthouse3d.com/tutorials/glsl-12-tutorial/toon-shader-version-ii/ 
 - Video Update mesh certainement 
 
-
 - MeshReload important aussi
 - Logger at some point (when engine refactoring I guess)
 - Relire la partie sur Pitch/Yaw/Roll et le calcul + reimplémenter le  LookAt
@@ -22,7 +21,6 @@
 -- Share Progress on Bluesky / Discord / Linkedin ?
 
 
-
 ## Global Goals
 - Shadowmaps
 - ToonShader
@@ -31,3 +29,7 @@
 - View Mode (normals, heatmaps...)
 - Particle System
 - PostProcessing Effects...
+
+
+## Notes
+- Edit MTL file for the path, texture should be in same folder than the .obj

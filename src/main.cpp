@@ -257,7 +257,6 @@ int main() {
     Shader lightShader("Shaders/light_source_vertex.vs",
                        "Shaders/light_source_frag.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
-    Shader toonShader("Shaders/toon.vs", "Shaders/frag.fs");
 
     ShaderReloader mainReloader(phongShader.vertexSaved,
                                 phongShader.fragmentSaved);
@@ -297,6 +296,8 @@ int main() {
     float attenuation[3] = {1.0, 0.09f, 0.032f};
     float lightOffsets[]{0.0, 0.0, 0.0};
     static const char* viewModes[]{"Normal", "Wireframe"};
+    static const char* objectSelected[]{"Backpack",  "Erato",  "Sponza",
+                                        "Fireplace", "Sphere", "Cathedral"};
 
     glm::vec3 pointLightPositions[] = {
         glm::vec3(0.7f, 0.2f, 2.0f), glm::vec3(2.3f, -3.3f, -4.0f),
@@ -311,9 +312,13 @@ int main() {
     glm::vec3 flashLightSpecular(1.0f);
     float flashLightRadius = 12.0f;
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     Model backpackModel("Resources/Models/backpack/backpack.obj");
+    Model eratoModel("Resources/Models/erato/erato.obj");
+    Model sponzaModel("Resources/Models/sponza/sponza.obj");
+    Model fireplaceModel("Resources/Models/fireplace_room/fireplace_room.obj");
+    Model sphereModel("Resources/Models/sphere/sphere-cubecoords.obj");
+    Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
+    static int objectViewSelection = -1;
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)) {
@@ -481,87 +486,15 @@ int main() {
             // glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // -- Backpack --
-        toonShader.Use();
-        toonShader.SetMat4("view", viewMatrix);
-        toonShader.SetMat4("projection", perspectiveMatrix);
-
-        // - Uniforms Woopsy
-        toonShader.SetInt("mat.diffuse", 0);
-        toonShader.SetInt("mat.specular", 1);
-        toonShader.SetInt("mat.emissive", 2);
-        toonShader.SetFloat("mat.shininess", 32.0F);
-
-        // -- User Data
-        toonShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-        toonShader.SetFloat("T", userLeftRight);
-        toonShader.SetVec3("ViewPos", cam.Position.GLM());
-
-        // -- Directionnal Light
-        toonShader.SetVec3("dirLight.direction", offsetedLightPos);
-        toonShader.SetVec3("dirLight.ambient",
-                           glm::vec3(ambientLightColor[0], ambientLightColor[1],
-                                     ambientLightColor[2]));
-        toonShader.SetVec3("dirLight.diffuse",
-                           glm::vec3(diffuseLightColor[0], diffuseLightColor[1],
-                                     diffuseLightColor[2]));
-        toonShader.SetVec3(
-            "dirLight.specular",
-            glm::vec3(specularLightColor[0], specularLightColor[1],
-                      specularLightColor[2]));
-
-        // -- Point Lights
-        toonShader.SetVec3("pointLights[0].position", pointLightPositions[0]);
-        toonShader.SetVec3("pointLights[0].ambient", pointLightAmbient);
-        toonShader.SetVec3("pointLights[0].diffuse", pointLightDiffuse);
-        toonShader.SetVec3("pointLights[0].specular", pointLightSpecular);
-        toonShader.SetFloat("pointLights[0].constant", attenuation[0]);
-        toonShader.SetFloat("pointLights[0].linear", attenuation[1]);
-        toonShader.SetFloat("pointLights[0].quadratic", attenuation[2]);
-
-        toonShader.SetVec3("pointLights[1].position", pointLightPositions[1]);
-        toonShader.SetVec3("pointLights[1].ambient", pointLightAmbient);
-        toonShader.SetVec3("pointLights[1].diffuse", pointLightDiffuse);
-        toonShader.SetVec3("pointLights[1].specular", pointLightSpecular);
-        toonShader.SetFloat("pointLights[1].constant", attenuation[0]);
-        toonShader.SetFloat("pointLights[1].linear", attenuation[1]);
-        toonShader.SetFloat("pointLights[1].quadratic", attenuation[2]);
-
-        toonShader.SetVec3("pointLights[2].position", pointLightPositions[2]);
-        toonShader.SetVec3("pointLights[2].ambient", pointLightAmbient);
-        toonShader.SetVec3("pointLights[2].diffuse", pointLightDiffuse);
-        toonShader.SetVec3("pointLights[2].specular", pointLightSpecular);
-        toonShader.SetFloat("pointLights[2].constant", attenuation[0]);
-        toonShader.SetFloat("pointLights[2].linear", attenuation[1]);
-        toonShader.SetFloat("pointLights[2].quadratic", attenuation[2]);
-
-        toonShader.SetVec3("pointLights[3].position", pointLightPositions[3]);
-        toonShader.SetVec3("pointLights[3].ambient", pointLightAmbient);
-        toonShader.SetVec3("pointLights[3].diffuse", pointLightDiffuse);
-        toonShader.SetVec3("pointLights[3].specular", pointLightSpecular);
-        toonShader.SetFloat("pointLights[3].constant", attenuation[0]);
-        toonShader.SetFloat("pointLights[3].linear", attenuation[1]);
-        toonShader.SetFloat("pointLights[3].quadratic", attenuation[2]);
-
-        // Lamp Torch
-        toonShader.SetVec3("flashLight.position", cam.Position.GLM());
-        toonShader.SetVec3("flashLight.direction", cam.Front.GLM());
-        toonShader.SetFloat("flashLight.cutOff",
-                            glm::cos(glm::radians(flashLightRadius)));
-        toonShader.SetFloat("flashLight.outerCutOff",
-                            glm::cos(glm::radians(flashLightRadius + 2.5f)));
-        toonShader.SetVec3("flashLight.ambient", flashLightAmbient);
-        toonShader.SetVec3("flashLight.diffuse", flashLightDiffuse);
-        toonShader.SetVec3("flashLight.specular", flashLightSpecular);
-        toonShader.SetFloat("flashLight.constant", attenuation[0]);
-        toonShader.SetFloat("flashLight.linear", attenuation[1]);
-        toonShader.SetFloat("flashLight.quadratic", attenuation[2]);
-
         modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0.5f, 1.0, 0.5));
-        toonShader.SetMat4("model", modelMatrix);
+        phongShader.SetMat4("model", modelMatrix);
 
-        backpackModel.Draw(toonShader);
+        if (objectViewSelection == 0) backpackModel.Draw(phongShader);
+        if (objectViewSelection == 1) eratoModel.Draw(phongShader);
+        if (objectViewSelection == 2) sponzaModel.Draw(phongShader);
+        if (objectViewSelection == 3) fireplaceModel.Draw(phongShader);
+        if (objectViewSelection == 4) sphereModel.Draw(phongShader);
+        if (objectViewSelection == 5) cathedralModel.Draw(phongShader);
 
         // -- Light Object -- //
         lightShader.Use();
@@ -609,6 +542,9 @@ int main() {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             }
         }
+
+        ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
+                      objectSelected, IM_ARRAYSIZE(objectSelected));
         ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
         ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
         ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);

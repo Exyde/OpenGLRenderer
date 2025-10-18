@@ -64,25 +64,29 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 vec3 CalculateEmissive(vec2 uvs);
 vec3 CalculateFlashlight(Flashlight light, vec3 normal, vec3 fragPos, vec3 viewDirection, vec2 uvs);
 
+vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection);
+
 void main()
 {
     vec3 normal = normalize(Normal);
     vec3 viewDirection = normalize(ViewPos - FragPosWorldSpace);
     vec2 scrollingUV = TexCoord + vec2(0, -uTime);
-    
+
+   // FragColor = vec4(normal, 1.0);
+
     vec3 result = vec3(0.0);
     
-    result += CalculateDirLight(dirLight, normal, viewDirection);
-
+    //result += CalculateDirLight(dirLight, normal, viewDirection);
+    result += ToonLight(dirLight, normal, viewDirection);
+    FragColor = vec4(result, 1.0);
+    return;    
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
         result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }
     
-
-    result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
-    //result += CalculateEmissive(scrollingUV);
+    //result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, scrollingUV);
+   // result += CalculateEmissive(scrollingUV);
     FragColor = vec4(result, 1.0);
-    //FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
@@ -102,8 +106,24 @@ vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
     vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
     vec3 specular = light.specular * spec * specularSampled;
 
+
     return (ambient + diffuse + specular);
 }
+
+vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection){
+
+    vec3 lightDirection = normalize(light.direction);
+    float theta = dot(normal, lightDirection);
+    float correctedTheta = max(theta, 0.0);
+    
+
+    if (correctedTheta > 0.99) return vec3(1.0);
+    else if (correctedTheta > 0.95) return vec3(1.0) * light.diffuse;
+    else if (correctedTheta > 0.5) return vec3(0.8) * light.diffuse;
+    else if (correctedTheta > 0.25) return vec3(0.3) * light.diffuse;
+    else return vec3(0.1) * light.diffuse;
+}
+
 
 vec3 CalculateEmissive(vec2 uvs){
     return vec3(texture(mat.emissive, uvs));
@@ -164,5 +184,5 @@ vec3 CalculateFlashlight(Flashlight light, vec3 normal, vec3 fragPos, vec3 viewD
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + diffuse + specular);
+    return (ambient + (diffuse * 2.0)+ specular);
 }

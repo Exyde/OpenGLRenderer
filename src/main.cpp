@@ -26,7 +26,8 @@ float specularLightColor[3] = {1.0, 1.0f, 1.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 float lightOffsets[]{0.0, 0.0, 0.0};
 static const char* viewModes[]{"Normal", "Wireframe"};
-static const char* objectSelected[]{"Backpack", "Fireplace", "Cathedral"};
+static const char* objectSelected[]{"Backpack", "Fireplace", "Cathedral",
+                                    "Dragon", "Village"};
 glm::vec3 pointLightAmbient(0.05f);
 glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
 glm::vec3 pointLightSpecular(1.0f);
@@ -35,9 +36,20 @@ glm::vec3 flashLightAmbient(0.05f);
 glm::vec3 flashLightDiffuse(0.8f, 0.2f, 0.6f);
 glm::vec3 flashLightSpecular(1.0f);
 float flashLightRadius = 10.0f;
+float sunTheta = 10.0f;
+float sunRadius = 200.0f;
 
 // -- Raws Datas
 #pragma region RawDatas
+
+float quadVertices[] = {
+    // positions         // texture Coords (swapped y coordinates because
+    // texture is flipped upside down)
+    0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 0.0f, -0.5f, 0.0f,
+    0.0f, 1.0f, 1.0f, -0.5f, 0.0f, 1.0f, 1.0f,
+
+    0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 1.0f, -0.5f, 0.0f,
+    1.0f, 1.0f, 1.0f, 0.5f,  0.0f, 1.0f, 0.0f};
 float cubeVertices[] = {
     // positions          // normals           // texture coords
     -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.5f,  -0.5f,
@@ -101,8 +113,13 @@ bool FIRST_MOUSE = true;
 float lastMouseX = 400;
 float lastMouseY = 300;
 static int viewMode = 0;             // -- Lit Shaded
-static int objectViewSelection = 0;  // -- Backpack
+static int objectViewSelection = 4;  // -- Backpack
 #pragma endregion
+
+void ToggleDepthBuffer(GLboolean state) {
+    glDepthMask(state);
+}  // -- Enable read-only depth buffer (fragment don't write to ZBuffer when
+   // enabled)
 float ElapsedTime() { return (float)glfwGetTime(); }
 void ExitEngine() {
     ImGui_ImplOpenGL3_Shutdown();
@@ -208,19 +225,48 @@ int main() {
     // -- Viewport dimensions ---
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // -- Setup ---
+    // -- Setup --
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
     glfwSetCursorPosCallback(window, Mouse_Callback);
     glfwSetScrollCallback(window, Scroll_Callback);
     stbi_set_flip_vertically_on_load(true);
-    glEnable(GL_DEPTH_TEST);
     InitIMGUI(window);
+
+    // -- Depth Buffer Config
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // -- Initial Culling Config
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_FRONT);
+    // glFrontFace(GL_CCW);
+
+    // -- Stencil Buffer
+    // glEnable(GL_STENCIL_TEST);
+    // glStencilMask(0xFF);  // -- Write as 1
+    // glStencilMask(0x00);  // -- Write as 0
 
     auto lastCheck = std::chrono::steady_clock::now();
     const std::chrono::milliseconds checkInterval(500);
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
+
+    // -- Quad Datas
+    unsigned int QuadVAO, QuadVBO;
+    glGenVertexArrays(1, &QuadVAO);
+    glGenBuffers(1, &QuadVBO);
+    glBindVertexArray(QuadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, QuadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void*)(0));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     // -- Cube Datas ---
     unsigned int CubeVBO, CubeVAO;
     glGenVertexArrays(1, &CubeVAO);
@@ -260,12 +306,16 @@ int main() {
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
-    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, true,
-                 "diffuse");
+    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER,
+                 false, "diffuse");
     Texture diffuse("Resources/Textures/container_diffuse.png",
                     GL_CLAMP_TO_BORDER, true, "diffuse");
+    Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false,
+                "diffuse");
+    Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_BORDER, true,
+                  "diffuse");
     Texture specular("Resources/Textures/container_specular.png",
-                     GL_CLAMP_TO_BORDER, true, "specular");
+                     GL_CLAMP_TO_BORDER, false, "specular");
     Texture emissive("Resources/Textures/container_emmisive.jpg",
                      GL_CLAMP_TO_BORDER, false, "diffuse");
     Texture funky("Resources/Textures/container_funky_specular.png",
@@ -274,6 +324,15 @@ int main() {
     Model backpackModel("Resources/Models/backpack/backpack.obj");
     Model fireplaceModel("Resources/Models/fireplace_room/fireplace_room.obj");
     Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
+    Model dragonModel("Resources/Models/dragon/dragon.obj");
+    // Model villageModel("Resources/Models/rungholt/rungholt.obj");
+
+    std::vector<glm::vec3> vegetation;
+    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 #pragma endregion
 
     // -- Render Loop
@@ -297,14 +356,21 @@ int main() {
 
         // -- Actual Rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT |
-                GL_DEPTH_BUFFER_BIT);  // -- You can clean color, depth and
-                                       // stencil buffer !
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+                GL_STENCIL_BUFFER_BIT);
 
         // -- Transformed positions
+        float radius = 50.0;
+        float sunSpeed = deltaTime * 0.1f;
+        sunTheta += sunSpeed;
+        glm::vec3 sunYaw =
+            glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
+        glm::vec3 sunPitch =
+            glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
         auto offsetedLightPos =
             LightPosition.GLM() +
-            Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM();
+            Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM() +
+            sunYaw + sunPitch;
 
         // -- UI IMGUI
         // 1. New Frame
@@ -319,6 +385,8 @@ int main() {
         specular.Bind();
         glActiveTexture(GL_TEXTURE2);
         emissive.Bind();
+        glActiveTexture(GL_TEXTURE3);
+        grass.Bind();
 
         // -- Phong Shader
         phongShader.Use();
@@ -338,7 +406,7 @@ int main() {
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
         glm::highp_mat4 perspectiveMatrix = glm::perspective(
             glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
-            0.1f, 100.0f);
+            0.1f, 1000.0f);
         glm::mat4 viewMatrix = cam.GetViewMatrix();
 
         // -- Model // View // Projections -- GROUND
@@ -374,7 +442,21 @@ int main() {
             }
             phongShader.SetMat4("model", model);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            //            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        // -- Grass
+        phongShader.Use();
+        glBindVertexArray(QuadVAO);
+        glActiveTexture(GL_TEXTURE3);
+        grass.Bind();
+        phongShader.SetInt("mat.diffuse", 3);
+
+        for (unsigned int i = 0; i < vegetation.size(); i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, vegetation[i]);
+            phongShader.SetMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
         modelMatrix = glm::mat4(1.0F);
@@ -383,12 +465,14 @@ int main() {
         if (objectViewSelection == 0) backpackModel.Draw(phongShader);
         if (objectViewSelection == 1) fireplaceModel.Draw(phongShader);
         if (objectViewSelection == 2) cathedralModel.Draw(phongShader);
+        if (objectViewSelection == 3) dragonModel.Draw(phongShader);
+        // if (objectViewSelection == 4) villageModel.Draw(phongShader);
 
         // -- Light Object -- //
         lightShader.Use();
         glm::mat4 lightModel = glm::mat4(1.0f);
         lightModel = glm::translate(lightModel, offsetedLightPos);
-        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightModel = glm::scale(lightModel, glm::vec3(25.0f));
         lightShader.SetMat4("model", lightModel);
         lightShader.SetMat4("view", viewMatrix);
         lightShader.SetMat4("projection", perspectiveMatrix);
@@ -430,6 +514,8 @@ int main() {
 
         ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
                       objectSelected, IM_ARRAYSIZE(objectSelected));
+        ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0, glm::two_pi<float>());
+        ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
         ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
         ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
         ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);

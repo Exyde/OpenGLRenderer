@@ -73,8 +73,7 @@ void main()
     vec2 scrollingUV = TexCoord + vec2(0, -uTime);
     vec4 texColor = texture(mat.diffuse, TexCoord);
     if (texColor.a < 0.1){
-        FragColor = vec4(TexCoord, 0., 1.0);
-        return;
+        discard;
     }
     FragColor = texture(mat.diffuse, TexCoord);
     return;

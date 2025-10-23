@@ -51,6 +51,7 @@ uniform PointLight pointLights[NR_POINTS_LIGHTS];
 uniform DirLight dirLight;
 uniform Flashlight flashLight;
 
+in float Height;
 in vec3 ourColor;
 in vec2 TexCoord;
 in vec3 Normal;
@@ -70,16 +71,18 @@ vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection);
 
 void main()
 {
-
     vec2 scrollingUV = TexCoord + vec2(0, -uTime);
     vec4 texColor = texture(mat.diffuse, TexCoord);
     if (texColor.a < 0.1){
         discard;
     }
     FragColor = texture(mat.diffuse, TexCoord);
+    float h = (Height)/  32.0f;
+    FragColor = vec4(1.0,h,h, 1.0);
+
     // UV's Debug
     FragColor = vec4(TexCoord, 0., 1.0);
-
+    FragColor = vec4(FragPosWorldSpace, 1.0);
     vec3 normal = normalize(Normal);
     vec3 viewDirection = normalize(ViewPos - FragPosWorldSpace);
 

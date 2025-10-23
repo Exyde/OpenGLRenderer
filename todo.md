@@ -1,6 +1,11 @@
 # TODO 
 
 ### Main Open GL Progress
+- Terrain Generation at runtime + Triplanar Textures (Terrain Shader) ?? Temporiser, plus tard peut être
+- Importer asset genre WindWaker ?
+- Support Post Processing UI with IMgui (+ imrpove I'mgui en vrai, genre dock etc)
+- Big Refacto 2 Soon pour pouvoir draw ce qu'on veut de maniè-re plus flexible et moins opti mais np
+- Afficher les Draws Calls
 - Blending
 - Depth testing + stencil --> Fog + Outline
 - FPS Display
@@ -11,6 +16,7 @@
 - Cubemaps --> Skybox
 
 - Color Class => Oui ça va etre needed, ou une lib 
+- ShaderReloader => Prendre une &Shader en param et se débrouiller avec ça
 - Video Update mesh certainement 
 - Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
 - ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d

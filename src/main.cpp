@@ -17,6 +17,14 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+struct TerrainData {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+
+    unsigned int NUM_STRIPS;
+    unsigned int NUM_VERTS_PER_STRIP;
+};
+
 // -- UI EXPOSED
 // -- IMGUI EXPOSED
 bool UI_rotateStuff = false;
@@ -52,6 +60,13 @@ float quadVertices[] = {
     0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // bottom-right
     0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f   // top-right
 };
+
+float NDCQuadVertices[] = {  // vertex attributes for a quad that fills the
+                             // entire screen in Normalized Device Coordinates.
+    // positions   // texCoords
+    -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+
+    -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f};
 
 float cubeVertices[] = {
     // positions          // normals           // texture coords
@@ -197,6 +212,7 @@ void InitIMGUI(GLFWwindow* window) {
 
 void GetInputs(GLFWwindow* window);
 void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos);
+TerrainData GetTerrainDataFromHeightMap(const char* filePath);
 
 int main() {
 #pragma region Init
@@ -255,6 +271,43 @@ int main() {
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
+    // -- Terrain
+    TerrainData terrainData =
+        GetTerrainDataFromHeightMap("Resources/Textures/iceland_heightmap.png");
+    GLuint terrainVAO, terrainVBO, terrainEBO;
+    glGenVertexArrays(1, &terrainVAO);
+    glBindVertexArray(terrainVAO);
+    glGenBuffers(1, &terrainVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+    glBufferData(GL_ARRAY_BUFFER, terrainData.vertices.size() * sizeof(float),
+                 &terrainData.vertices[0], GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &terrainEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 terrainData.indices.size() * sizeof(unsigned int),
+                 &terrainData.indices[0], GL_STATIC_DRAW);
+
+    // -- NDC Quad
+
+    unsigned int ndcQuadVAO, ndcQuadVBO;
+    glGenVertexArrays(1, &ndcQuadVAO);
+    glGenBuffers(1, &ndcQuadVBO);
+    glBindVertexArray(ndcQuadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, ndcQuadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(NDCQuadVertices), &NDCQuadVertices,
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          (void*)(2 * sizeof(float)));
+
     // -- Quad Datas
     unsigned int QuadVAO, QuadVBO;
     glGenVertexArrays(1, &QuadVAO);
@@ -307,11 +360,15 @@ int main() {
                        "Shaders/light_source_frag.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
     Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
+    Shader fullScrenShader("Shaders/postprocess_vert.vs",
+                           "Shaders/postprocess_frag.fs");
 
     ShaderReloader mainReloader(phongShader.vertexSaved,
                                 phongShader.fragmentSaved);
     ShaderReloader grassReloader(grassShader.vertexSaved,
                                  grassShader.fragmentSaved);
+    ShaderReloader fullScreenReloader(fullScrenShader.vertexSaved,
+                                      fullScrenShader.fragmentSaved);
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
@@ -327,8 +384,6 @@ int main() {
                      GL_CLAMP_TO_BORDER, false, "specular");
     Texture emissive("Resources/Textures/container_emmisive.jpg",
                      GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture funky("Resources/Textures/container_funky_specular.png",
-                  GL_CLAMP_TO_BORDER, false, "specular");
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
     Model fireplaceModel("Resources/Models/fireplace_room/fireplace_room.obj");
@@ -341,6 +396,43 @@ int main() {
     vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
     vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
     vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+    // -- FrameBuffers
+    // -- To be valid, attach at least on buffer, one color attachment, all
+    // attachements should be complete, each buffer same samples count.
+    // Check with
+    // if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+    unsigned int framebuffer;
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    unsigned int renderTexture;
+    glGenTextures(1, &renderTexture);
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           renderTexture, 0);
+    // -- You could also attach a depth-stencil buffer to this framebuffer with
+    // a 32 bit texture (24 bit for depth, 8 for Stencil)
+    // -- Use a RenderBufferObject for Depth & Stencil as Read it's read only
+    unsigned int rbo;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH,
+                          SCREEN_HEIGHT);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                              GL_RENDERBUFFER, rbo);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "[FRAMEBUFFER] Error : FrameBuffer is not complete !"
+                  << std::endl;
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 #pragma endregion
 
     // -- Render Loop
@@ -358,6 +450,9 @@ int main() {
             if (grassReloader.CheckForChanges()) {
                 grassShader.Reload();
             }
+            if (fullScreenReloader.CheckForChanges()) {
+                fullScrenShader.Reload();
+            }
         }
 
         // -- Time Update
@@ -365,13 +460,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // -- Actual Rendering
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-                GL_STENCIL_BUFFER_BIT);
-
         // -- Transformed positions
-        float radius = 50.0;
         float sunSpeed = deltaTime * 0.1f;
         sunTheta += sunSpeed;
         glm::vec3 sunYaw =
@@ -388,6 +477,15 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING (Well that's the
+        // way to Deferred I guess)
+
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+                GL_STENCIL_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
         // -- Textures Units ?
         glActiveTexture(GL_TEXTURE0);
@@ -415,7 +513,7 @@ int main() {
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
         glm::highp_mat4 perspectiveMatrix = glm::perspective(
             glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
-            0.1f, 1000.0f);
+            0.1f, 5000.0f);
         glm::mat4 viewMatrix = cam.GetViewMatrix();
 
         // -- Model // View // Projections -- GROUND
@@ -432,6 +530,20 @@ int main() {
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        //-- Draw Terrain
+        glBindVertexArray(terrainVAO);
+        bool drawTerrain = false;
+        if (drawTerrain) {
+            for (unsigned int strip = 0; strip < terrainData.NUM_STRIPS;
+                 ++strip) {
+                glDrawElements(
+                    GL_TRIANGLE_STRIP, terrainData.NUM_VERTS_PER_STRIP,
+                    GL_UNSIGNED_INT,
+                    (void*)(sizeof(unsigned int) *
+                            terrainData.NUM_VERTS_PER_STRIP * strip));
+            }
+        }
+
         // -- Central Cube --
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
@@ -440,7 +552,7 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // -- Multiples Floating Cubes
-        for (unsigned int i = 0; i < 10; i++) {
+        for (unsigned int i = 0; i < 0; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
@@ -451,7 +563,7 @@ int main() {
             }
             phongShader.SetMat4("model", model);
 
-            //            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);
@@ -517,9 +629,22 @@ int main() {
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
+        // -- SECOND PASS FOR FULL SCREEN POST PROCESSING
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        fullScrenShader.Use();
+        fullScrenShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        glBindVertexArray(ndcQuadVAO);
+        glDisable(GL_DEPTH_TEST);
+        glBindTexture(GL_TEXTURE_2D, renderTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
         // -- IMGUI FOLLOW UP
         ImGui::Begin(
-            "Some User Interface for this tiny Renderer <3 - Hello Bluesky !");
+            "Some User Interface for this tiny Renderer <3 - Hello Bluesky "
+            "!");
         ImGui::Text("Improved version of this tiny engine. :]");
         ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
         if (ImGui::Combo("Choose View Mode", &viewMode, viewModes,
@@ -555,6 +680,7 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();  // We will register event callbacks soon :)
     }
+    glDeleteFramebuffers(1, &framebuffer);
 
     ExitEngine();
     return 0;
@@ -609,6 +735,74 @@ void GetInputs(GLFWwindow* window) {
         cam.ProcessKeyboardInputs(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         cam.ProcessKeyboardInputs(DOWN, deltaTime);
+}
+
+TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
+    TerrainData terrainData;
+
+    int width, height, channels;
+    unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
+
+    if (!data) {
+        std::cerr << "[HEIGHTMAP] - Failed to load " << filePath << " ("
+                  << stbi_failure_reason() << ")" << std::endl;
+        return terrainData;
+    }
+
+    unsigned short* data16 =
+        stbi_load_16(filePath, &width, &height, &channels, 0);
+    if (data16) {
+        std::cout << "16-bit texel = " << data16[0] << std::endl;
+    }
+
+    std::cout << "[HEIGHTMAP] - Loaded with W: " << width << " - H: " << height
+              << " - Channels: " << channels << std::endl;
+
+    std::vector<float> vertices;
+    float yScale = 5000.0f;
+    float yShift = 0.0F;
+
+    for (unsigned int i = 0; i < height; i++) {
+        for (unsigned int j = 0; j < width; j++) {
+            // -- Data 16
+            unsigned short value16 = data[width * i + j];
+            float h = (float)value16 / 65535.0F;
+
+            // -- 32 Bits
+            unsigned char* pixelOffset = data + (j + width * i) * channels;
+            unsigned char y = pixelOffset[0];
+
+            if (j == 100) std::cout << "Value Y " << h << std::endl;
+
+            float worldX = (i - width / 2.0F);
+            float worldZ = (j - height / 2.0F);
+            float worldY = h * yScale - yShift;
+
+            vertices.push_back(worldX);
+            vertices.push_back(worldY);
+            vertices.push_back(worldZ);
+        }
+    }
+
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < height - 1; i++) {
+        for (unsigned int j = 0; j < width; j++) {
+            for (unsigned int k = 0; k < 2; k++)  // for each side of the strip
+            {
+                indices.push_back(j + width * (i + k));
+            }
+        }
+    }
+
+    terrainData.vertices = vertices;
+    terrainData.indices = indices;
+    terrainData.NUM_STRIPS = height - 1;
+    terrainData.NUM_VERTS_PER_STRIP = width * 2;
+
+    stbi_image_free(data);
+    stbi_image_free(data16);
+
+    return terrainData;
 }
 
 void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {

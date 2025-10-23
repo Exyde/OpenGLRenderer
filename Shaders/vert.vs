@@ -7,7 +7,7 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec3 FragPosWorldSpace;
-
+out float Height;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -20,5 +20,6 @@ void main()
     TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     Normal = mat3(transpose(inverse(model))) * aNormal; // -- Transpose normal to world space 
     FragPosWorldSpace = vec3(model * vec4(aPos.x, aPos.y, aPos.y, 1.0));
+    Height = aPos.y;
 }     
 

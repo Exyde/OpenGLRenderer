@@ -27,7 +27,7 @@ float attenuation[3] = {1.0, 0.09f, 0.032f};
 float lightOffsets[]{0.0, 0.0, 0.0};
 static const char* viewModes[]{"Normal", "Wireframe"};
 static const char* objectSelected[]{"Backpack", "Fireplace", "Cathedral",
-                                    "Dragon", "Village"};
+                                    "Village"};
 glm::vec3 pointLightAmbient(0.05f);
 glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
 glm::vec3 pointLightSpecular(1.0f);
@@ -43,13 +43,16 @@ float sunRadius = 200.0f;
 #pragma region RawDatas
 
 float quadVertices[] = {
-    // positions         // texture Coords (swapped y coordinates because
-    // texture is flipped upside down)
-    0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 0.0f, -0.5f, 0.0f,
-    0.0f, 1.0f, 1.0f, -0.5f, 0.0f, 1.0f, 1.0f,
+    // positions           // normals           // texCoords
+    -0.5f, 0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,  // top-left
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom-left
+    0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // bottom-right
 
-    0.0f, 0.5f, 0.0f, 0.0f,  0.0f, 1.0f, -0.5f, 0.0f,
-    1.0f, 1.0f, 1.0f, 0.5f,  0.0f, 1.0f, 0.0f};
+    -0.5f, 0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,  // top-left
+    0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // bottom-right
+    0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f   // top-right
+};
+
 float cubeVertices[] = {
     // positions          // normals           // texture coords
     -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.5f,  -0.5f,
@@ -260,12 +263,15 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, QuadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
                  GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           (void*)(0));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // -- Cube Datas ---
     unsigned int CubeVBO, CubeVAO;
@@ -300,9 +306,12 @@ int main() {
     Shader lightShader("Shaders/light_source_vertex.vs",
                        "Shaders/light_source_frag.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
+    Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
 
     ShaderReloader mainReloader(phongShader.vertexSaved,
                                 phongShader.fragmentSaved);
+    ShaderReloader grassReloader(grassShader.vertexSaved,
+                                 grassShader.fragmentSaved);
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
@@ -312,7 +321,7 @@ int main() {
                     GL_CLAMP_TO_BORDER, true, "diffuse");
     Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false,
                 "diffuse");
-    Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_BORDER, true,
+    Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true,
                   "diffuse");
     Texture specular("Resources/Textures/container_specular.png",
                      GL_CLAMP_TO_BORDER, false, "specular");
@@ -324,7 +333,6 @@ int main() {
     Model backpackModel("Resources/Models/backpack/backpack.obj");
     Model fireplaceModel("Resources/Models/fireplace_room/fireplace_room.obj");
     Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    Model dragonModel("Resources/Models/dragon/dragon.obj");
     // Model villageModel("Resources/Models/rungholt/rungholt.obj");
 
     std::vector<glm::vec3> vegetation;
@@ -345,7 +353,10 @@ int main() {
         if (now - lastCheck > checkInterval) {
             lastCheck = now;
             if (mainReloader.CheckForChanges()) {
-                phongShader.Reload();  //
+                phongShader.Reload();
+            }
+            if (grassReloader.CheckForChanges()) {
+                grassShader.Reload();
             }
         }
 
@@ -385,8 +396,6 @@ int main() {
         specular.Bind();
         glActiveTexture(GL_TEXTURE2);
         emissive.Bind();
-        glActiveTexture(GL_TEXTURE3);
-        grass.Bind();
 
         // -- Phong Shader
         phongShader.Use();
@@ -445,28 +454,38 @@ int main() {
             //            glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // -- Grass
-        phongShader.Use();
-        glBindVertexArray(QuadVAO);
-        glActiveTexture(GL_TEXTURE3);
-        grass.Bind();
-        phongShader.SetInt("mat.diffuse", 3);
-
-        for (unsigned int i = 0; i < vegetation.size(); i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, vegetation[i]);
-            phongShader.SetMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
-
         modelMatrix = glm::mat4(1.0F);
         phongShader.SetMat4("model", modelMatrix);
 
         if (objectViewSelection == 0) backpackModel.Draw(phongShader);
         if (objectViewSelection == 1) fireplaceModel.Draw(phongShader);
         if (objectViewSelection == 2) cathedralModel.Draw(phongShader);
-        if (objectViewSelection == 3) dragonModel.Draw(phongShader);
         // if (objectViewSelection == 4) villageModel.Draw(phongShader);
+
+        // -- Grass
+        grassShader.Use();
+        glActiveTexture(GL_TEXTURE0);
+        grass.Bind();
+        grassShader.SetMat4("view", viewMatrix);
+        grassShader.SetMat4("projection", perspectiveMatrix);
+        grassShader.SetInt("mat.diffuse", 0);
+        // -- User Data
+        grassShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        grassShader.SetFloat("T", userLeftRight);
+        grassShader.SetVec3("ViewPos", cam.Position.GLM());
+        glBindVertexArray(QuadVAO);
+
+        for (unsigned int i = 0; i < vegetation.size(); i++) {
+            float grassCount = 8;
+            for (int rot = 0; rot < grassCount; rot++) {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, vegetation[i]);
+                float angle = (double)glm::two_pi<float>() / grassCount * rot;
+                model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                grassShader.SetMat4("model", model);
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            }
+        }
 
         // -- Light Object -- //
         lightShader.Use();
@@ -543,13 +562,18 @@ int main() {
 
 void GetInputs(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        if (cursorVisible) {
+            cursorVisible = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            return;
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         if (!cursorVisible) {
             cursorVisible = true;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
             return;
-        } else {
-            cursorVisible = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     }
 

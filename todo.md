@@ -1,22 +1,23 @@
 # TODO 
 
 ### Main Open GL Progress
+- Blending
 - Depth testing + stencil --> Fog + Outline
 - FPS Display
-- Blending --> Grass (+Particles  + Instancing ?) (Cool veritasium video on complexe plants though) 
+- Grass Shader With Vertex displacement + Color UV + Instancing (voir Acerola)
+- (+Particles  + Instancing ?) (Cool veritasium video on complexe plants though) 
 - FaceCulling
 - FrameBuffers
 - Cubemaps --> Skybox
 
+- Color Class => Oui ça va etre needed, ou une lib 
 - Video Update mesh certainement 
 - Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
-- Color Class => Oui ça va etre needed, ou une lib 
 - ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d
-- Render Doc Plugin ?
+- Render Doc Plugin / Pix ?
 
 ### Bug
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
-- Mouse Control quand Echap
 
 ### Engine
 - Utility Class
@@ -25,7 +26,7 @@
 - Settings system config with plain text and hot reload
 - Full refacto l'engine aussi at some point (post build system I guess ?)
 
-##€ ImGUI
+## ImGUI
 - MeshReload important aussi (via file system ça pourrait être noice)
 - Bool for switch from ortho to perspective camera
 - Bool pour unlock camera

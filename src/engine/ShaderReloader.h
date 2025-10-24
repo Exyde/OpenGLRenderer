@@ -1,15 +1,16 @@
 #pragma once
-#include <string>
 #include <filesystem>
+#include <string>
+
+#include "Shader.h"
 
 namespace fs = std::filesystem;
-class ShaderReloader
-{
-public:
-    ShaderReloader(const std::string& vertexPath, const std::string& fragmentPath);
+class ShaderReloader {
+   public:
+    ShaderReloader(Shader& shader);
     bool CheckForChanges();
 
-private:
+   private:
     std::string vPath;
     std::string fPath;
     fs::file_time_type vLastWrite;

@@ -1,78 +1,83 @@
 # TODO 
 
-### Main Open GL Progress
-- Terrain Generation at runtime + Triplanar Textures (Terrain Shader) ?? Temporiser, plus tard peut être
-- Importer asset genre WindWaker ?
-- Support Post Processing UI with IMgui (+ imrpove I'mgui en vrai, genre dock etc)
-- Big Refacto 2 Soon pour pouvoir draw ce qu'on veut de maniè-re plus flexible et moins opti mais np
-- Afficher les Draws Calls
-- Blending
-- Depth testing + stencil --> Fog + Outline
-- FPS Display
+## Core Goals for Portolio
+- Finish Learn open GL
+- PBR : Industry Standard (Require Gamma Correction, FrameBuffer, Cubemaps, HDR)
+- ShadowMaps : Require Advenced Lighting
+- Deffered Rendering : Requir at least both above I guess. Last fight ? 
+- One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? You've got time :)
+
+### Main Path (Learn Open GL)
+- Cubemaps --> Skybox
+- ShaderReloader => Ref a son shader et iterations sur un tableau
+- Pass ImGui Update 
+- Importer asset genre WindWaker pour tester le rendu
+- Video Update mesh certainement + update readme/features
+- Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
+- 2D Games aswell for engine structure can be nice (or side weekend break)
+- Pause main loop while out of focus for my poor GPU and my poor CPU
+
+## GPU Instancing (Advanced Fun Goals)
 - Grass Shader With Vertex displacement + Color UV + Instancing (voir Acerola)
 - (+Particles  + Instancing ?) (Cool veritasium video on complexe plants though) 
-- FaceCulling
-- FrameBuffers
-- Cubemaps --> Skybox
-
-- Color Class => Oui ça va etre needed, ou une lib 
-- ShaderReloader => Prendre une &Shader en param et se débrouiller avec ça
-- Video Update mesh certainement 
-- Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
-- ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d
-- Render Doc Plugin / Pix ?
+- Terrain Generation at runtime + Triplanar Textures (Terrain Shader)
 
 ### Bug
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
+- Bizzare ce truc de quadrillage avec le lighting ?
 
 ### Engine
+- FaceCulling v2
+- Blending v2
 - Utility Class
+- ResourceLoader Class
 - Logger at some point (when engine refactoring I guess)
 - Relire la partie sur Pitch/Yaw/Roll et le calcul + reimplémenter le  LookAt
 - Settings system config with plain text and hot reload
-- Full refacto l'engine aussi at some point (post build system I guess ?)
+- Big Refacto 2 Soon pour pouvoir draw ce qu'on veut de maniè-re plus flexible et moins opti mais np
+- FrameBuffer Class / Skybox Class / Terrain Class ... 
+- ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d
+- Render Doc Plugin / Pix ?
+- Color Class => Oui ça va etre needed, ou une lib 
 
 ## ImGUI
+- Toggle on Off multiple pass with post process (I want to see the scene geometry or I can't debug)
+- FPS Display
+- Afficher les Draws Calls
 - MeshReload important aussi (via file system ça pourrait être noice)
 - Bool for switch from ortho to perspective camera
-- Bool pour unlock camera
+- Bool pour unlock camera Y
+- Bool pour switch entre Toon & Phong
 - DockerIMGUI sur le côté
+- Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) 
 
 # Global Goals
+- PostProcessing Effects : presque ok v1
 - ToonShader : ok
 - View Mode : kinda ok - Normal shader could be cool - (normals, heatmaps...)
 - Shadowmaps
 - PS1 Shading ?
 - Global Illumination ?
 - Particle System
-- PostProcessing Effects...
 
 ## Notes
+- Share Progress on Bluesky / Discord / Linkedin ?
 - Edit MTL file for the path, texture should be in same folder than the .obj
 - Voir vidéo Acerola pour idée de post process
 - Voir ça : https://noclip.website/ pour idéees
-- Share Progress on Bluesky / Discord / Linkedin ?
 - Checker the cherno at some point
 - Check la playlist thearlesvfx
 - Revoir les refs de OpenGL Effects pour des idées de trucs à implémenter at some point
-
-
-## Core Todo for Portolio
-- PBR
-- ShadowMaps
-- Deffered Rendering
-- One thing from a reasearch  / siggraph paper
 
 ## References
 - The Real MGP : https://therealmjp.github.io/posts/gpu-memory-pool/
 - Cem Yuksel (Rendereing Courses) : https://www.youtube.com/watch?v=DnkU4_DttGE&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh&index=10
 - Wicked Engine Janos Turansky : https://wickedengine.net/2022/07/game-dev-journey-10-years/
-- Tech Artist Org
+- Tech Artist Org : https://www.tech-artists.org/
+- Graphic Opti : https://www.youtube.com/watch?v=YdXi1kcQLDE
 
 ## Books 
 - 3D Maths Primer for Graphics and Game Dev
 - Real Time Rendering Fourth Edition
-- GPU gems
+- GPU gems + Acerola refs
 - PBR Games : From Theory to Implementation
-
-Graphic Opti : https://www.youtube.com/watch?v=YdXi1kcQLDE

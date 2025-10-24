@@ -26,6 +26,9 @@ Texture::Texture(const char* filePath, int clampMode, bool useAlpha,
 
         glGenerateMipmap(GL_TEXTURE_2D);
 
+        std::cout << "[TEXTURE] Loaded : " << filePath << std::endl;
+        ;
+
     } else {
         std::cerr << "Failed to load texture" << std::endl;
     }

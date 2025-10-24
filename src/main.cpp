@@ -25,17 +25,16 @@ struct TerrainData {
     unsigned int NUM_VERTS_PER_STRIP;
 };
 
-// -- UI EXPOSED
+#pragma region UI EXPOSED
 // -- IMGUI EXPOSED
-bool UI_rotateStuff = false;
+bool UI_rotateStuff = true;
 float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
 float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};
 float specularLightColor[3] = {1.0, 1.0f, 1.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 float lightOffsets[]{0.0, 0.0, 0.0};
 static const char* viewModes[]{"Normal", "Wireframe"};
-static const char* objectSelected[]{"Backpack", "Fireplace", "Cathedral",
-                                    "Village"};
+static const char* objectSelected[]{"Backpack", "Cathedral", "Village"};
 glm::vec3 pointLightAmbient(0.05f);
 glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
 glm::vec3 pointLightSpecular(1.0f);
@@ -46,9 +45,30 @@ glm::vec3 flashLightSpecular(1.0f);
 float flashLightRadius = 10.0f;
 float sunTheta = 10.0f;
 float sunRadius = 200.0f;
+#pragma endregion
 
 // -- Raws Datas
 #pragma region RawDatas
+
+float skyboxVertices[] = {
+    // positions
+    -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+
+    -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+    -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
+
+    1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
+
+    -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
+
+    -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
+
+    -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
 
 float quadVertices[] = {
     // positions           // normals           // texCoords
@@ -107,7 +127,7 @@ float cubeVertices[] = {
     -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f,  1.0f};
 
 glm::vec3 cubePositions[] = {
-    glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+    glm::vec3(2.0f, -1.0f, -1.0f),  glm::vec3(2.0f, 5.0f, -15.0f),
     glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
     glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
     glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
@@ -124,7 +144,7 @@ bool cursorVisible = false;
 float userUpDown = 1.0;
 float userLeftRight = 1.0;
 Vector3 LightPosition(-2.0f, 1.5F, 3.3F);
-Camera cam(Vector3(0.0f, 0.0f, -3.0f));
+Camera cam(Vector3(0.0f, 0.0f, 0.0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 bool FIRST_MOUSE = true;
@@ -133,6 +153,8 @@ float lastMouseY = 300;
 static int viewMode = 0;             // -- Lit Shaded
 static int objectViewSelection = 4;  // -- Backpack
 #pragma endregion
+
+unsigned int LoadCubeMap(std::vector<std::string> facePaths);
 
 void ToggleDepthBuffer(GLboolean state) {
     glDepthMask(state);
@@ -239,8 +261,6 @@ int main() {
         return -1;
     }
 
-#pragma endregion
-
     // -- Viewport dimensions ---
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -256,20 +276,30 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    // -- Initial Culling Config
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_FRONT);
-    // glFrontFace(GL_CCW);
+// -- Initial Culling Config
+// glEnable(GL_CULL_FACE);
+// glCullFace(GL_FRONT);
+// glFrontFace(GL_CCW);
 
-    // -- Stencil Buffer
-    // glEnable(GL_STENCIL_TEST);
-    // glStencilMask(0xFF);  // -- Write as 1
-    // glStencilMask(0x00);  // -- Write as 0
-
-    auto lastCheck = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds checkInterval(500);
+// -- Stencil Buffer
+// glEnable(GL_STENCIL_TEST);
+// glStencilMask(0xFF);  // -- Write as 1
+// glStencilMask(0x00);  // -- Write as 0
+#pragma endregion
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
+
+    // -- Skybox --
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices,
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+                          (void*)0);
 
     // -- Terrain
     TerrainData terrainData =
@@ -293,7 +323,6 @@ int main() {
                  &terrainData.indices[0], GL_STATIC_DRAW);
 
     // -- NDC Quad
-
     unsigned int ndcQuadVAO, ndcQuadVBO;
     glGenVertexArrays(1, &ndcQuadVAO);
     glGenBuffers(1, &ndcQuadVBO);
@@ -358,17 +387,30 @@ int main() {
 
     Shader lightShader("Shaders/light_source_vertex.vs",
                        "Shaders/light_source_frag.fs");
+    Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
     Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
-    Shader fullScrenShader("Shaders/postprocess_vert.vs",
-                           "Shaders/postprocess_frag.fs");
+    Shader postProcessShader("Shaders/postprocess_vert.vs",
+                             "Shaders/postprocess_frag.fs");
 
-    ShaderReloader mainReloader(phongShader.vertexSaved,
-                                phongShader.fragmentSaved);
-    ShaderReloader grassReloader(grassShader.vertexSaved,
-                                 grassShader.fragmentSaved);
-    ShaderReloader fullScreenReloader(fullScrenShader.vertexSaved,
-                                      fullScrenShader.fragmentSaved);
+    ShaderReloader mainReloader(phongShader);
+    ShaderReloader grassReloader(grassShader);
+    ShaderReloader fullScreenReloader(postProcessShader);
+    ShaderReloader skyboxReloader(skyboxShader);
+
+    std::vector<std::string> cubemapPaths{
+        "Resources/Textures/skybox/right.jpg",
+        "Resources/Textures/skybox/left.jpg",
+        "Resources/Textures/skybox/top.jpg",
+        "Resources/Textures/skybox/bottom.jpg",
+        "Resources/Textures/skybox/front.jpg",
+        "Resources/Textures/skybox/back.jpg",
+    };
+    unsigned int cubemapTexture = LoadCubeMap(cubemapPaths);
+
+    skyboxShader.Use();
+    skyboxShader.SetInt("skybox", 0);
+    skyboxShader.SetFloat("uTime", ElapsedTime() * userUpDown);
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
@@ -386,9 +428,8 @@ int main() {
                      GL_CLAMP_TO_BORDER, false, "diffuse");
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
-    Model fireplaceModel("Resources/Models/fireplace_room/fireplace_room.obj");
     Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    // Model villageModel("Resources/Models/rungholt/rungholt.obj");
+    //  Model villageModel("Resources/Models/rungholt/rungholt.obj");
 
     std::vector<glm::vec3> vegetation;
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
@@ -433,6 +474,9 @@ int main() {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    auto lastCheck = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds checkInterval(500);
+
 #pragma endregion
 
     // -- Render Loop
@@ -451,7 +495,10 @@ int main() {
                 grassShader.Reload();
             }
             if (fullScreenReloader.CheckForChanges()) {
-                fullScrenShader.Reload();
+                postProcessShader.Reload();
+            }
+            if (skyboxReloader.CheckForChanges()) {
+                skyboxShader.Reload();
             }
         }
 
@@ -460,6 +507,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+#pragma region SunUpdate
         // -- Transformed positions
         float sunSpeed = deltaTime * 0.1f;
         sunTheta += sunSpeed;
@@ -471,6 +519,7 @@ int main() {
             LightPosition.GLM() +
             Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM() +
             sunYaw + sunPitch;
+#pragma endregion
 
         // -- UI IMGUI
         // 1. New Frame
@@ -478,14 +527,28 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+#pragma region FIRST PASS
+
+        bool enablePostProcessing = false;
+
         //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING (Well that's the
         // way to Deferred I guess)
-
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        if (enablePostProcessing) {
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        } else {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
+
+        // here FOV, aspect ratio, near and far plane for perspective (w scaled)
+        glm::highp_mat4 perspectiveMatrix = glm::perspective(
+            glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+            0.1f, 5000.0f);
+        glm::mat4 viewMatrix = cam.GetViewMatrix();
+        glm::mat4 modelMatrix = glm::mat4(1.0F);
 
         // -- Textures Units ?
         glActiveTexture(GL_TEXTURE0);
@@ -497,6 +560,8 @@ int main() {
 
         // -- Phong Shader
         phongShader.Use();
+        phongShader.SetMat4("view", viewMatrix);
+        phongShader.SetMat4("projection", perspectiveMatrix);
         // -- Material
         phongShader.SetInt("mat.diffuse", 0);
         phongShader.SetInt("mat.specular", 1);
@@ -510,23 +575,11 @@ int main() {
 
         SetShaderLightsDatas(phongShader, offsetedLightPos);
 
-        // here FOV, aspect ratio, near and far plane for perspective (w scaled)
-        glm::highp_mat4 perspectiveMatrix = glm::perspective(
-            glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
-            0.1f, 5000.0f);
-        glm::mat4 viewMatrix = cam.GetViewMatrix();
-
-        // -- Model // View // Projections -- GROUND
-        glm::mat4 modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 2, 100));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
-
-        // -- Sending Matrices to Shader
-        phongShader.SetMat4("model", modelMatrix);
-        phongShader.SetMat4("view", viewMatrix);
-        phongShader.SetMat4("projection", perspectiveMatrix);
-
         //-- DrawGround
+        modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(10, 10, 10));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
+        phongShader.SetMat4("model", modelMatrix);
         glBindVertexArray(CubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -544,24 +597,17 @@ int main() {
             }
         }
 
-        // -- Central Cube --
-        modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
-        phongShader.SetMat4("model", modelMatrix);
-        glBindVertexArray(CubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
         // -- Multiples Floating Cubes
-        for (unsigned int i = 0; i < 0; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
+        for (unsigned int i = 0; i < 10; i++) {
+            modelMatrix = glm::mat4(1.0f);
+            modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
             float angle = 20.0f * i;
             if (UI_rotateStuff) {
-                model = glm::rotate(model,
-                                    glm::radians(angle + ElapsedTime() * 100),
-                                    glm::vec3(1.0f, 0.3f, 0.5f));
+                modelMatrix = glm::rotate(
+                    modelMatrix, glm::radians(angle + ElapsedTime() * 100),
+                    glm::vec3(1.0f, 0.3f, 0.5f));
             }
-            phongShader.SetMat4("model", model);
+            phongShader.SetMat4("model", modelMatrix);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -570,9 +616,8 @@ int main() {
         phongShader.SetMat4("model", modelMatrix);
 
         if (objectViewSelection == 0) backpackModel.Draw(phongShader);
-        if (objectViewSelection == 1) fireplaceModel.Draw(phongShader);
-        if (objectViewSelection == 2) cathedralModel.Draw(phongShader);
-        // if (objectViewSelection == 4) villageModel.Draw(phongShader);
+        if (objectViewSelection == 1) cathedralModel.Draw(phongShader);
+        // if (objectViewSelection == 2) villageModel.Draw(phongShader);
 
         // -- Grass
         grassShader.Use();
@@ -629,18 +674,40 @@ int main() {
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // -- SECOND PASS FOR FULL SCREEN POST PROCESSING
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // -- Skybox
+        glDepthFunc(GL_LEQUAL);
+        skyboxShader.Use();
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        glm::mat4 skyboxViewWithoutTranslation =
+            glm::mat4(glm::mat3(cam.GetViewMatrix()));
+        skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
+        skyboxShader.SetMat4("projection", perspectiveMatrix);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDepthFunc(GL_LESS);
 
-        fullScrenShader.Use();
-        fullScrenShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-        glBindVertexArray(ndcQuadVAO);
-        glDisable(GL_DEPTH_TEST);
-        glBindTexture(GL_TEXTURE_2D, renderTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+#pragma endregion
 
+#pragma region SECOND PASS POST PROCESS
+
+        if (enablePostProcessing) {
+            // -- SECOND PASS FOR FULL SCREEN POST PROCESSING
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            postProcessShader.Use();
+            postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+            glBindVertexArray(ndcQuadVAO);
+            glDisable(GL_DEPTH_TEST);
+            glBindTexture(GL_TEXTURE_2D, renderTexture);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
+#pragma endregion
+
+#pragma region IMGUI
         // -- IMGUI FOLLOW UP
         ImGui::Begin(
             "Some User Interface for this tiny Renderer <3 - Hello Bluesky "
@@ -675,6 +742,7 @@ int main() {
         // -- UI Render
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#pragma endregion
 
         // -- Buffer Swap & Events
         glfwSwapBuffers(window);
@@ -751,28 +819,24 @@ TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
 
     unsigned short* data16 =
         stbi_load_16(filePath, &width, &height, &channels, 0);
-    if (data16) {
-        std::cout << "16-bit texel = " << data16[0] << std::endl;
-    }
 
-    std::cout << "[HEIGHTMAP] - Loaded with W: " << width << " - H: " << height
+    std::cout << "[TERRAIN] - Loaded HeightMap at : " << filePath
+              << " -- W: " << width << " - H: " << height
               << " - Channels: " << channels << std::endl;
 
     std::vector<float> vertices;
-    float yScale = 5000.0f;
+    float yScale = 50.0f;
     float yShift = 0.0F;
 
     for (unsigned int i = 0; i < height; i++) {
         for (unsigned int j = 0; j < width; j++) {
             // -- Data 16
-            unsigned short value16 = data[width * i + j];
+            unsigned short value16 = data16[width * i + j];
             float h = (float)value16 / 65535.0F;
 
             // -- 32 Bits
             unsigned char* pixelOffset = data + (j + width * i) * channels;
             unsigned char y = pixelOffset[0];
-
-            if (j == 100) std::cout << "Value Y " << h << std::endl;
 
             float worldX = (i - width / 2.0F);
             float worldZ = (j - height / 2.0F);
@@ -864,4 +928,39 @@ void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     shader.SetFloat("flashLight.constant", attenuation[0]);
     shader.SetFloat("flashLight.linear", attenuation[1]);
     shader.SetFloat("flashLight.quadratic", attenuation[2]);
+}
+
+unsigned int LoadCubeMap(std::vector<std::string> facePaths) {
+    // -- Create texture
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+    int w, h, channels;
+    stbi_set_flip_vertically_on_load(false);
+
+    for (unsigned int i = 0; i < facePaths.size(); i++) {
+        unsigned char* data =
+            stbi_load(facePaths[i].c_str(), &w, &h, &channels, 0);
+
+        if (data) {
+            std::cout << "[CUBEMAP] Loaded : " << facePaths[i] << std::endl;
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, w, h, 0,
+                         GL_RGB, GL_UNSIGNED_BYTE, data);
+            stbi_image_free(data);
+        } else {
+            std::cout << "Cubemap tex failed to load at path: " << facePaths[i]
+                      << std::endl;
+            stbi_image_free(data);
+        }
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    stbi_set_flip_vertically_on_load(true);
+    return textureID;
 }

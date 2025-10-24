@@ -53,6 +53,10 @@ vec4 ToGrayScale(){
 }
 
 void main(){
+
+
+    FragColor = texture(screenTexture, TexCoord);
+    return;
     FragColor = DrawUvs();
     FragColor = InvertImage();
     FragColor = ToGrayScale();
@@ -60,7 +64,7 @@ void main(){
     vec3 sampleTex[9];
     vec3 col = vec3(0.0);
 
-    float kernel[9] = sharpenKernel;
+    float kernel[9] = blurKernel;
 
     vec2 uv = TexCoord;
     float amount = 0.009;

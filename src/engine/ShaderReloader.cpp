@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-ShaderReloader::ShaderReloader(const std::string& vertexPath,
-                               const std::string& fragmentPath)
-    : vPath(vertexPath), fPath(fragmentPath) {
+ShaderReloader::ShaderReloader(Shader& shader) {
+    vPath = shader.vertexSaved;
+    fPath = shader.fragmentSaved;
     try {
         vLastWrite = fs::last_write_time(vPath);
         fLastWrite = fs::last_write_time(fPath);

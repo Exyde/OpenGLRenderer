@@ -76,8 +76,8 @@ int Shader::CompileShaderFromCode(std::string vertexCode,
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
-    std::cout << "[SHADER] - Shader created succesfully at ID : " << id << " ! "
-              << std::endl;
+    std::cout << "[SHADER] Created succesfully : " << vertexSaved << " || "
+              << fragmentSaved << std::endl;
     return id;
 }
 
@@ -108,8 +108,6 @@ void Shader::Reload() {
 }
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
-    std::cout << "Shader Construction : " << vertexPath << " - " << fragmentPath
-              << std::endl;
     ID = CreateShaderFromFiles(vertexPath, fragmentPath);
 }
 

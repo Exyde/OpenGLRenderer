@@ -53,10 +53,7 @@ vec4 ToGrayScale(){
 }
 
 void main(){
-
-
     FragColor = texture(screenTexture, TexCoord);
-    return;
     FragColor = DrawUvs();
     FragColor = InvertImage();
     FragColor = ToGrayScale();

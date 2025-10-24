@@ -7,24 +7,29 @@
 - Deffered Rendering : Requir at least both above I guess. Last fight ? 
 - One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? You've got time :)
 
+
 ### Main Path (Learn Open GL)
-- Cubemaps --> Skybox
-- ShaderReloader => Ref a son shader et iterations sur un tableau
+- Faire des classes (Framebuffer, GameObject...) même wip, marre de dupliquer des VAO/BVO
 - Pass ImGui Update 
 - Importer asset genre WindWaker pour tester le rendu
 - Video Update mesh certainement + update readme/features
 - Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
 - 2D Games aswell for engine structure can be nice (or side weekend break)
-- Pause main loop while out of focus for my poor GPU and my poor CPU
 
 ## GPU Instancing (Advanced Fun Goals)
 - Grass Shader With Vertex displacement + Color UV + Instancing (voir Acerola)
 - (+Particles  + Instancing ?) (Cool veritasium video on complexe plants though) 
 - Terrain Generation at runtime + Triplanar Textures (Terrain Shader)
 
+## Later Features
+- Dynamic Environment Mapping (6x framebuffer and runtime cubemaps for reflection/refraction but perf ?)
+- Todo : Reflection map (Cubemap -- Reflection)
+- Todo : Refraction Map (Cubemap) + Light, Refraction, Reflection, Vertex Anim = Water Shader :D
+
 ### Bug
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
 - Bizzare ce truc de quadrillage avec le lighting ?
+- Floating Cubes chelou
 
 ### Engine
 - FaceCulling v2
@@ -41,15 +46,15 @@
 - Color Class => Oui ça va etre needed, ou une lib 
 
 ## ImGUI
-- Toggle on Off multiple pass with post process (I want to see the scene geometry or I can't debug)
-- FPS Display
-- Afficher les Draws Calls
-- MeshReload important aussi (via file system ça pourrait être noice)
-- Bool for switch from ortho to perspective camera
-- Bool pour unlock camera Y
-- Bool pour switch entre Toon & Phong
 - DockerIMGUI sur le côté
+- Bool pour switch entre Toon & Phong
+
+- Camera
+    - Bool for switch from ortho to perspective camera
+    - Bool pour unlock camera Y
 - Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) 
+- MeshReload important aussi (via file system ça pourrait être noice)
+- Afficher les Draws Calls
 
 # Global Goals
 - PostProcessing Effects : presque ok v1
@@ -75,7 +80,7 @@
 - Wicked Engine Janos Turansky : https://wickedengine.net/2022/07/game-dev-journey-10-years/
 - Tech Artist Org : https://www.tech-artists.org/
 - Graphic Opti : https://www.youtube.com/watch?v=YdXi1kcQLDE
-
+- Journal of Computer Graphics, per Year : https://jcgt.org/read.html
 ## Books 
 - 3D Maths Primer for Graphics and Game Dev
 - Real Time Rendering Fourth Edition

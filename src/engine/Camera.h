@@ -9,7 +9,7 @@
 #include "Vector.h"
 
 enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
-enum CameraType { FPS, TPS };
+enum CameraType { FPS, FREECAM };
 
 // -- Default Values -- //
 const float YAW = -90.0f;
@@ -17,7 +17,6 @@ const float PITCH = 0.0f;
 const float SPEED = 25.0f;
 const float SENSITIVITY = 0.1F;
 const float FOV = 45.0f;
-CameraType cameraType = CameraType::FPS;
 
 class Camera {
    public:
@@ -26,6 +25,7 @@ class Camera {
     Vector3 Up;
     Vector3 Right;
     Vector3 WorldUp;
+    CameraType type;
 
     float Yaw;
     float Pitch;
@@ -36,7 +36,8 @@ class Camera {
 
     // constructor with vectors
     Camera(Vector3 position = Vector3::Zero(), Vector3 worldUp = Vector3::Up(),
-           float yaw = YAW, float pitch = PITCH)
+           float yaw = YAW, float pitch = PITCH,
+           CameraType type = CameraType::FREECAM)
         : Front(Vector3(0.0f, 0.0f, -1.0f)),
           MovementSpeed(SPEED),
           MouseSensitivity(SENSITIVITY),
@@ -62,9 +63,7 @@ class Camera {
         if (direction == UP) Position += Up * velocity;
         if (direction == DOWN) Position -= Up * velocity;
 
-        //        Position.y = 0;
-        // -- FPS = Grounded
-        // if (CameraType  CameraType::FPS){
+        if (type == CameraType::FPS) Position.y = 0;
     }
 
     void ProcessMouseMovement(float xoffset, float yoffset,

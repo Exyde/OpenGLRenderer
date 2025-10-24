@@ -81,7 +81,7 @@ void main()
     // UV's Debug
     FragColor = vec4(TexCoord, 0., 1.0);
     FragColor = vec4(FragPosWorldSpace, 1.0);
-
+    
     vec3 normal = normalize(Normal);
     vec3 viewDirection = normalize(ViewPos - FragPosWorldSpace);
 

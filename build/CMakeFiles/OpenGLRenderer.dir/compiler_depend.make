@@ -3897,6 +3897,7 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/msys64/mingw64/include/c++/15.2.0/bits/specfun.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/sstream.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/bits/std_abs.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/std_thread.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_algo.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_algobase.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_bvector.h \
@@ -3914,6 +3915,7 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/msys64/mingw64/include/c++/15.2.0/bits/streambuf_iterator.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/string_view.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stringfwd.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/this_thread_sleep.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/uniform_int_dist.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/unique_ptr.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/unordered_set.h \
@@ -3972,6 +3974,7 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/msys64/mingw64/include/c++/15.2.0/string \
   C:/msys64/mingw64/include/c++/15.2.0/string_view \
   C:/msys64/mingw64/include/c++/15.2.0/system_error \
+  C:/msys64/mingw64/include/c++/15.2.0/thread \
   C:/msys64/mingw64/include/c++/15.2.0/tr1/bessel_function.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/tr1/beta_function.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/tr1/ell_integral.tcc \
@@ -4060,10 +4063,10 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_opengl3.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imconfig.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_glfw.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_opengl3.h
 
 
 C:/Users/youne/Desktop/OpenGLRenderer/include/glm/ext/matrix_double2x2_precision.hpp:
@@ -4934,6 +4937,8 @@ C:/msys64/mingw64/include/c++/15.2.0/debug/debug.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/exception:
 
+C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imconfig.h:
+
 C:/msys64/mingw64/include/c++/15.2.0/ext/alloc_traits.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/ext/atomicity.h:
@@ -5282,11 +5287,15 @@ C:/msys64/mingw64/include/oaidl.h:
 
 C:/msys64/mingw64/include/objbase.h:
 
+C:/msys64/mingw64/include/c++/15.2.0/bits/std_thread.h:
+
 C:/msys64/mingw64/include/ole2.h:
 
 C:/msys64/mingw64/include/oleauto.h:
 
 C:/msys64/mingw64/include/oleidl.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui.h:
 
 C:/msys64/mingw64/include/playsoundapi.h:
 
@@ -5430,7 +5439,11 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512bitalgvlintrin
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512bwintrin.h:
 
+C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_opengl3.h:
+
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512fp16vlintrin.h:
+
+C:/msys64/mingw64/include/c++/15.2.0/bits/this_thread_sleep.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512ifmaintrin.h:
 
@@ -5542,4 +5555,8 @@ C:/msys64/mingw64/include/GL/gl.h:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h:
 
+C:/msys64/mingw64/include/c++/15.2.0/thread:
+
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_glfw.h:

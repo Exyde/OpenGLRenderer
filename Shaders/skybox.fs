@@ -7,6 +7,5 @@ uniform float uTime;
 
 void main(){
 
-    vec3 coord = TexCoord;
-    FragColor = texture(skybox, vec3(coord.x, coord.y, coord.z));
+    FragColor = texture(skybox, TexCoord);
 }

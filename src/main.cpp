@@ -5,6 +5,7 @@
 // clang-format on
 #include <cmath>
 #include <iostream>
+#include <thread>
 
 #include "engine/Camera.h"
 #include "engine/Model.h"
@@ -13,9 +14,9 @@
 #include "engine/SlyMath.H"
 #include "engine/Texture.h"
 #include "engine/stb_image.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "imgui-docking/imgui.h"
+#include "imgui-docking/imgui_impl_glfw.h"
+#include "imgui-docking/imgui_impl_opengl3.h"
 
 struct TerrainData {
     std::vector<float> vertices;
@@ -27,12 +28,12 @@ struct TerrainData {
 
 #pragma region UI EXPOSED
 // -- IMGUI EXPOSED
+bool enablePostProcessing = false;
 bool UI_rotateStuff = true;
 float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
 float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};
 float specularLightColor[3] = {1.0, 1.0f, 1.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
-float lightOffsets[]{0.0, 0.0, 0.0};
 static const char* viewModes[]{"Normal", "Wireframe"};
 static const char* objectSelected[]{"Backpack", "Cathedral", "Village"};
 glm::vec3 pointLightAmbient(0.05f);
@@ -225,6 +226,7 @@ void InitIMGUI(GLFWwindow* window) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     (void)io;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -398,6 +400,9 @@ int main() {
     ShaderReloader fullScreenReloader(postProcessShader);
     ShaderReloader skyboxReloader(skyboxShader);
 
+    std::vector<ShaderReloader> reloaders{mainReloader, grassReloader,
+                                          fullScreenReloader, skyboxReloader};
+
     std::vector<std::string> cubemapPaths{
         "Resources/Textures/skybox/right.jpg",
         "Resources/Textures/skybox/left.jpg",
@@ -439,10 +444,7 @@ int main() {
     vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 
     // -- FrameBuffers
-    // -- To be valid, attach at least on buffer, one color attachment, all
-    // attachements should be complete, each buffer same samples count.
-    // Check with
-    // if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+
     unsigned int framebuffer;
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -468,6 +470,8 @@ int main() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                               GL_RENDERBUFFER, rbo);
 
+    // -- To be valid, attach at least on buffer, one color attachment, all
+    // attachements should be complete, each buffer same samples count.
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "[FRAMEBUFFER] Error : FrameBuffer is not complete !"
                   << std::endl;
@@ -481,6 +485,13 @@ int main() {
 
     // -- Render Loop
     while (!glfwWindowShouldClose(window)) {
+        // -- Skip everything if windows not focused.
+        if (!glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            glfwPollEvents();
+            continue;
+        }
+
         // -- Input Handling
         GetInputs(window);
 
@@ -488,17 +499,8 @@ int main() {
         auto now = std::chrono::steady_clock::now();
         if (now - lastCheck > checkInterval) {
             lastCheck = now;
-            if (mainReloader.CheckForChanges()) {
-                phongShader.Reload();
-            }
-            if (grassReloader.CheckForChanges()) {
-                grassShader.Reload();
-            }
-            if (fullScreenReloader.CheckForChanges()) {
-                postProcessShader.Reload();
-            }
-            if (skyboxReloader.CheckForChanges()) {
-                skyboxShader.Reload();
+            for (ShaderReloader r : reloaders) {
+                r.CheckForChanges();
             }
         }
 
@@ -506,6 +508,21 @@ int main() {
         float currentFrame = ElapsedTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // -- FPS Computation --
+        static double lastTime = glfwGetTime();
+        static int frameCount = 0;
+        static double currentFPS = 0;
+        double currentTime = glfwGetTime();
+        frameCount++;
+
+        if (currentTime - lastTime >= 1.0) {
+            double fps = double(frameCount) / (currentTime - lastTime);
+            frameCount = 0;
+            lastTime = currentTime;
+
+            currentFPS = fps;
+        }
 
 #pragma region SunUpdate
         // -- Transformed positions
@@ -515,10 +532,7 @@ int main() {
             glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
         glm::vec3 sunPitch =
             glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
-        auto offsetedLightPos =
-            LightPosition.GLM() +
-            Vector3(lightOffsets[0], lightOffsets[1], lightOffsets[2]).GLM() +
-            sunYaw + sunPitch;
+        auto offsetedLightPos = LightPosition.GLM() + sunYaw + sunPitch;
 #pragma endregion
 
         // -- UI IMGUI
@@ -528,8 +542,6 @@ int main() {
         ImGui::NewFrame();
 
 #pragma region FIRST PASS
-
-        bool enablePostProcessing = false;
 
         //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING (Well that's the
         // way to Deferred I guess)
@@ -598,6 +610,7 @@ int main() {
         }
 
         // -- Multiples Floating Cubes
+        glBindVertexArray(CubeVAO);
         for (unsigned int i = 0; i < 10; i++) {
             modelMatrix = glm::mat4(1.0f);
             modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
@@ -706,37 +719,57 @@ int main() {
         }
 
 #pragma endregion
-
 #pragma region IMGUI
         // -- IMGUI FOLLOW UP
         ImGui::Begin(
             "Some User Interface for this tiny Renderer <3 - Hello Bluesky "
             "!");
-        ImGui::Text("Improved version of this tiny engine. :]");
-        ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
-        if (ImGui::Combo("Choose View Mode", &viewMode, viewModes,
-                         IM_ARRAYSIZE(viewModes))) {
-            if (viewMode == 0) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            } else if (viewMode == 1) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            }
+
+        if (ImGui::CollapsingHeader("User Settings")) {
         }
 
-        ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
-                      objectSelected, IM_ARRAYSIZE(objectSelected));
-        ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0, glm::two_pi<float>());
-        ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
-        ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
-        ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
-        ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
-        ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
-        ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007,
-                           1.8);
-        ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
-        ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
-        ImGui::ColorEdit3("Specular Light Color", specularLightColor);
-        ImGui::SliderFloat3("Light Offsets", (float*)lightOffsets, -10, 10);
+        if (ImGui::CollapsingHeader("Performance")) {
+            ImGui::Text("FPS : %1f", currentFPS);
+            ImGui::Text("FrameTime: %3f ms", 1000.0 / currentFPS);
+            ImGui::Text("DrawCall: Not implemented yet.");
+            ImGui::Text("Instancing: Incoming.");
+        }
+
+        if (ImGui::CollapsingHeader("Meshes & Models")) {
+            ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
+            if (ImGui::Combo("Choose View Mode", &viewMode, viewModes,
+                             IM_ARRAYSIZE(viewModes))) {
+                if (viewMode == 0) {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                } else if (viewMode == 1) {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                }
+            }
+            ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
+                          objectSelected, IM_ARRAYSIZE(objectSelected));
+        }
+
+        if (ImGui::CollapsingHeader("Post Processing")) {
+            ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
+        }
+
+        if (ImGui::CollapsingHeader("Lighting")) {
+            ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0,
+                               glm::two_pi<float>());
+            ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
+            ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
+            ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+            ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0,
+                               20.0f);
+            ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014,
+                               0.7);
+            ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2],
+                               0.000007, 1.8);
+            ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
+            ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
+            ImGui::ColorEdit3("Specular Light Color", specularLightColor);
+        }
+
         ImGui::End();
 
         // -- UI Render

@@ -11,8 +11,8 @@ class ShaderReloader {
     bool CheckForChanges();
 
    private:
-    std::string vPath;
-    std::string fPath;
+    Shader* shader;
+    void Reload();
     fs::file_time_type vLastWrite;
     fs::file_time_type fLastWrite;
 };

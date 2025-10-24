@@ -9,7 +9,7 @@
 #include "Vector.h"
 
 enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
-enum CameraType { FPS, FREECAM };
+enum CameraType { FREECAM, FPS };
 
 // -- Default Values -- //
 const float YAW = -90.0f;

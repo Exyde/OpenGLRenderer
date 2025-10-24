@@ -75,7 +75,8 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "thread": "cpp"
     },
     // === Apparence & confort ===
     "editor.formatOnSave": true,

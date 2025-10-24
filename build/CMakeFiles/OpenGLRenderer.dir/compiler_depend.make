@@ -4063,10 +4063,10 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imconfig.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_glfw.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_opengl3.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_opengl3.h
 
 
 C:/Users/youne/Desktop/OpenGLRenderer/include/glm/ext/matrix_double2x2_precision.hpp:
@@ -4937,8 +4937,6 @@ C:/msys64/mingw64/include/c++/15.2.0/debug/debug.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/exception:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imconfig.h:
-
 C:/msys64/mingw64/include/c++/15.2.0/ext/alloc_traits.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/ext/atomicity.h:
@@ -5295,8 +5293,6 @@ C:/msys64/mingw64/include/oleauto.h:
 
 C:/msys64/mingw64/include/oleidl.h:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui.h:
-
 C:/msys64/mingw64/include/playsoundapi.h:
 
 C:/msys64/mingw64/include/processtopologyapi.h:
@@ -5439,8 +5435,6 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512bitalgvlintrin
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512bwintrin.h:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_opengl3.h:
-
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/avx512fp16vlintrin.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/this_thread_sleep.h:
@@ -5558,5 +5552,3 @@ C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h:
 C:/msys64/mingw64/include/c++/15.2.0/thread:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/imgui-docking/imgui_impl_glfw.h:

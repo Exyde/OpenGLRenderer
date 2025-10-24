@@ -9,11 +9,11 @@
 
 
 ### Main Path (Learn Open GL)
-- Faire des classes (Framebuffer, GameObject...) même wip, marre de dupliquer des VAO/BVO
-- Pass ImGui Update 
-- Importer asset genre WindWaker pour tester le rendu
+- Importer asset genre WindWaker pour tester le rendu (MORE MORE MORE TROP COOOOOOOL)
+- UI : MeshReload important aussi (via file system ça pourrait être noice) (pour voir tout les assets Zelda jor <3)
+- UI : Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) 
 - Video Update mesh certainement + update readme/features
-- Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
+- REFACTORING HERE (Voir ~Engine~)
 - 2D Games aswell for engine structure can be nice (or side weekend break)
 
 ## GPU Instancing (Advanced Fun Goals)
@@ -25,35 +25,28 @@
 - Dynamic Environment Mapping (6x framebuffer and runtime cubemaps for reflection/refraction but perf ?)
 - Todo : Reflection map (Cubemap -- Reflection)
 - Todo : Refraction Map (Cubemap) + Light, Refraction, Reflection, Vertex Anim = Water Shader :D
+- Tint les ombres de la diffuse (toon diffuse shader + color ramp ?)
 
 ### Bug
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
 - Bizzare ce truc de quadrillage avec le lighting ?
-- Floating Cubes chelou
+- Fix Orthographic Camera
 
-### Engine
+### Engine Features
 - FaceCulling v2
 - Blending v2
+- Render Doc Plugin / Pix ?
+- ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d
+- Settings system config with plain text and hot reload
+
+### Engine Struture
+- Color Class / Struct (ou lib) 
 - Utility Class
 - ResourceLoader Class
+- Faire des classes (Framebuffer, GameObject...) même wip, marre de dupliquer des VAO/BVO
 - Logger at some point (when engine refactoring I guess)
-- Relire la partie sur Pitch/Yaw/Roll et le calcul + reimplémenter le  LookAt
-- Settings system config with plain text and hot reload
-- Big Refacto 2 Soon pour pouvoir draw ce qu'on veut de maniè-re plus flexible et moins opti mais np
-- FrameBuffer Class / Skybox Class / Terrain Class ... 
-- ImGuizmo 3D (John Shapman) : https://github.com/john-chapman/im3d
-- Render Doc Plugin / Pix ?
-- Color Class => Oui ça va etre needed, ou une lib 
 
 ## ImGUI
-- DockerIMGUI sur le côté
-- Bool pour switch entre Toon & Phong
-
-- Camera
-    - Bool for switch from ortho to perspective camera
-    - Bool pour unlock camera Y
-- Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) 
-- MeshReload important aussi (via file system ça pourrait être noice)
 - Afficher les Draws Calls
 
 # Global Goals

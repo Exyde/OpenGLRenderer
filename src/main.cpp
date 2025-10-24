@@ -14,9 +14,9 @@
 #include "engine/SlyMath.H"
 #include "engine/Texture.h"
 #include "engine/stb_image.h"
-#include "imgui-docking/imgui.h"
-#include "imgui-docking/imgui_impl_glfw.h"
-#include "imgui-docking/imgui_impl_opengl3.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 struct TerrainData {
     std::vector<float> vertices;
@@ -36,6 +36,17 @@ float specularLightColor[3] = {1.0, 1.0f, 1.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 static const char* viewModes[]{"Normal", "Wireframe"};
 static const char* objectSelected[]{"Backpack", "Cathedral", "Village"};
+static const char* lightModeSelected[]{"Phong", "Toon", "PBR"};
+static const char* cameraModeSelected[]{"FreeCamera", "FPS"};
+static const char* projectionModeSelected[]{"Perspective", "Orthographic"};
+
+static float NearPlane = 0.1f;
+static float FarPlane = 5000.0f;
+static int viewMode = 0;                 // -- Lit Shaded
+static int objectViewSelection = 4;      // -- Backpack
+static int lightModeSelection = 0;       // -- Phong/Toon/PBR
+static int cameraModeSelection = 0;      // -- Free/FPS
+static int projectionModeSelection = 0;  // -- Perspective/Orthographic
 glm::vec3 pointLightAmbient(0.05f);
 glm::vec3 pointLightDiffuse(0.0f, 0.2f, 0.7f);
 glm::vec3 pointLightSpecular(1.0f);
@@ -151,8 +162,6 @@ float lastFrame = 0.0f;
 bool FIRST_MOUSE = true;
 float lastMouseX = 400;
 float lastMouseY = 300;
-static int viewMode = 0;             // -- Lit Shaded
-static int objectViewSelection = 4;  // -- Backpack
 #pragma endregion
 
 unsigned int LoadCubeMap(std::vector<std::string> facePaths);
@@ -227,6 +236,7 @@ void InitIMGUI(GLFWwindow* window) {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     (void)io;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -434,7 +444,8 @@ int main() {
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
     Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    //  Model villageModel("Resources/Models/rungholt/rungholt.obj");
+    Model villageModel("Resources/Models/rungholt/rungholt.obj");
+    Model windWakerModel("Resources/Models/Windfall/Windfall.obj");
 
     std::vector<glm::vec3> vegetation;
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
@@ -540,6 +551,8 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(),
+                                     ImGuiDockNodeFlags_PassthruCentralNode);
 
 #pragma region FIRST PASS
 
@@ -556,9 +569,18 @@ int main() {
         glEnable(GL_DEPTH_TEST);
 
         // here FOV, aspect ratio, near and far plane for perspective (w scaled)
-        glm::highp_mat4 perspectiveMatrix = glm::perspective(
-            glm::radians(cam.Fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
-            0.1f, 5000.0f);
+
+        glm::highp_mat4 projectionMatrix;
+        if (projectionModeSelection == 0) {
+            projectionMatrix =
+                glm::perspective(glm::radians(cam.Fov),
+                                 (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+                                 NearPlane, FarPlane);
+        } else {
+            projectionMatrix =
+                glm::ortho(0.0f, (float)SCREEN_WIDTH, 0.0f,
+                           (float)SCREEN_HEIGHT, NearPlane, FarPlane);
+        }
         glm::mat4 viewMatrix = cam.GetViewMatrix();
         glm::mat4 modelMatrix = glm::mat4(1.0F);
 
@@ -573,7 +595,12 @@ int main() {
         // -- Phong Shader
         phongShader.Use();
         phongShader.SetMat4("view", viewMatrix);
-        phongShader.SetMat4("projection", perspectiveMatrix);
+        phongShader.SetMat4("projection", projectionMatrix);
+        if (lightModeSelection == 1)
+            phongShader.SetBool("ToonShading", true);
+        else
+            phongShader.SetBool("ToonShading", false);
+
         // -- Material
         phongShader.SetInt("mat.diffuse", 0);
         phongShader.SetInt("mat.specular", 1);
@@ -626,8 +653,10 @@ int main() {
         }
 
         modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
 
+        windWakerModel.Draw(phongShader);
         if (objectViewSelection == 0) backpackModel.Draw(phongShader);
         if (objectViewSelection == 1) cathedralModel.Draw(phongShader);
         // if (objectViewSelection == 2) villageModel.Draw(phongShader);
@@ -637,7 +666,7 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
         grass.Bind();
         grassShader.SetMat4("view", viewMatrix);
-        grassShader.SetMat4("projection", perspectiveMatrix);
+        grassShader.SetMat4("projection", projectionMatrix);
         grassShader.SetInt("mat.diffuse", 0);
         // -- User Data
         grassShader.SetFloat("uTime", ElapsedTime() * userUpDown);
@@ -664,7 +693,7 @@ int main() {
         lightModel = glm::scale(lightModel, glm::vec3(25.0f));
         lightShader.SetMat4("model", lightModel);
         lightShader.SetMat4("view", viewMatrix);
-        lightShader.SetMat4("projection", perspectiveMatrix);
+        lightShader.SetMat4("projection", projectionMatrix);
         lightShader.SetVec3("LightPos", offsetedLightPos);
         lightShader.SetVec3("LightColor",
                             Vector3(diffuseLightColor[0], diffuseLightColor[1],
@@ -696,7 +725,7 @@ int main() {
         glm::mat4 skyboxViewWithoutTranslation =
             glm::mat4(glm::mat3(cam.GetViewMatrix()));
         skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
-        skyboxShader.SetMat4("projection", perspectiveMatrix);
+        skyboxShader.SetMat4("projection", projectionMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glDepthFunc(GL_LESS);
 
@@ -726,6 +755,22 @@ int main() {
             "!");
 
         if (ImGui::CollapsingHeader("User Settings")) {
+            if (ImGui ::Combo("Light Model", &lightModeSelection,
+                              lightModeSelected,
+                              IM_ARRAYSIZE(lightModeSelected))) {
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Camera Settings")) {
+            if (ImGui ::Combo("Camera Mode", &cameraModeSelection,
+                              cameraModeSelected,
+                              IM_ARRAYSIZE(cameraModeSelected))) {
+                cam.type = (CameraType)cameraModeSelection;
+            }
+            if (ImGui ::Combo("Projection", &projectionModeSelection,
+                              projectionModeSelected,
+                              IM_ARRAYSIZE(projectionModeSelected))) {
+            }
         }
 
         if (ImGui::CollapsingHeader("Performance")) {

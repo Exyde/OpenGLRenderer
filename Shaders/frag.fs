@@ -51,6 +51,8 @@ uniform PointLight pointLights[NR_POINTS_LIGHTS];
 uniform DirLight dirLight;
 uniform Flashlight flashLight;
 
+uniform bool ToonShading;
+
 in float Height;
 in vec3 ourColor;
 in vec2 TexCoord;
@@ -59,7 +61,6 @@ in vec3 FragPosWorldSpace;
 uniform float uTime;
 uniform float T;
 uniform vec3 ViewPos;
-
 
 float LinearDepth(float depth);
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection);
@@ -89,9 +90,13 @@ void main()
     vec3 result = vec3(0.0);
     FragColor = vec4(normal, 1.0);
     
-    result += CalculateDirLight(dirLight, normal, viewDirection);
-    //result += ToonLight(dirLight, normal, viewDirection);
-    //FragColor = vec4(result, 1.0);
+
+    if(ToonShading){
+        result += ToonLight(dirLight, normal, viewDirection);   
+    } else {
+        result += CalculateDirLight(dirLight, normal, viewDirection);
+    }
+    
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
       //  result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }
@@ -139,16 +144,30 @@ vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
 
 vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection){
 
+    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, TexCoord));
+
     vec3 lightDirection = normalize(light.direction);
+
+    // -- Specular
+    vec3 reflectionDirection = reflect(-lightDirection, normal);
+    float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess);
+    vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
+    vec3 specular = light.specular * spec * specularSampled;
+
     float theta = dot(normal, lightDirection);
     float correctedTheta = max(theta, 0.0);
     
+    vec3 toonDiffuse = vec3(0);
 
-    if (correctedTheta > 0.99) return vec3(1.0);
-    else if (correctedTheta > 0.95) return vec3(1.0) * light.diffuse;
-    else if (correctedTheta > 0.5) return vec3(0.8) * light.diffuse;
-    else if (correctedTheta > 0.25) return vec3(0.3) * light.diffuse;
-    else return vec3(0.1) * light.diffuse;
+    if (correctedTheta > 0.95) toonDiffuse = vec3(1.0) * light.diffuse;
+    else if (correctedTheta > 0.5) toonDiffuse = vec3(0.8) * light.diffuse;
+    else if (correctedTheta > 0.25) toonDiffuse = vec3(0.3) * light.diffuse;
+    else toonDiffuse = vec3(0.1) * light.diffuse;
+
+    vec3 diffuse = toonDiffuse * vec3(texture(mat.diffuse, TexCoord));
+
+
+    return (ambient + diffuse + specular);
 }
 
 

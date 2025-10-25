@@ -14,12 +14,15 @@ enum CameraType { FREECAM, FPS };
 // -- Default Values -- //
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 25.0f;
+const float SPEED = 100.0f;
 const float SENSITIVITY = 0.1F;
 const float FOV = 45.0f;
 
 class Camera {
    public:
+    constexpr static float MIN_SPEED = 10.0f;
+    constexpr static float MAX_SPEED = 500.0f;
+
     Vector3 Position;
     Vector3 Front;
     Vector3 Up;

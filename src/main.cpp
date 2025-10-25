@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 // clang-format on
+
 #include <cmath>
 #include <iostream>
 #include <thread>
@@ -17,6 +18,10 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+
+constexpr glm::vec4 ColorWhite = glm::vec4(1.0);
+constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
+constexpr glm::vec4 ColorGray = glm::vec4(0.5);
 
 struct TerrainData {
     std::vector<float> vertices;
@@ -35,7 +40,8 @@ float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};
 float specularLightColor[3] = {1.0, 1.0f, 1.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 static const char* viewModes[]{"Normal", "Wireframe"};
-static const char* objectSelected[]{"Backpack", "Cathedral", "Village"};
+static const char* objectSelected[]{"Backpack", "Cathedral", "Village",
+                                    "Mercantile"};
 static const char* lightModeSelected[]{"Phong", "Toon", "PBR"};
 static const char* cameraModeSelected[]{"FreeCamera", "FPS"};
 static const char* projectionModeSelected[]{"Perspective", "Orthographic"};
@@ -55,8 +61,10 @@ glm::vec3 flashLightAmbient(0.05f);
 glm::vec3 flashLightDiffuse(0.8f, 0.2f, 0.6f);
 glm::vec3 flashLightSpecular(1.0f);
 float flashLightRadius = 10.0f;
+bool updateSun = false;
+float userSunSpeed = 0.01f;
 float sunTheta = 10.0f;
-float sunRadius = 200.0f;
+float sunRadius = 500.0f;
 #pragma endregion
 
 // -- Raws Datas
@@ -152,6 +160,9 @@ glm::vec3 pointLightPositions[] = {
 
 #pragma region UserShitToMoveLaterAwayFromHere
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
+uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;
+unsigned int renderTexture;
+unsigned int rbo;
 bool cursorVisible = false;
 float userUpDown = 1.0;
 float userLeftRight = 1.0;
@@ -185,7 +196,16 @@ void LogMaxVertexAttributes() {
 
 #pragma region CallbackOpenGL
 void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
+    CURRENT_WIDTH = width;
+    CURRENT_HEIGHT = height;
     glViewport(0, 0, width, height);
+
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, nullptr);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -443,9 +463,12 @@ int main() {
                      GL_CLAMP_TO_BORDER, false, "diffuse");
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
-    Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    Model villageModel("Resources/Models/rungholt/rungholt.obj");
-    Model windWakerModel("Resources/Models/Windfall/Windfall.obj");
+    // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
+    // Model villageModel("Resources/Models/rungholt/rungholt.obj");
+    // Model windWakerModel("Resources/Models/Windfall/Windfall.obj");
+
+    std::vector<Model> models{backpackModel, backpackModel, backpackModel,
+                              backpackModel, backpackModel};
 
     std::vector<glm::vec3> vegetation;
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
@@ -459,7 +482,7 @@ int main() {
     unsigned int framebuffer;
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    unsigned int renderTexture;
+
     glGenTextures(1, &renderTexture);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0,
@@ -472,7 +495,6 @@ int main() {
     // -- You could also attach a depth-stencil buffer to this framebuffer with
     // a 32 bit texture (24 bit for depth, 8 for Stencil)
     // -- Use a RenderBufferObject for Depth & Stencil as Read it's read only
-    unsigned int rbo;
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH,
@@ -537,8 +559,8 @@ int main() {
 
 #pragma region SunUpdate
         // -- Transformed positions
-        float sunSpeed = deltaTime * 0.1f;
-        sunTheta += sunSpeed;
+        float sunSpeed = deltaTime * userSunSpeed;
+        if (updateSun) sunTheta += sunSpeed;
         glm::vec3 sunYaw =
             glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
         glm::vec3 sunPitch =
@@ -574,12 +596,12 @@ int main() {
         if (projectionModeSelection == 0) {
             projectionMatrix =
                 glm::perspective(glm::radians(cam.Fov),
-                                 (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT,
+                                 (float)CURRENT_WIDTH / (float)CURRENT_HEIGHT,
                                  NearPlane, FarPlane);
         } else {
             projectionMatrix =
-                glm::ortho(0.0f, (float)SCREEN_WIDTH, 0.0f,
-                           (float)SCREEN_HEIGHT, NearPlane, FarPlane);
+                glm::ortho(0.0f, (float)CURRENT_WIDTH, 0.0f,
+                           (float)CURRENT_HEIGHT, NearPlane, FarPlane);
         }
         glm::mat4 viewMatrix = cam.GetViewMatrix();
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -656,10 +678,7 @@ int main() {
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
 
-        windWakerModel.Draw(phongShader);
-        if (objectViewSelection == 0) backpackModel.Draw(phongShader);
-        if (objectViewSelection == 1) cathedralModel.Draw(phongShader);
-        // if (objectViewSelection == 2) villageModel.Draw(phongShader);
+        models[objectViewSelection].Draw(phongShader);
 
         // -- Grass
         grassShader.Use();
@@ -750,34 +769,44 @@ int main() {
 #pragma endregion
 #pragma region IMGUI
         // -- IMGUI FOLLOW UP
-        ImGui::Begin(
-            "Some User Interface for this tiny Renderer <3 - Hello Bluesky "
-            "!");
 
-        if (ImGui::CollapsingHeader("User Settings")) {
-            if (ImGui ::Combo("Light Model", &lightModeSelection,
-                              lightModeSelected,
-                              IM_ARRAYSIZE(lightModeSelected))) {
-            }
-        }
+        ImGui::Begin("Scene");
+        ImGui::End();
 
-        if (ImGui::CollapsingHeader("Camera Settings")) {
-            if (ImGui ::Combo("Camera Mode", &cameraModeSelection,
-                              cameraModeSelected,
-                              IM_ARRAYSIZE(cameraModeSelected))) {
-                cam.type = (CameraType)cameraModeSelection;
-            }
-            if (ImGui ::Combo("Projection", &projectionModeSelection,
-                              projectionModeSelected,
-                              IM_ARRAYSIZE(projectionModeSelected))) {
-            }
+        ImGui::Begin("Buttons");
+        if (ImGui::Button("Load Model (.obj)")) {
         }
+        ImGui::End();
+
+        ImGui::Begin("Inspector");
 
         if (ImGui::CollapsingHeader("Performance")) {
             ImGui::Text("FPS : %1f", currentFPS);
             ImGui::Text("FrameTime: %3f ms", 1000.0 / currentFPS);
             ImGui::Text("DrawCall: Not implemented yet.");
             ImGui::Text("Instancing: Incoming.");
+        }
+
+        if (ImGui::CollapsingHeader("User Settings")) {
+            if (ImGui ::Combo("Light Model", &lightModeSelection,
+                              lightModeSelected,
+                              IM_ARRAYSIZE(lightModeSelected))) {
+            }
+
+            ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
+            ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+        }
+
+        if (ImGui::CollapsingHeader("Post Processing")) {
+            ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
+        }
+
+        if (ImGui::CollapsingHeader("Sun")) {
+            ImGui::Checkbox("Update Sun", &updateSun);
+            ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0,
+                               glm::two_pi<float>());
+            ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
+            ImGui::SliderFloat("Sun Speed", &userSunSpeed, 0.0, 1.0f);
         }
 
         if (ImGui::CollapsingHeader("Meshes & Models")) {
@@ -794,16 +823,7 @@ int main() {
                           objectSelected, IM_ARRAYSIZE(objectSelected));
         }
 
-        if (ImGui::CollapsingHeader("Post Processing")) {
-            ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
-        }
-
-        if (ImGui::CollapsingHeader("Lighting")) {
-            ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0,
-                               glm::two_pi<float>());
-            ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
-            ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
-            ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+        if (ImGui::CollapsingHeader("Lights")) {
             ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0,
                                20.0f);
             ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014,
@@ -815,6 +835,19 @@ int main() {
             ImGui::ColorEdit3("Specular Light Color", specularLightColor);
         }
 
+        if (ImGui::CollapsingHeader("Camera Settings")) {
+            ImGui::SliderFloat("Camera Speed", &cam.MovementSpeed,
+                               Camera::MIN_SPEED, Camera::MAX_SPEED);
+            if (ImGui ::Combo("Camera Mode", &cameraModeSelection,
+                              cameraModeSelected,
+                              IM_ARRAYSIZE(cameraModeSelected))) {
+                cam.type = (CameraType)cameraModeSelection;
+            }
+            if (ImGui ::Combo("Projection", &projectionModeSelection,
+                              projectionModeSelected,
+                              IM_ARRAYSIZE(projectionModeSelected))) {
+            }
+        }
         ImGui::End();
 
         // -- UI Render

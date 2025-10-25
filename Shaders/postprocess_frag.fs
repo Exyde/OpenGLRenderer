@@ -64,7 +64,7 @@ void main(){
     float kernel[9] = blurKernel;
 
     vec2 uv = TexCoord;
-    float amount = 0.009;
+    float amount = 0.0;
     col.r = texture(screenTexture, uv + vec2(amount * sin(uTime * 2.0) * 5.0, 0.0)).r;
     col.g = texture(screenTexture, uv).g;
     col.b = texture(screenTexture, uv - vec2(0.0, amount * cos(uTime * 2.5) * 20.0)).b;

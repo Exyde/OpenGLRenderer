@@ -1,5 +1,7 @@
 # TODO 
 
+- Partager moteur Vianney / Stanis pour feedback at some point
+
 ## Core Goals for Portolio
 - Finish Learn open GL
 - PBR : Industry Standard (Require Gamma Correction, FrameBuffer, Cubemaps, HDR)
@@ -7,12 +9,11 @@
 - Deffered Rendering : Requir at least both above I guess. Last fight ? 
 - One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? You've got time :)
 
-
 ### Main Path (Learn Open GL)
-- Importer asset genre WindWaker pour tester le rendu (MORE MORE MORE TROP COOOOOOOL)
-- UI : MeshReload important aussi (via file system ça pourrait être noice) (pour voir tout les assets Zelda jor <3)
-- UI : Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) 
-- Video Update mesh certainement + update readme/features
+- Importer les autres modèles
+- UI : Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) + expose shader code dans un champ et reload ça serait funky
+- Video Update mesh certainement + update readme/features + music de la playlist high bass energy + post linked/simon/outraghe/bluesky/insta/youtube
+- Big Water plane genre WindWaker ? :p
 - REFACTORING HERE (Voir ~Engine~)
 - 2D Games aswell for engine structure can be nice (or side weekend break)
 
@@ -48,6 +49,8 @@
 
 ## ImGUI
 - Afficher les Draws Calls
+- UI : MeshReload important aussi (via file system ça pourrait être noice) (pour voir tout les assets Zelda jor <3)
+
 
 # Global Goals
 - PostProcessing Effects : presque ok v1

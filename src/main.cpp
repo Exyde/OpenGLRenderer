@@ -23,6 +23,22 @@ constexpr glm::vec4 ColorWhite = glm::vec4(1.0);
 constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
 constexpr glm::vec4 ColorGray = glm::vec4(0.5);
 
+struct PostProcessSettings {
+    bool enableChromaticAberration = false;
+    float chromaIntensity = 0.02f;
+    bool enableGrayscale;
+
+    bool enableBlur = false;
+    float blurRadius = 1.0f;
+
+    bool enableInvert = false;
+
+    bool enableKernel;
+    int kernelType = 0;
+};
+
+PostProcessSettings postFX;
+
 struct TerrainData {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
@@ -33,6 +49,8 @@ struct TerrainData {
 
 #pragma region UI EXPOSED
 // -- IMGUI EXPOSED
+
+static int DrawCallsCounter = 0;
 bool enablePostProcessing = false;
 bool UI_rotateStuff = true;
 float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
@@ -176,6 +194,11 @@ float lastMouseY = 300;
 #pragma endregion
 
 unsigned int LoadCubeMap(std::vector<std::string> facePaths);
+
+static void OpenGlDraw(GLenum mode, GLint first, GLsizei count) {
+    glDrawArrays(mode, first, count);
+    DrawCallsCounter++;
+}
 
 void ToggleDepthBuffer(GLboolean state) {
     glDepthMask(state);
@@ -527,6 +550,7 @@ int main() {
 
         // -- Input Handling
         GetInputs(window);
+        DrawCallsCounter = 0;
 
         // -- Update Shader Timer
         auto now = std::chrono::steady_clock::now();
@@ -642,7 +666,7 @@ int main() {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
         phongShader.SetMat4("model", modelMatrix);
         glBindVertexArray(CubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
 
         //-- Draw Terrain
         glBindVertexArray(terrainVAO);
@@ -671,7 +695,7 @@ int main() {
             }
             phongShader.SetMat4("model", modelMatrix);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            OpenGlDraw(GL_TRIANGLES, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);
@@ -701,7 +725,7 @@ int main() {
                 float angle = (double)glm::two_pi<float>() / grassCount * rot;
                 model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
                 grassShader.SetMat4("model", model);
-                glDrawArrays(GL_TRIANGLES, 0, 6);
+                OpenGlDraw(GL_TRIANGLES, 0, 6);
             }
         }
 
@@ -719,7 +743,7 @@ int main() {
                                     diffuseLightColor[2])
                                 .GLM());
         glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
 
         for (int i = 0; i < 4; i++) {
             lightModel = glm::mat4(1.0F);
@@ -732,7 +756,7 @@ int main() {
                                                       pointLightDiffuse[2])
                                                   .GLM());
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            OpenGlDraw(GL_TRIANGLES, 0, 36);
         }
 
         // -- Skybox
@@ -745,7 +769,8 @@ int main() {
             glm::mat4(glm::mat3(cam.GetViewMatrix()));
         skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
         skyboxShader.SetMat4("projection", projectionMatrix);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
+
         glDepthFunc(GL_LESS);
 
 #pragma endregion
@@ -760,10 +785,19 @@ int main() {
 
             postProcessShader.Use();
             postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+            postProcessShader.SetBool("uEnableChroma",
+                                      postFX.enableChromaticAberration);
+            postProcessShader.SetFloat("uChromaIntensity",
+                                       postFX.chromaIntensity);
+            postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
+            postProcessShader.SetBool("uEnableGrayscale",
+                                      postFX.enableGrayscale);
+            postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
+            postProcessShader.SetInt("uKernelType", postFX.kernelType);
             glBindVertexArray(ndcQuadVAO);
             glDisable(GL_DEPTH_TEST);
             glBindTexture(GL_TEXTURE_2D, renderTexture);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            OpenGlDraw(GL_TRIANGLES, 0, 6);
         }
 
 #pragma endregion
@@ -783,7 +817,7 @@ int main() {
         if (ImGui::CollapsingHeader("Performance")) {
             ImGui::Text("FPS : %1f", currentFPS);
             ImGui::Text("FrameTime: %3f ms", 1000.0 / currentFPS);
-            ImGui::Text("DrawCall: Not implemented yet.");
+            ImGui::Text("DrawCall: %d", DrawCallsCounter);
             ImGui::Text("Instancing: Incoming.");
         }
 
@@ -799,6 +833,26 @@ int main() {
 
         if (ImGui::CollapsingHeader("Post Processing")) {
             ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
+            ImGui::Checkbox("Invert Colors", &postFX.enableInvert);
+            ImGui::Checkbox("Grayscale", &postFX.enableGrayscale);
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Chromatic Aberration",
+                            &postFX.enableChromaticAberration);
+            if (postFX.enableChromaticAberration)
+                ImGui::SliderFloat("Chroma Intensity", &postFX.chromaIntensity,
+                                   0.0f, 0.02f);
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
+            if (postFX.enableKernel) {
+                const char* kernels[] = {"Blur", "Sharpen", "BoxBlur",
+                                         "Emboss"};
+                ImGui::Combo("Kernel Type", &postFX.kernelType, kernels,
+                             IM_ARRAYSIZE(kernels));
+            }
         }
 
         if (ImGui::CollapsingHeader("Sun")) {

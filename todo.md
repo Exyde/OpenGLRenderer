@@ -11,7 +11,8 @@
 
 ### Main Path (Learn Open GL)
 - Importer les autres modèles
-- UI : Support Post Processing Choice (Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) + expose shader code dans un champ et reload ça serait funky
+- UI : Support Post Processing Choice
+-- POST PROCESS STACK :(Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) + expose shader code dans un champ et reload ça serait funky
 - Video Update mesh certainement + update readme/features + music de la playlist high bass energy + post linked/simon/outraghe/bluesky/insta/youtube
 - Big Water plane genre WindWaker ? :p
 - REFACTORING HERE (Voir ~Engine~)
@@ -32,6 +33,7 @@
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
 - Bizzare ce truc de quadrillage avec le lighting ?
 - Fix Orthographic Camera
+- DrawCall Bugger parce que pas pris en compte dans Mesh.Draw (todo : Class Renderer qui wrap tout les calls opens GL)
 
 ### Engine Features
 - FaceCulling v2

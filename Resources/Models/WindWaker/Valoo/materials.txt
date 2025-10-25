@@ -1,0 +1,36 @@
+m_dr_eye
+========
+  Textures:
+    - dr_tex
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Steps:
+    1: RGB = ((tex #1 RGB) * (vertex RGB))
+         A = ((tex #1 A) * (vertex A))
+
+
+
+m_dr_skin_a
+===========
+  Textures:
+    - dr_tex
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 220, 160, 32, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = (vertex A)
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = ((tex #1 A) * (prev. A))
+    3: RGB = ((220, 160, 32) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)

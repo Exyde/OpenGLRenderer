@@ -1,0 +1,71 @@
+inner
+=====
+  Textures:
+    - Txm_hokori3
+        Offset: -0.7699999809265137, -0.7699999809265137
+        Scale: 3, 2
+    - Txm_hokori3
+        Offset: 0.9666666388511658, -0.9666666388511658
+    - AK_kagerouIndMM00
+        Offset: -0.8074240684509277, -0.8074240684509277
+        Scale: 2, 1
+    - windGrad00
+        Offset: 0, -0.25
+        Scale: 1, 2
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Material Colors:
+    - 204, 204, 204, 255
+    - 204, 204, 204, 255
+
+  Color Registers:
+    - 246, 238, 153, 255
+    - 27, 30, 30, 77
+    - 27, 30, 30, 81
+
+  Steps:
+    1: RGB = (tex #1 RGB)
+         A = ((tex #1 A) * (vertex A))
+    2: RGB = (lerp from (prev. RGB) to (tex #2 RGB) using (128, 128, 128)), divide by 2
+         A = (prev. A)
+    3: RGB = (0, 0, 0), then add (prev. RGB)
+         A = ((tex #4 A) * (prev. A))
+
+
+
+outer
+=====
+  Textures:
+    - Txm_hokori3
+        Offset: -0.20666667819023132, -0.20666667819023132
+        Scale: 3, 2
+    - Txm_hokori3
+        Offset: 0.4033333957195282, -0.4033333957195282
+    - AK_kagerouIndMM00
+        Offset: -0.14874336123466492, -0.14874336123466492
+        Scale: 2, 1
+    - windGrad00
+        Offset: 0, -0.25
+        Scale: 1, 2
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Material Colors:
+    - 204, 204, 204, 255
+    - 204, 204, 204, 255
+
+  Color Registers:
+    - 246, 238, 153, 255
+    - 27, 30, 30, 77
+    - 27, 30, 30, 81
+
+  Steps:
+    1: RGB = (tex #1 RGB)
+         A = ((tex #1 A) * (vertex A))
+    2: RGB = (lerp from (prev. RGB) to (tex #2 RGB) using (128, 128, 128)), divide by 2
+         A = (prev. A)
+    3: RGB = (0, 0, 0), then add (prev. RGB)
+         A = ((tex #4 A) * (prev. A))

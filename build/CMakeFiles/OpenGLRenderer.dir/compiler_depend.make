@@ -4066,7 +4066,8 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_opengl3.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_opengl3.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/main.h
 
 
 C:/Users/youne/Desktop/OpenGLRenderer/include/glm/ext/matrix_double2x2_precision.hpp:
@@ -5552,3 +5553,5 @@ C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h:
 C:/msys64/mingw64/include/c++/15.2.0/thread:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/main.h:

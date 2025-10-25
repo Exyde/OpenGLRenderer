@@ -1,0 +1,125 @@
+SC_eyeL
+=======
+  Textures:
+    - md_eye.1
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Steps:
+    1: RGB = ((vertex RGB) * (tex #1 RGB))
+         A = ((vertex A) * (tex #1 A))
+
+
+
+SC_eyeR
+=======
+  Textures:
+    - md_eye.1
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Steps:
+    1: RGB = ((vertex RGB) * (tex #1 RGB))
+         A = ((vertex A) * (tex #1 A))
+
+
+
+SC_kuchi
+========
+  Textures:
+    - md_kuchi.1
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 160, 90, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = 0
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = (tex #1 A)
+    3: RGB = ((160, 90, 0) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)
+
+
+
+SC_mayuL
+========
+  Textures:
+    - md_mayu.1
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 160, 90, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = 0
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = (tex #1 A)
+    3: RGB = ((160, 90, 0) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)
+
+
+
+SC_mayuR
+========
+  Textures:
+    - md_mayu.1
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 160, 90, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = 0
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = (tex #1 A)
+    3: RGB = ((160, 90, 0) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)
+
+
+
+maekake
+=======
+  Textures:
+    - md_body
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 160, 90, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = 0
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = (tex #1 A)
+    3: RGB = ((160, 90, 0) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)

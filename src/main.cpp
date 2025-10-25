@@ -4,6 +4,8 @@
 
 // clang-format on
 
+#include "main.h"
+
 #include <cmath>
 #include <iostream>
 #include <thread>
@@ -37,8 +39,6 @@ struct PostProcessSettings {
     int kernelType = 0;
 };
 
-PostProcessSettings postFX;
-
 struct TerrainData {
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
@@ -46,6 +46,8 @@ struct TerrainData {
     unsigned int NUM_STRIPS;
     unsigned int NUM_VERTS_PER_STRIP;
 };
+
+PostProcessSettings postFX;
 
 #pragma region UI EXPOSED
 // -- IMGUI EXPOSED
@@ -63,11 +65,15 @@ static const char* objectSelected[]{"Backpack", "Cathedral", "Village",
 static const char* lightModeSelected[]{"Phong", "Toon", "PBR"};
 static const char* cameraModeSelected[]{"FreeCamera", "FPS"};
 static const char* projectionModeSelected[]{"Perspective", "Orthographic"};
+static const char* windWakerSelected[]{
+    "Ariel",         "Crab",   "HelmarocKing", "Medoli",
+    "Phantom Sword", "Shield", "Valoo",        "Mercantile"};
 
 static float NearPlane = 0.1f;
 static float FarPlane = 5000.0f;
 static int viewMode = 0;                 // -- Lit Shaded
 static int objectViewSelection = 4;      // -- Backpack
+static int windWakerSelection = 4;       // -- Backpack
 static int lightModeSelection = 0;       // -- Phong/Toon/PBR
 static int cameraModeSelection = 0;      // -- Free/FPS
 static int projectionModeSelection = 0;  // -- Perspective/Orthographic
@@ -233,7 +239,8 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
     if (cursorVisible) return;
-    cam.ProcessMouseScroll(yoffset);
+    // cam.ProcessMouseScroll(yoffset);
+    cam.MovementSpeed += (float)yoffset;
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
@@ -324,7 +331,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
     glfwSetCursorPosCallback(window, Mouse_Callback);
     glfwSetScrollCallback(window, Scroll_Callback);
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(false);
     InitIMGUI(window);
 
     // -- Depth Buffer Config
@@ -481,17 +488,32 @@ int main() {
     Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true,
                   "diffuse");
     Texture specular("Resources/Textures/container_specular.png",
-                     GL_CLAMP_TO_BORDER, false, "specular");
+                     GL_CLAMP_TO_BORDER, true, "specular");
     Texture emissive("Resources/Textures/container_emmisive.jpg",
                      GL_CLAMP_TO_BORDER, false, "diffuse");
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
     // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
     // Model villageModel("Resources/Models/rungholt/rungholt.obj");
-    // Model windWakerModel("Resources/Models/Windfall/Windfall.obj");
 
     std::vector<Model> models{backpackModel, backpackModel, backpackModel,
                               backpackModel, backpackModel};
+
+#ifdef WIND_WAKER
+    std::vector<Model> wwModels;
+    wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
+    wwModels.push_back(
+        Model("Resources/Models/WindWaker/HelmarocKing/HelmarocKingMask.obj"));
+    wwModels.push_back(
+        Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
+    wwModels.push_back(
+        Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Shield/Shield.obj"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Valoo/dr.dae"));
+    wwModels.push_back(
+        Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
+#endif
 
     std::vector<glm::vec3> vegetation;
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
@@ -702,7 +724,11 @@ int main() {
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
 
-        models[objectViewSelection].Draw(phongShader);
+        // models[objectViewSelection].Draw(phongShader);
+
+#ifdef WIND_WAKER
+        wwModels[windWakerSelection].Draw(phongShader);
+#endif
 
         // -- Grass
         grassShader.Use();
@@ -875,6 +901,11 @@ int main() {
             }
             ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
                           objectSelected, IM_ARRAYSIZE(objectSelected));
+
+#ifdef WIND_WAKER
+            ImGui ::Combo("Choose Wind Waker Asset", &windWakerSelection,
+                          windWakerSelected, IM_ARRAYSIZE(windWakerSelected));
+#endif
         }
 
         if (ImGui::CollapsingHeader("Lights")) {

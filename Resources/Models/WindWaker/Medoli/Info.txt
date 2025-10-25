@@ -1,0 +1,10 @@
+Medli extracted from Wind Waker with in-game rigging. Some assembly required as the arms and wings are there own models. Textures are not broken. The body model uses Clamping texture mapping or in Blender 2.78 "Extened" mapping.
+
+Tools:
+Dolphin to extract the .arc files
+yaz0dec.exe and/or rarcdump.exe
+BmdView2 for transparent textures
+Blender 2.78 with bdl/bmd import plug in
+
+AJD-262
+Feb 26 2021

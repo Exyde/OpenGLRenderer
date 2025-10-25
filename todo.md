@@ -2,21 +2,19 @@
 
 - Partager moteur Vianney / Stanis pour feedback at some point
 
+
+### Main Path (Learn Open GL)
+- Montage : music de la playlist high bass energy + post linked/simon/outraghe/bluesky/insta/youtube
+- Big Water plane genre WindWaker ? :p
+- REFACTORING HERE (Voir ~Engine~)
+- 2D Games aswell for engine structure can be nice (or side weekend break)
+
 ## Core Goals for Portolio
 - Finish Learn open GL
 - PBR : Industry Standard (Require Gamma Correction, FrameBuffer, Cubemaps, HDR)
 - ShadowMaps : Require Advenced Lighting
 - Deffered Rendering : Requir at least both above I guess. Last fight ? 
 - One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? You've got time :)
-
-### Main Path (Learn Open GL)
-- Importer les autres modèles
-- UI : Support Post Processing Choice
--- POST PROCESS STACK :(Later Stack?) (Kernel, Blur, Chromatic Abberation, Sharpen... Drop down + Combine or bool flags (the simplest so far)) + expose shader code dans un champ et reload ça serait funky
-- Video Update mesh certainement + update readme/features + music de la playlist high bass energy + post linked/simon/outraghe/bluesky/insta/youtube
-- Big Water plane genre WindWaker ? :p
-- REFACTORING HERE (Voir ~Engine~)
-- 2D Games aswell for engine structure can be nice (or side weekend break)
 
 ## GPU Instancing (Advanced Fun Goals)
 - Grass Shader With Vertex displacement + Color UV + Instancing (voir Acerola)
@@ -31,9 +29,9 @@
 
 ### Bug
 - Linear/Quadratic Attenuation  calculation seems weirds / off ? :/
-- Bizzare ce truc de quadrillage avec le lighting ?
 - Fix Orthographic Camera
 - DrawCall Bugger parce que pas pris en compte dans Mesh.Draw (todo : Class Renderer qui wrap tout les calls opens GL)
+- camere scroll speed pas pris en comtpe 
 
 ### Engine Features
 - FaceCulling v2
@@ -54,7 +52,7 @@
 - UI : MeshReload important aussi (via file system ça pourrait être noice) (pour voir tout les assets Zelda jor <3)
 
 
-# Global Goals
+# Global Goals (de départ, remember d'ou tu viens)
 - PostProcessing Effects : presque ok v1
 - ToonShader : ok
 - View Mode : kinda ok - Normal shader could be cool - (normals, heatmaps...)
@@ -79,6 +77,7 @@
 - Tech Artist Org : https://www.tech-artists.org/
 - Graphic Opti : https://www.youtube.com/watch?v=YdXi1kcQLDE
 - Journal of Computer Graphics, per Year : https://jcgt.org/read.html
+
 ## Books 
 - 3D Maths Primer for Graphics and Game Dev
 - Real Time Rendering Fourth Edition

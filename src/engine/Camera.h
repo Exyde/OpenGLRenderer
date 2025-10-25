@@ -86,7 +86,7 @@ class Camera {
     }
 
     void ProcessMouseScroll(float yoffset) {
-        Fov -= (float)yoffset;
+        Fov -= yoffset;
         if (Fov < 1.0f) Fov = 1.0f;
         if (Fov > 45.0f) Fov = 45.0f;
     }

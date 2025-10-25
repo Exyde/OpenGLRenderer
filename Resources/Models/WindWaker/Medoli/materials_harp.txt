@@ -1,0 +1,54 @@
+mayu
+====
+  Textures:
+    - md_harp
+    - kankyo
+        Offset: 0.125, 0
+        Scale: 0.75, 0.75
+    - md_harp_ia
+    - toonMETAL
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 207, 63, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+    - 0, 0, 0, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #4 RGB))
+         A = 0
+    2: RGB = (tex #1 RGB)
+         A = (tex #1 A)
+    3: RGB = (prev. RGB), then add (tex #2 RGB)
+         A = (prev. A)
+    4: RGB = ((207, 63, 0) * (tex #4 RGB)), then add (prev. RGB)
+         A = (prev. A)
+
+
+
+mokubu1
+=======
+  Textures:
+    - md_harp
+    - ZBtoonEX
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 160, 90, 0, 255
+
+  Color Registers:
+    - 128, 128, 128, 255
+
+  Steps:
+    1: RGB = (lerp from (128, 128, 128) to (255, 255, 255) using (tex #2 RGB))
+         A = 0
+    2: RGB = ((tex #1 RGB) * (prev. RGB))
+         A = (tex #1 A)
+    3: RGB = ((160, 90, 0) * (tex #2 RGB)), then add (prev. RGB)
+         A = (prev. A)

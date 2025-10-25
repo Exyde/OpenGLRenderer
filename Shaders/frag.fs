@@ -98,7 +98,7 @@ void main()
     }
     
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
-      //  result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
+      result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }
     
     //result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, TexCoord);

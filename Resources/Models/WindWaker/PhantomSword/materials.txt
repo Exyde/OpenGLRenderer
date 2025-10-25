@@ -1,0 +1,43 @@
+m_bpg_ken1
+==========
+  Textures:
+    - pg_ken1_1
+    - kieru2
+        Offset: -0.25, 0.25
+        Scale: 0.5, 0.5
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 255, 255, 255, 128
+    - 61, 112, 142, 255
+
+  Steps:
+    1: RGB = (0, 0, 0)
+         A = (lerp from 255 to 128 using (tex #2 A))
+    2: RGB = ((61, 112, 142) * (tex #1 RGB))
+         A = (prev. A)
+
+
+
+m_bpg_ken1(2)
+=============
+  Textures:
+    - pg_ken1_1
+    - kieru2
+        Offset: -0.25, 0.25
+        Scale: 0.5, 0.5
+
+  Ambient Colors:
+    - 50, 50, 50, 50
+
+  Constant Colors:
+    - 255, 255, 255, 128
+    - 61, 112, 142, 255
+
+  Steps:
+    1: RGB = (0, 0, 0)
+         A = (lerp from 255 to 128 using (tex #2 A))
+    2: RGB = ((61, 112, 142) * (tex #1 RGB))
+         A = (prev. A)

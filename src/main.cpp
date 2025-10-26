@@ -55,12 +55,12 @@ PostProcessSettings postFX;
 static int DrawCallsCounter = 0;
 bool enablePostProcessing = false;
 bool UI_rotateStuff = true;
-float ambientLightColor[3] = {0.1, 0.1f, 0.1f};
+float ambientLightColor[3] = {1.0, 1.0f, 1.0f};
 float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};
-float specularLightColor[3] = {1.0, 1.0f, 1.0f};
+float specularLightColor[3] = {0.0, 0.0f, 0.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 static const char* viewModes[]{"Normal", "Wireframe"};
-static const char* objectSelected[]{"Backpack", "Cathedral", "Village",
+static const char* objectSelected[]{"Backpack", "Water", "Village",
                                     "Mercantile"};
 static const char* lightModeSelected[]{"Phong", "Toon", "PBR"};
 static const char* cameraModeSelected[]{"FreeCamera", "FPS"};
@@ -73,7 +73,7 @@ static float NearPlane = 0.1f;
 static float FarPlane = 5000.0f;
 static int viewMode = 0;                 // -- Lit Shaded
 static int objectViewSelection = 4;      // -- Backpack
-static int windWakerSelection = 4;       // -- Backpack
+static int windWakerSelection = 7;       // -- Mercantile
 static int lightModeSelection = 0;       // -- Phong/Toon/PBR
 static int cameraModeSelection = 0;      // -- Free/FPS
 static int projectionModeSelection = 0;  // -- Perspective/Orthographic
@@ -188,7 +188,7 @@ uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;
 unsigned int renderTexture;
 unsigned int rbo;
 bool cursorVisible = false;
-float userUpDown = 1.0;
+float userUpDown = 0.01;
 float userLeftRight = 1.0;
 Vector3 LightPosition(-2.0f, 1.5F, 3.3F);
 Camera cam(Vector3(0.0f, 0.0f, 0.0f));
@@ -451,6 +451,7 @@ int main() {
                        "Shaders/light_source_frag.fs");
     Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
     Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
+    Shader waterShader("Shaders/water.vs", "Shaders/water.fs");
     Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
     Shader postProcessShader("Shaders/postprocess_vert.vs",
                              "Shaders/postprocess_frag.fs");
@@ -459,23 +460,24 @@ int main() {
     ShaderReloader grassReloader(grassShader);
     ShaderReloader fullScreenReloader(postProcessShader);
     ShaderReloader skyboxReloader(skyboxShader);
+    ShaderReloader waterReloader(waterShader);
 
     std::vector<ShaderReloader> reloaders{mainReloader, grassReloader,
-                                          fullScreenReloader, skyboxReloader};
+                                          fullScreenReloader, skyboxReloader,
+                                          waterReloader};
 
     std::vector<std::string> cubemapPaths{
-        "Resources/Textures/skybox/right.jpg",
-        "Resources/Textures/skybox/left.jpg",
-        "Resources/Textures/skybox/top.jpg",
-        "Resources/Textures/skybox/bottom.jpg",
-        "Resources/Textures/skybox/front.jpg",
-        "Resources/Textures/skybox/back.jpg",
+        "Resources/Textures/skybox/right.png",
+        "Resources/Textures/skybox/left.png",
+        "Resources/Textures/skybox/top.png",
+        "Resources/Textures/skybox/bottom.png",
+        "Resources/Textures/skybox/front.png",
+        "Resources/Textures/skybox/back.png",
     };
     unsigned int cubemapTexture = LoadCubeMap(cubemapPaths);
 
     skyboxShader.Use();
     skyboxShader.SetInt("skybox", 0);
-    skyboxShader.SetFloat("uTime", ElapsedTime() * userUpDown);
 
     Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
                    false, "diffuse");
@@ -493,10 +495,11 @@ int main() {
                      GL_CLAMP_TO_BORDER, false, "diffuse");
 
     Model backpackModel("Resources/Models/backpack/backpack.obj");
+    Model waterPlane("Resources/Models//Water/waterplane.obj");
     // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
     // Model villageModel("Resources/Models/rungholt/rungholt.obj");
 
-    std::vector<Model> models{backpackModel, backpackModel, backpackModel,
+    std::vector<Model> models{backpackModel, waterPlane, backpackModel,
                               backpackModel, backpackModel};
 
 #ifdef WIND_WAKER
@@ -717,18 +720,28 @@ int main() {
             }
             phongShader.SetMat4("model", modelMatrix);
 
-            OpenGlDraw(GL_TRIANGLES, 0, 36);
+            // OpenGlDraw(GL_TRIANGLES, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
 
-        // models[objectViewSelection].Draw(phongShader);
+        models[objectViewSelection].Draw(phongShader);
 
 #ifdef WIND_WAKER
         wwModels[windWakerSelection].Draw(phongShader);
 #endif
+
+        waterShader.Use();
+        modelMatrix = glm::mat4(1.0F);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(1000.0f));
+        waterShader.SetMat4("model", modelMatrix);
+        waterShader.SetMat4("view", viewMatrix);
+        waterShader.SetMat4("projection", projectionMatrix);
+        waterShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        // -- Water
+        waterPlane.Draw(waterShader);
 
         // -- Grass
         grassShader.Use();

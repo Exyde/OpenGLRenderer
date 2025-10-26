@@ -2,10 +2,10 @@
 
 - Partager moteur Vianney / Stanis pour feedback at some point
 
-
 ### Main Path (Learn Open GL)
-- Montage : music de la playlist high bass energy + post linked/simon/outraghe/bluesky/insta/youtube
+- Advanced Data : Remplacer l'implémentation d'assimp par des subdata dans le VAO ?
 - Big Water plane genre WindWaker ? :p
+- Shadowmap ? :think:
 - REFACTORING HERE (Voir ~Engine~)
 - 2D Games aswell for engine structure can be nice (or side weekend break)
 

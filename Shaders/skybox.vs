@@ -5,7 +5,6 @@ layout (location = 0) in vec3 aPos;
 out vec3 TexCoord; // Direction vector here for sampling cubemap correctly.
 uniform mat4 view;
 uniform mat4 projection;
-uniform float uTime;
 
 void main()
 {

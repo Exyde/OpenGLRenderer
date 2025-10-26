@@ -1,6 +1,6 @@
 # Global
 
-[Back to menu](/index.md)
+[Back to menu](index.md)
 
 Analyse First, then optimize : Where are we bottle neck ? Enemies ? Physics ? AI ?
 Frame Rate vs Frame Time (much better for details)

@@ -2,12 +2,15 @@
 
 ## Navigation
 - [Back to repo](https://github.com/Exyde/OpenGLRenderer)
-- [Optimization Guide](/docs/optimization_guide_ben.md)
-- [Advanced Open GL](/docs/advanced_opengl.md)
-- [Advanced Lighting](/docs/advanced_lighting.md)
+- [Optimization Guide](optimization_guide_ben.md)
+- [Advanced Open GL](advanced_opengl.md)
+- [Advanced Lighting](advanced_lighting.md)
 
+## Table Of Contents
 - [Syntropy Roadmap](#syntropy-roadmap)
-    - [Main Path (Learn Open GL) || TodoList](#main-path-learn-open-gl--todolist)
+  - [Navigation](#navigation)
+  - [Table Of Contents](#table-of-contents)
+    - [Main Path (Learn Open GL) - TodoList](#main-path-learn-open-gl---todolist)
   - [Core Goals for Portolio](#core-goals-for-portolio)
   - [GPU Instancing (Advanced Fun Goals)](#gpu-instancing-advanced-fun-goals)
   - [Later Features](#later-features)
@@ -20,7 +23,7 @@
   - [Books](#books)
   - [Radiance Cascades](#radiance-cascades)
 
-### Main Path (Learn Open GL) || TodoList
+### Main Path (Learn Open GL) - TodoList
 - Add renter textures for differents maps views (different buffer, could be nice)
 - Mesh Reload from IMGUI + Filesystem
 - Improve Site/Files system here (clean all links)
@@ -38,8 +41,6 @@
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
 - Implement Basic Physics
-
-
 
 ## Core Goals for Portolio
 - Finish Learn open GL

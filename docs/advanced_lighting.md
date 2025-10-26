@@ -1,6 +1,6 @@
 # Advanced Lighting
 
-[Back to menu](/index.md)
+[Back to menu](index.md)
 
 - [Advanced Lighting](#advanced-lighting)
   - [Intro : Bling-Phong](#intro--bling-phong)

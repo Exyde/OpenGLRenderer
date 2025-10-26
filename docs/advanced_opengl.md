@@ -1,6 +1,6 @@
 # Advanced OpenGL
 
-[Back to menu](/README.md)
+[Back to menu](/index.md)
 
 - [Advanced OpenGL](#advanced-opengl)
   - [Advanced Datas](#advanced-datas)

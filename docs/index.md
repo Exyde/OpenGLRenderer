@@ -1,8 +1,6 @@
-# Rodmap
+# Syntropy Roadmap
 
-[Back to menu](/README.md)
-
-- [Rodmap](#rodmap)
+- [Syntropy Roadmap](#syntropy-roadmap)
     - [Main Path (Learn Open GL) || TodoList](#main-path-learn-open-gl--todolist)
   - [Core Goals for Portolio](#core-goals-for-portolio)
   - [GPU Instancing (Advanced Fun Goals)](#gpu-instancing-advanced-fun-goals)

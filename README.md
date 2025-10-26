@@ -1,4 +1,4 @@
-# OpenGLRenderer - This dude need a name
+# Syntropy ?
 
 ## Navigation
 - [Roadmap](/docs/index.md)

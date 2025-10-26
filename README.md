@@ -1,10 +1,6 @@
 # Syntropy ?
 
-## Navigation
-- [Roadmap](/docs/index.md)
-- [Optimization Guide](/docs/optimization_guide_ben.md)
-- [Advanced Open GL](/docs/advanced_opengl.md)
-- [Advanced Lighting](/docs/advanced_lighting.md)
+[Check documentation website](https://exyde.github.io/OpenGLRenderer/)
 
 ## Current Features
 - World Camera

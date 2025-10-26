@@ -1,5 +1,11 @@
 # Syntropy Roadmap
 
+## Navigation
+- [Back to repo](https://github.com/Exyde/OpenGLRenderer)
+- [Optimization Guide](/docs/optimization_guide_ben.md)
+- [Advanced Open GL](/docs/advanced_opengl.md)
+- [Advanced Lighting](/docs/advanced_lighting.md)
+
 - [Syntropy Roadmap](#syntropy-roadmap)
     - [Main Path (Learn Open GL) || TodoList](#main-path-learn-open-gl--todolist)
   - [Core Goals for Portolio](#core-goals-for-portolio)

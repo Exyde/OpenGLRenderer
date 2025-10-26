@@ -53,11 +53,14 @@ uniform Flashlight flashLight;
 
 uniform bool ToonShading;
 
-in float Height;
-in vec3 ourColor;
-in vec2 TexCoord;
-in vec3 Normal;
-in vec3 FragPosWorldSpace;
+
+in StagedData {
+    float Height;
+    vec2 TexCoord;
+    vec3 Normal;
+    vec3 FragPosWorldSpace;
+} inData;
+
 uniform float uTime;
 uniform float T;
 uniform vec3 ViewPos;
@@ -72,23 +75,30 @@ vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection);
 
 void main()
 {
-    vec2 scrollingUV = TexCoord + vec2(0, -uTime); 
-    vec4 texColor = texture(mat.diffuse, TexCoord);
+    vec2 uvs = inData.TexCoord;
 
-    FragColor = texture(mat.diffuse, TexCoord);
-    float h = (Height)/  32.0f;
+    vec2 scrollingUV = uvs + vec2(0, -uTime); 
+    vec4 texColor = texture(mat.diffuse, uvs);
+
+    FragColor = texture(mat.diffuse, uvs);
+    float h = (inData.Height)/  32.0f;
     FragColor = vec4(1.0,h,h, 1.0);
 
     // UV's Debug
-    FragColor = vec4(TexCoord, 0., 1.0);
-    FragColor = vec4(FragPosWorldSpace, 1.0);
+    FragColor = vec4(uvs, 0., 1.0);
+    FragColor = vec4(inData.FragPosWorldSpace, 1.0);
     
-    vec3 normal = normalize(Normal);
-    vec3 viewDirection = normalize(ViewPos - FragPosWorldSpace);
+    vec3 normal = normalize(inData.Normal);
+    vec3 viewDirection = normalize(ViewPos - inData.FragPosWorldSpace);
 
     FragColor = vec4(normal, 1.0);
+
+    if (gl_FrontFacing == false) return; // Draw normal for backfaces
+
+    // -- Create curses
+    //gl_FragDepth = gl_FragCoord.z - 0.1;
+
     vec3 result = vec3(0.0);
-    FragColor = vec4(normal, 1.0);
     
 
     if(ToonShading){
@@ -98,14 +108,14 @@ void main()
     }
     
     for (int i = 0; i < NR_POINTS_LIGHTS; i++){
-      result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
+      //result += CalculatePointLight(pointLights[i], normal, FragPosWorldSpace, viewDirection);
     }
     
     //result += CalculateFlashlight(flashLight, normal, FragPosWorldSpace, viewDirection, TexCoord);
     //result += CalculateEmissive(scrollingUV);
 
     // -- Fog kind of, but linear, need circular blend 
-    float depth = clamp(LinearDepth(gl_FragCoord.z) / 20, 0.0, 0.85); 
+    //float depth = clamp(LinearDepth(gl_FragCoord.z) / 20, 0.0, 0.85); 
 
     //FragColor = vec4(result * ( 1- depth), 1.0);
     FragColor = vec4(result, 1.0);
@@ -114,7 +124,7 @@ void main()
 float LinearDepth(float depth){
     // -- Could / Should be an uniform 
     float near = 0.1;
-    float far = 1000.0;
+    float far = 5000.0;
 
     float ndc = depth * 2.0 - 1.0; // -- From 0-1 to -1,1 range
     return (2.0 * near * far) / (far + near - ndc * (far - near)); // Inverse projection matrix, see :https://www.songho.ca/opengl/gl_projectionmatrix.html
@@ -123,19 +133,21 @@ float LinearDepth(float depth){
 
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
 
+    vec2 uvs = inData.TexCoord;
+
     // -- Ambiant
-    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, TexCoord));
+    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, uvs));
 
     // -- Diffuse
     vec3 lightDirection = normalize(light.direction);
     float theta = dot(normal, lightDirection);
     float correctedTheta = max(theta, 0.0);
-    vec3 diffuse = light.diffuse * correctedTheta * vec3(texture(mat.diffuse, TexCoord));
+    vec3 diffuse = light.diffuse * correctedTheta * vec3(texture(mat.diffuse, uvs));
 
     // -- Specular
     vec3 reflectionDirection = reflect(-lightDirection, normal);
     float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess);
-    vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
+    vec3 specularSampled = vec3(texture(mat.specular, uvs));
     vec3 specular = light.specular * spec * specularSampled;
 
 
@@ -144,14 +156,15 @@ vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
 
 vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection){
 
-    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, TexCoord));
+    vec2 uvs = inData.TexCoord;
+    vec3 ambient = light.ambient * vec3(texture(mat.diffuse, uvs));
 
     vec3 lightDirection = normalize(light.direction);
 
     // -- Specular
     vec3 reflectionDirection = reflect(-lightDirection, normal);
     float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess);
-    vec3 specularSampled = vec3(texture(mat.specular, TexCoord));
+    vec3 specularSampled = vec3(texture(mat.specular, uvs));
     vec3 specular = light.specular * spec * specularSampled;
 
     float theta = dot(normal, lightDirection);
@@ -164,7 +177,7 @@ vec3 ToonLight(DirLight light, vec3 normal, vec3 viewDirection){
     else if (correctedTheta > 0.25) toonDiffuse = vec3(0.3) * light.diffuse;
     else toonDiffuse = vec3(0.1) * light.diffuse;
 
-    vec3 diffuse = toonDiffuse * vec3(texture(mat.diffuse, TexCoord));
+    vec3 diffuse = toonDiffuse * vec3(texture(mat.diffuse, uvs));
 
 
     return (ambient + diffuse + specular);
@@ -177,6 +190,7 @@ vec3 CalculateEmissive(vec2 uvs){
 
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection){
 
+    vec2 uvs = inData.TexCoord;
     vec3 lightDir = normalize(light.position - fragPos);
 
     // -- Diffuse
@@ -190,10 +204,10 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     float distance = length(light.position - fragPos);
     float Attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    vec3 diffuseTex = vec3(texture(mat.diffuse, TexCoord));
+    vec3 diffuseTex = vec3(texture(mat.diffuse, uvs));
     vec3 ambient = light.ambient * diffuseTex;
     vec3 diffuse = light.diffuse * diff * diffuseTex;
-    vec3 specular = light.specular * vec3(texture(mat.specular, TexCoord));
+    vec3 specular = light.specular * vec3(texture(mat.specular, uvs));
 
     ambient *= Attenuation;
     diffuse *= Attenuation;

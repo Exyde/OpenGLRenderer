@@ -1,5 +1,11 @@
 # OpenGLRenderer - This dude need a name
 
+## Navigation
+- [Roadmap](/documentation/todo.md)
+- [Optimization Guide](/documentation/optimization_guide_ben.md)
+- [Advanced Open GL](/documentation/advanced_opengl.md)
+- [Advanced Lighting](/documentation/advanced_lighting.md)
+
 ## Current Features
 - World Camera
 - Basic mesh support with Assimp
@@ -9,7 +15,7 @@
 - Cubemaps
 - Matrices transformations
 - Lights : Directionnal, Spotlight, Pointlight
-- Shaders : Hot reload
+- Shaders : MainPhong, Toon, Grass, Water, Skybox, Postprocessing + Hot reload
 - Wireframe View
 - ImGui Basic UI
 

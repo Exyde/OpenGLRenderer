@@ -338,6 +338,9 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    // Vertex Shader Config
+    glEnable(GL_PROGRAM_POINT_SIZE);
+
 // -- Initial Culling Config
 // glEnable(GL_CULL_FACE);
 // glCullFace(GL_FRONT);
@@ -720,7 +723,7 @@ int main() {
             }
             phongShader.SetMat4("model", modelMatrix);
 
-            // OpenGlDraw(GL_TRIANGLES, 0, 36);
+            OpenGlDraw(GL_POINTS, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);

@@ -61,41 +61,46 @@ void main(){
     vec4 scene = texture(screenTexture, TexCoord);
     vec4 finalColor = scene;
 
-    if (uEnableInvert)
-        finalColor = vec4(vec3(1.0) - finalColor.rgb, 1.0);
-
-    if (uEnableGrayscale){
-        float avg = dot(finalColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-        finalColor = vec4(avg, avg, avg, 1.0);
-    }
-
-    if (uEnableChroma) {
-        vec2 uv = TexCoord;
-        float a = uChromaIntensity;
-        vec3 chroma;
-        chroma.r = texture(screenTexture, uv + vec2(a * sin(uTime * 2.0), 0.0)).r;
-        chroma.g = texture(screenTexture, uv).g;
-        chroma.b = texture(screenTexture, uv - vec2(0.0, a * cos(uTime * 2.5))).b;
-        finalColor = vec4(chroma, 1.0);
-    }
-
-    if (uEnableKernel) {
-        vec3 sampleTex[9];
-        float kernel[9];
+    // -- Stylized post process
+    if (gl_FragCoord.y < sin(uTime * 100.0) * 1080){
+        if (uEnableInvert)
+            finalColor = vec4(vec3(1.0) - finalColor.rgb, 1.0);
         
-        if (uKernelType == 0)      kernel = blurKernel;
-        else if (uKernelType == 1) kernel = sharpenKernel;
-        else if (uKernelType == 2) kernel = boxBlur;
-        else if (uKernelType == 3) kernel = embossKernel;
-
-        vec3 color = vec3(0.0);
-        for (int i = 0; i < 9; i++) {
-            sampleTex[i] = texture(screenTexture, TexCoord + offsets[i]).rgb;
-            color += sampleTex[i] * kernel[i];
+        if (uEnableGrayscale){
+            float avg = dot(finalColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+            finalColor = vec4(avg, avg, avg, 1.0);
         }
-        
-        finalColor = mix(finalColor, vec4(color, 1.0), .5);
+
+        if (uEnableChroma) {
+            vec2 uv = TexCoord;
+            float a = uChromaIntensity;
+            vec3 chroma;
+            chroma.r = texture(screenTexture, uv + vec2(a * sin(uTime * 2.0), 0.0)).r;
+            chroma.g = texture(screenTexture, uv).g;
+            chroma.b = texture(screenTexture, uv - vec2(0.0, a * cos(uTime * 2.5))).b;
+            finalColor = vec4(chroma, 1.0);
+        }
+
+        if (uEnableKernel) {
+            vec3 sampleTex[9];
+            float kernel[9];
+            
+            if (uKernelType == 0)      kernel = blurKernel;
+            else if (uKernelType == 1) kernel = sharpenKernel;
+            else if (uKernelType == 2) kernel = boxBlur;
+            else if (uKernelType == 3) kernel = embossKernel;
+
+            vec3 color = vec3(0.0);
+            for (int i = 0; i < 9; i++) {
+                sampleTex[i] = texture(screenTexture, TexCoord + offsets[i]).rgb;
+                color += sampleTex[i] * kernel[i];
+            }
+            
+            finalColor = mix(finalColor, vec4(color, 1.0), .5);
+        }
     }
+
+
 
     FragColor = finalColor;
 }

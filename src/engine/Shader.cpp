@@ -1,7 +1,6 @@
 #include "Shader.h"
 
 std::string Shader::LoadShaderCodeFromFile(const char* filePath) {
-    // std::cout << "Loading shader code : " << filePath << std::endl;
     std::string shaderCode = "";
     std::ifstream shaderFile;
 

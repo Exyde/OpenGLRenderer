@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <glad/glad.h>
 
@@ -15,6 +14,7 @@ class Shader {
    public:
     int ID;
 
+    Shader() = default;
     Shader(const char* vertexPath, const char* fragmentPath);
     ~Shader();
 
@@ -30,7 +30,6 @@ class Shader {
     void SetMat3(const std::string& name, const glm::mat3& value) const;
     void SetMat4(const std::string& name, const glm::mat4& value) const;
 
-    // -- Todo : Getters
     const char* vertexSaved;
     const char* fragmentSaved;
 
@@ -39,5 +38,3 @@ class Shader {
     int CompileShaderFromCode(std::string vertexCode, std::string fragmentCode);
     int CreateShaderFromFiles(const char* vertexPath, const char* fragmentPath);
 };
-
-#endif  // SHADER_H

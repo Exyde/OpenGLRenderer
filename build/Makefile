@@ -176,6 +176,30 @@ src/engine/Model.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.s
 .PHONY : src/engine/Model.cpp.s
 
+src/engine/ResourceLoader.obj: src/engine/ResourceLoader.cpp.obj
+.PHONY : src/engine/ResourceLoader.obj
+
+# target to build an object file
+src/engine/ResourceLoader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj
+.PHONY : src/engine/ResourceLoader.cpp.obj
+
+src/engine/ResourceLoader.i: src/engine/ResourceLoader.cpp.i
+.PHONY : src/engine/ResourceLoader.i
+
+# target to preprocess a source file
+src/engine/ResourceLoader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.i
+.PHONY : src/engine/ResourceLoader.cpp.i
+
+src/engine/ResourceLoader.s: src/engine/ResourceLoader.cpp.s
+.PHONY : src/engine/ResourceLoader.s
+
+# target to generate assembly for a file
+src/engine/ResourceLoader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.s
+.PHONY : src/engine/ResourceLoader.cpp.s
+
 src/engine/Shader.obj: src/engine/Shader.cpp.obj
 .PHONY : src/engine/Shader.obj
 
@@ -248,6 +272,30 @@ src/engine/Texture.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.s
 .PHONY : src/engine/Texture.cpp.s
 
+src/engine/Texture2D.obj: src/engine/Texture2D.cpp.obj
+.PHONY : src/engine/Texture2D.obj
+
+# target to build an object file
+src/engine/Texture2D.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj
+.PHONY : src/engine/Texture2D.cpp.obj
+
+src/engine/Texture2D.i: src/engine/Texture2D.cpp.i
+.PHONY : src/engine/Texture2D.i
+
+# target to preprocess a source file
+src/engine/Texture2D.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.i
+.PHONY : src/engine/Texture2D.cpp.i
+
+src/engine/Texture2D.s: src/engine/Texture2D.cpp.s
+.PHONY : src/engine/Texture2D.s
+
+# target to generate assembly for a file
+src/engine/Texture2D.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.s
+.PHONY : src/engine/Texture2D.cpp.s
+
 src/engine/stb_image.obj: src/engine/stb_image.cpp.obj
 .PHONY : src/engine/stb_image.obj
 
@@ -271,6 +319,30 @@ src/engine/stb_image.s: src/engine/stb_image.cpp.s
 src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
+
+src/game/Game.obj: src/game/Game.cpp.obj
+.PHONY : src/game/Game.obj
+
+# target to build an object file
+src/game/Game.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj
+.PHONY : src/game/Game.cpp.obj
+
+src/game/Game.i: src/game/Game.cpp.i
+.PHONY : src/game/Game.i
+
+# target to preprocess a source file
+src/game/Game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.i
+.PHONY : src/game/Game.cpp.i
+
+src/game/Game.s: src/game/Game.cpp.s
+.PHONY : src/game/Game.s
+
+# target to generate assembly for a file
+src/game/Game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.s
+.PHONY : src/game/Game.cpp.s
 
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
@@ -503,6 +575,9 @@ help:
 	@echo ... src/engine/Model.obj
 	@echo ... src/engine/Model.i
 	@echo ... src/engine/Model.s
+	@echo ... src/engine/ResourceLoader.obj
+	@echo ... src/engine/ResourceLoader.i
+	@echo ... src/engine/ResourceLoader.s
 	@echo ... src/engine/Shader.obj
 	@echo ... src/engine/Shader.i
 	@echo ... src/engine/Shader.s
@@ -512,9 +587,15 @@ help:
 	@echo ... src/engine/Texture.obj
 	@echo ... src/engine/Texture.i
 	@echo ... src/engine/Texture.s
+	@echo ... src/engine/Texture2D.obj
+	@echo ... src/engine/Texture2D.i
+	@echo ... src/engine/Texture2D.s
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
+	@echo ... src/game/Game.obj
+	@echo ... src/game/Game.i
+	@echo ... src/game/Game.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s

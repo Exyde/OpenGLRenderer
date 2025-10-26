@@ -11,6 +11,7 @@
   - [Navigation](#navigation)
   - [Table Of Contents](#table-of-contents)
     - [Main Path (Learn Open GL) - TodoList](#main-path-learn-open-gl---todolist)
+  - [Breakout](#breakout)
   - [Core Goals for Portolio](#core-goals-for-portolio)
   - [GPU Instancing (Advanced Fun Goals)](#gpu-instancing-advanced-fun-goals)
   - [Later Features](#later-features)
@@ -24,6 +25,9 @@
   - [Radiance Cascades](#radiance-cascades)
 
 ### Main Path (Learn Open GL) - TodoList
+- Static Logger
+- Resource Loader ---> Support Texture.cpp or remove it
+- Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Add renter textures for differents maps views (different buffer, could be nice)
 - Mesh Reload from IMGUI + Filesystem
 - Improve Site/Files system here (clean all links)
@@ -32,7 +36,6 @@
 - Flag for post process FragCoord influence
 - Big Water plane genre WindWaker ? 
 - REFACTORING HERE (Voir ~Engine~) - En vrai, pas la peine de GROS Refactoring avant d'avoir fini tout et de savoir un peu mieux ce qu'on fait - Genre la refactoring avec Uniform Buffer Object cool !
-- 2D Games aswell for engine structure can be nice (or side weekend break)
 - RayLibEngine at some point ? Game or Jam maybe ? 
 - Finnish Advanced Lighting
 - Finish Advanced GLSL
@@ -41,6 +44,8 @@
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
 - Implement Basic Physics
+
+## Breakout 
 
 ## Core Goals for Portolio
 - Finish Learn open GL

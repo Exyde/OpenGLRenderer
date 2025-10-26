@@ -19,11 +19,13 @@ include_directories(
 # === Source files ===
 file(GLOB_RECURSE ENGINE_SRC ${CMAKE_SOURCE_DIR}/src/engine/*.cpp)
 file(GLOB_RECURSE IMGUI_SRC ${CMAKE_SOURCE_DIR}/src/imgui/*.cpp)
+file(GLOB_RECURSE GAME_SRC ${CMAKE_SOURCE_DIR}/src/game/*.cpp)
 
 add_executable(OpenGLRenderer
     ${CMAKE_SOURCE_DIR}/src/main.cpp
     ${CMAKE_SOURCE_DIR}/src/glad.c
     ${ENGINE_SRC}
+    ${GAME_SRC}
     ${IMGUI_SRC}
 )
 

@@ -12,14 +12,36 @@
 
 #include "engine/Camera.h"
 #include "engine/Model.h"
+#include "engine/ResourceLoader.h"
 #include "engine/Shader.h"
 #include "engine/ShaderReloader.h"
 #include "engine/SlyMath.H"
 #include "engine/Texture.h"
 #include "engine/stb_image.h"
+#include "game/Game.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+
+#pragma region UserShitToMoveLaterAwayFromHere
+const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
+uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;
+unsigned int renderTexture;
+unsigned int rbo;
+bool cursorVisible = false;
+float userUpDown = 0.01;
+float userLeftRight = 1.0;
+Vector3 LightPosition(-2.0f, 1.5F, 3.3F);
+Camera cam(Vector3(0.0f, 0.0f, 0.0f));
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+bool FIRST_MOUSE = true;
+float lastMouseX = 400;
+float lastMouseY = 300;
+#pragma endregion
+
+// #define BREAKOUT
+Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 constexpr glm::vec4 ColorWhite = glm::vec4(1.0);
 constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
@@ -182,23 +204,6 @@ glm::vec3 pointLightPositions[] = {
     glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f)};
 #pragma endregion
 
-#pragma region UserShitToMoveLaterAwayFromHere
-const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
-uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;
-unsigned int renderTexture;
-unsigned int rbo;
-bool cursorVisible = false;
-float userUpDown = 0.01;
-float userLeftRight = 1.0;
-Vector3 LightPosition(-2.0f, 1.5F, 3.3F);
-Camera cam(Vector3(0.0f, 0.0f, 0.0f));
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-bool FIRST_MOUSE = true;
-float lastMouseX = 400;
-float lastMouseY = 300;
-#pragma endregion
-
 unsigned int LoadCubeMap(std::vector<std::string> facePaths);
 
 static void OpenGlDraw(GLenum mode, GLint first, GLsizei count) {
@@ -225,6 +230,10 @@ void LogMaxVertexAttributes() {
 
 #pragma region CallbackOpenGL
 void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
+#ifdef BREAKOUT
+    return;
+#endif
+
     CURRENT_WIDTH = width;
     CURRENT_HEIGHT = height;
     glViewport(0, 0, width, height);
@@ -238,12 +247,20 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
+#ifdef BREAKOUT
+    return;
+#endif
+
     if (cursorVisible) return;
     // cam.ProcessMouseScroll(yoffset);
     cam.MovementSpeed += (float)yoffset;
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
+#ifdef BREAKOUT
+    return;
+#endif
+
     if (cursorVisible) return;
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
@@ -328,11 +345,40 @@ int main() {
 
     // -- Setup --
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    InitIMGUI(window);
+    stbi_set_flip_vertically_on_load(false);
+
+    // -- Callback
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
     glfwSetCursorPosCallback(window, Mouse_Callback);
     glfwSetScrollCallback(window, Scroll_Callback);
-    stbi_set_flip_vertically_on_load(false);
-    InitIMGUI(window);
+
+#ifdef BREAKOUT
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    game.Initialize();
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
+
+    while (!glfwWindowShouldClose(window)) {
+        // -- Delta time
+        float currentFrame = ElapsedTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        glfwPollEvents();
+
+        game.ProcessInput(deltaTime);
+        game.Update(deltaTime);
+        game.Render();
+
+        glfwSwapBuffers(window);
+    }
+
+    ResourceLoader::Clear();
+    glfwTerminate();
+    return 0;
+#else
 
     // -- Depth Buffer Config
     glEnable(GL_DEPTH_TEST);
@@ -964,6 +1010,7 @@ int main() {
 
     ExitEngine();
     return 0;
+#endif  // -- ENDIF BREAKOUT
 }
 
 void GetInputs(GLFWwindow* window) {

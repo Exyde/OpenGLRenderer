@@ -1,10 +1,10 @@
 # OpenGLRenderer - This dude need a name
 
 ## Navigation
-- [Roadmap](/documentation/todo.md)
-- [Optimization Guide](/documentation/optimization_guide_ben.md)
-- [Advanced Open GL](/documentation/advanced_opengl.md)
-- [Advanced Lighting](/documentation/advanced_lighting.md)
+- [Roadmap](/docs/index.md)
+- [Optimization Guide](/docs/optimization_guide_ben.md)
+- [Advanced Open GL](/docs/advanced_opengl.md)
+- [Advanced Lighting](/docs/advanced_lighting.md)
 
 ## Current Features
 - World Camera

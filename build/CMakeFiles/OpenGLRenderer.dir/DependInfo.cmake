@@ -19,6 +19,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/game/BallObject.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameObject.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj.d"

@@ -16,9 +16,14 @@ class GameObject {
 
     // -- Methods
     GameObject();
-    GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite,
-               glm::vec4 color = glm::vec4(1.0f),
+    GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec4 color = glm::vec4(1.0f),
                glm::vec2 velocity = glm::vec2(0.0f));
     ~GameObject();
+
     virtual void Draw(SpriteRenderer& renderer);
+
+    bool CheckForLeftBound();
+    bool CheckForRightBound(unsigned int windowWidth);
+    bool CheckForTopBound();
+    bool CheckForBottomBound(unsigned int windowHeight);
 };

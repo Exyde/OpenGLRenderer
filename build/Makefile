@@ -368,6 +368,30 @@ src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
 
+src/game/BallObject.obj: src/game/BallObject.cpp.obj
+.PHONY : src/game/BallObject.obj
+
+# target to build an object file
+src/game/BallObject.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj
+.PHONY : src/game/BallObject.cpp.obj
+
+src/game/BallObject.i: src/game/BallObject.cpp.i
+.PHONY : src/game/BallObject.i
+
+# target to preprocess a source file
+src/game/BallObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.i
+.PHONY : src/game/BallObject.cpp.i
+
+src/game/BallObject.s: src/game/BallObject.cpp.s
+.PHONY : src/game/BallObject.s
+
+# target to generate assembly for a file
+src/game/BallObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.s
+.PHONY : src/game/BallObject.cpp.s
+
 src/game/Game.obj: src/game/Game.cpp.obj
 .PHONY : src/game/Game.obj
 
@@ -695,6 +719,9 @@ help:
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
+	@echo ... src/game/BallObject.obj
+	@echo ... src/game/BallObject.i
+	@echo ... src/game/BallObject.s
 	@echo ... src/game/Game.obj
 	@echo ... src/game/Game.i
 	@echo ... src/game/Game.s

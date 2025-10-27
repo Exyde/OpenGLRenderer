@@ -22,6 +22,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj"

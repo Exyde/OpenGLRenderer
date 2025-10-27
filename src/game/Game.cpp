@@ -1,16 +1,16 @@
 #include "Game.h"
 
-#include "../engine/Logger.h"
-#include "../engine/ResourceLoader.h"
-#include "../engine/SpriteRenderer.h"
-#include "../glm/glm.hpp"
-
+// -- Player
 const glm::vec2 PLAYER_SIZE(100.0F, 20.0f);
 const float PLAYER_VELOCITY(500.0f);
 
+// -- Ball
+const glm::vec2 INITIAL_BALL_VELOCITY(100.0f, -350.0f);
+const float BALL_RADIUS = 12.5f;
+
 GameObject* Player;
 SpriteRenderer* Renderer;
-
+BallObject* Ball;
 const std::string PLAYER_TEXTURE = "player";
 
 Game::Game(unsigned int width, unsigned int height) : State(ACTIVE), Keys(), Width(width), Height(height) {}
@@ -47,6 +47,10 @@ void Game::Initialize() {
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
     Player = new GameObject(playerPos, PLAYER_SIZE, ResourceLoader::GetTexture2D(PLAYER_TEXTURE));
 
+    // -- Ball
+    glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -BALL_RADIUS * 2.0f);
+    Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY, ResourceLoader::GetTexture2D("face"));
+
     // -- Load Levels
     GameLevel levelOne, levelTwo, levelThree, levelFour;
     levelOne.Load("Resources/Levels/level1.txt", this->Width, this->Height / 2);
@@ -68,26 +72,43 @@ void Game::ProcessInput(float deltaTime) {
     if (this->State == ACTIVE) {
         float vel = PLAYER_VELOCITY * deltaTime;
 
-        if (this->Keys[GLFW_KEY_A]) {
-            if (Player->Position.x >= 0)
-                Player->Position.x -= vel;
-        }
-
+        // -- Change Level
         if (this->Keys[GLFW_KEY_O]) {
             currentLevel++;
             if (currentLevel > (Levels.size() - 1))
                 currentLevel = 0;
         }
 
+        // -- Unlock Ball
+        if (this->Keys[GLFW_KEY_SPACE]) {
+            Ball->Locked = false;
+        }
+
+        // -- Left Motion
+        if (this->Keys[GLFW_KEY_A]) {
+            if (Player->Position.x >= 0) {
+                Player->Position.x -= vel;
+
+                if (Ball->Locked)
+                    Ball->Position.x -= vel;
+            }
+        }
+
+        // -- Right Motion
         if (this->Keys[GLFW_KEY_D]) {
             if (Player->Position.x <= this->Width - Player->Size.x) {
                 Player->Position.x += vel;
+
+                if (Ball->Locked)
+                    Ball->Position.x += vel;
             }
         }
     }
 }
 
-void Game::Update(float deltaTime) {}
+void Game::Update(float deltaTime) {
+    Ball->Move(deltaTime, this->Width);
+}
 
 void Game::Render() {
     glClearColor(0.1, 0.0, 0.0, 1.0);
@@ -98,5 +119,6 @@ void Game::Render() {
                              glm::vec2(this->Width, this->Height), 0.0f);
         this->Levels[this->currentLevel].Draw(*Renderer);
         Player->Draw(*Renderer);
+        Ball->Draw(*Renderer);
     }
 }

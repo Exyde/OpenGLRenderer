@@ -3,10 +3,16 @@
 // clang-format off
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include <vector>
-#include "GameLevel.h"
 
 // clang-format on
+#include <vector>
+
+#include "../engine/Logger.h"
+#include "../engine/ResourceLoader.h"
+#include "../engine/SpriteRenderer.h"
+#include "../glm/glm.hpp"
+#include "BallObject.h"
+#include "GameLevel.h"
 
 enum GameState { ACTIVE, MENU, PAUSED, WIN };
 

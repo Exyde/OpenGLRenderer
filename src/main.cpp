@@ -15,14 +15,12 @@ float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};
 float specularLightColor[3] = {0.0, 0.0f, 0.0f};
 float attenuation[3] = {1.0, 0.09f, 0.032f};
 static const char* viewModes[]{"Normal", "Wireframe"};
-static const char* objectSelected[]{"Backpack", "Water", "Village",
-                                    "Mercantile"};
+static const char* objectSelected[]{"Backpack", "Water", "Village", "Mercantile"};
 static const char* lightModeSelected[]{"Phong", "Toon", "PBR"};
 static const char* cameraModeSelected[]{"FreeCamera", "FPS"};
 static const char* projectionModeSelected[]{"Perspective", "Orthographic"};
-static const char* windWakerSelected[]{
-    "Ariel",         "Crab",   "HelmarocKing", "Medoli",
-    "Phantom Sword", "Shield", "Valoo",        "Mercantile"};
+static const char* windWakerSelected[]{"Ariel",         "Crab",   "HelmarocKing", "Medoli",
+                                       "Phantom Sword", "Shield", "Valoo",        "Mercantile"};
 
 static float NearPlane = 0.1f;
 static float FarPlane = 5000.0f;
@@ -52,28 +50,32 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
     CURRENT_HEIGHT = height;
     glViewport(0, 0, width, height);
 
-    if (appMode == ApplicationMode::Game) return;
+    if (appMode == ApplicationMode::Game)
+        return;
 
     glBindTexture(GL_TEXTURE_2D, renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
-    if (appMode == ApplicationMode::Game) return;
+    if (appMode == ApplicationMode::Game)
+        return;
 
-    if (cursorVisible) return;
+    if (cursorVisible)
+        return;
     // cam.ProcessMouseScroll(yoffset);
     cam.MovementSpeed += (float)yoffset;
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
-    if (appMode == ApplicationMode::Game) return;
+    if (appMode == ApplicationMode::Game)
+        return;
 
-    if (cursorVisible) return;
+    if (cursorVisible)
+        return;
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
 
@@ -109,8 +111,7 @@ bool InitializeGLFW() {
 GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
     LOG("Creating main window");
 
-    GLFWwindow* window =
-        glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
     return window;
 }
 
@@ -228,23 +229,19 @@ int main() {
         glGenBuffers(1, &skyboxVBO);
         glBindVertexArray(skyboxVAO);
         glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices,
-                     GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-                              (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
         // -- Terrain
-        TerrainData terrainData = GetTerrainDataFromHeightMap(
-            "Resources/Textures/iceland_heightmap.png");
+        TerrainData terrainData = GetTerrainDataFromHeightMap("Resources/Textures/iceland_heightmap.png");
         GLuint terrainVAO, terrainVBO, terrainEBO;
         glGenVertexArrays(1, &terrainVAO);
         glBindVertexArray(terrainVAO);
         glGenBuffers(1, &terrainVBO);
         glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
-        glBufferData(GL_ARRAY_BUFFER,
-                     terrainData.vertices.size() * sizeof(float),
-                     &terrainData.vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, terrainData.vertices.size() * sizeof(float), &terrainData.vertices[0],
+                     GL_STATIC_DRAW);
 
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -252,8 +249,7 @@ int main() {
 
         glGenBuffers(1, &terrainEBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     terrainData.indices.size() * sizeof(unsigned int),
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrainData.indices.size() * sizeof(unsigned int),
                      &terrainData.indices[0], GL_STATIC_DRAW);
 
         // -- NDC Quad
@@ -262,14 +258,11 @@ int main() {
         glGenBuffers(1, &ndcQuadVBO);
         glBindVertexArray(ndcQuadVAO);
         glBindBuffer(GL_ARRAY_BUFFER, ndcQuadVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(NDCQuadVertices), &NDCQuadVertices,
-                     GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(NDCQuadVertices), &NDCQuadVertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                              (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                              (void*)(2 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
         // -- Quad Datas
         unsigned int QuadVAO, QuadVBO;
@@ -277,16 +270,12 @@ int main() {
         glGenBuffers(1, &QuadVBO);
         glBindVertexArray(QuadVAO);
         glBindBuffer(GL_ARRAY_BUFFER, QuadVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices,
-                     GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(0));
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0));
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(6 * sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
         // -- Cube Datas ---
@@ -295,16 +284,12 @@ int main() {
         glGenBuffers(1, &CubeVBO);
         glBindVertexArray(CubeVAO);
         glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices,
-                     GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(0));
+        glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0));
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)(6 * sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
         // -- Light Data
@@ -312,21 +297,18 @@ int main() {
         glGenVertexArrays(1, &lightVAO);
         glBindVertexArray(lightVAO);
         glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                              (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
 #pragma endregion
 #pragma region Texture Shaders Models
 
-        Shader lightShader("Shaders/light_source_vertex.vs",
-                           "Shaders/light_source_frag.fs");
+        Shader lightShader("Shaders/light_source_vertex.vs", "Shaders/light_source_frag.fs");
         Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
         Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
         Shader waterShader("Shaders/water.vs", "Shaders/water.fs");
         Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
-        Shader postProcessShader("Shaders/postprocess_vert.vs",
-                                 "Shaders/postprocess_frag.fs");
+        Shader postProcessShader("Shaders/postprocess_vert.vs", "Shaders/postprocess_frag.fs");
 
         ShaderReloader mainReloader(phongShader);
         ShaderReloader grassReloader(grassShader);
@@ -334,63 +316,46 @@ int main() {
         ShaderReloader skyboxReloader(skyboxShader);
         ShaderReloader waterReloader(waterShader);
 
-        std::vector<ShaderReloader> reloaders{mainReloader, grassReloader,
-                                              fullScreenReloader,
-                                              skyboxReloader, waterReloader};
+        std::vector<ShaderReloader> reloaders{mainReloader, grassReloader, fullScreenReloader, skyboxReloader,
+                                              waterReloader};
 
         std::vector<std::string> cubemapPaths{
-            "Resources/Textures/skybox/right.png",
-            "Resources/Textures/skybox/left.png",
-            "Resources/Textures/skybox/top.png",
-            "Resources/Textures/skybox/bottom.png",
-            "Resources/Textures/skybox/front.png",
-            "Resources/Textures/skybox/back.png",
+            "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
+            "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/bottom.png",
+            "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
         };
         unsigned int cubemapTexture = LoadCubeMap(cubemapPaths);
 
         skyboxShader.Use();
         skyboxShader.SetInt("skybox", 0);
 
-        Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER,
-                       false, "diffuse");
-        Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER,
-                     false, "diffuse");
-        Texture diffuse("Resources/Textures/container_diffuse.png",
-                        GL_CLAMP_TO_BORDER, true, "diffuse");
-        Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false,
-                    "diffuse");
-        Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true,
-                      "diffuse");
-        Texture specular("Resources/Textures/container_specular.png",
-                         GL_CLAMP_TO_BORDER, true, "specular");
-        Texture emissive("Resources/Textures/container_emmisive.jpg",
-                         GL_CLAMP_TO_BORDER, false, "diffuse");
+        Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+        Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, false, "diffuse");
+        Texture diffuse("Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
+        Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false, "diffuse");
+        Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true, "diffuse");
+        Texture specular("Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
+        Texture emissive("Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
 
         Model backpackModel("Resources/Models/backpack/backpack.obj");
         Model waterPlane("Resources/Models//Water/waterplane.obj");
         // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
         // Model villageModel("Resources/Models/rungholt/rungholt.obj");
 
-        std::vector<Model> models{backpackModel, waterPlane, backpackModel,
-                                  backpackModel, backpackModel};
+        std::vector<Model> models{backpackModel, waterPlane, backpackModel, backpackModel, backpackModel};
 
 #ifdef WIND_WAKER
         std::vector<Model> wwModels;
-        wwModels.push_back(
-            Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
+        wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
         wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
         wwModels.push_back(
             Model("Resources/Models/WindWaker/HelmarocKing/"
                   "HelmarocKingMask.obj"));
-        wwModels.push_back(
-            Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
-        wwModels.push_back(
-            Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
-        wwModels.push_back(
-            Model("Resources/Models/WindWaker/Shield/Shield.obj"));
+        wwModels.push_back(Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
+        wwModels.push_back(Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
+        wwModels.push_back(Model("Resources/Models/WindWaker/Shield/Shield.obj"));
         wwModels.push_back(Model("Resources/Models/WindWaker/Valoo/dr.dae"));
-        wwModels.push_back(
-            Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
+        wwModels.push_back(Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
 #endif
 
         std::vector<glm::vec3> vegetation;
@@ -408,13 +373,11 @@ int main() {
 
         glGenTextures(1, &renderTexture);
         glBindTexture(GL_TEXTURE_2D, renderTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0,
-                     GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_2D, renderTexture, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
         // -- You could also attach a depth-stencil buffer to this
         // framebuffer with a 32 bit texture (24 bit for depth, 8 for
         // Stencil)
@@ -422,17 +385,14 @@ int main() {
         // only
         glGenRenderbuffers(1, &rbo);
         glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
-                              SCREEN_WIDTH, SCREEN_HEIGHT);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                  GL_RENDERBUFFER, rbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
         // -- To be valid, attach at least on buffer, one color attachment,
         // all attachements should be complete, each buffer same samples
         // count.
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
-            GL_FRAMEBUFFER_COMPLETE) {
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             LOG_ERROR(LogCategory::Engine, "FrameBuffer is not complete !");
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -487,11 +447,10 @@ int main() {
 #pragma region SunUpdate
             // -- Transformed positions
             float sunSpeed = deltaTime * userSunSpeed;
-            if (updateSun) sunTheta += sunSpeed;
-            glm::vec3 sunYaw = glm::vec3(cos(sunTheta) * sunRadius, 0,
-                                         sin(sunTheta) * sunRadius);
-            glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius,
-                                           sin(sunTheta) * sunRadius);
+            if (updateSun)
+                sunTheta += sunSpeed;
+            glm::vec3 sunYaw = glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
+            glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
             auto offsetedLightPos = LightPosition.GLM() + sunYaw + sunPitch;
 #pragma endregion
 
@@ -500,9 +459,7 @@ int main() {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
-            ImGui::DockSpaceOverViewport(
-                0, ImGui::GetMainViewport(),
-                ImGuiDockNodeFlags_PassthruCentralNode);
+            ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 #pragma region FIRST PASS
 
@@ -516,8 +473,7 @@ int main() {
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
             glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-                    GL_STENCIL_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
 
             // here FOV, aspect ratio, near and far plane for perspective (w
@@ -525,14 +481,10 @@ int main() {
 
             glm::highp_mat4 projectionMatrix;
             if (projectionModeSelection == 0) {
-                projectionMatrix = glm::perspective(
-                    glm::radians(cam.Fov),
-                    (float)CURRENT_WIDTH / (float)CURRENT_HEIGHT, NearPlane,
-                    FarPlane);
+                projectionMatrix = glm::perspective(glm::radians(cam.Fov), (float)CURRENT_WIDTH / (float)CURRENT_HEIGHT,
+                                                    NearPlane, FarPlane);
             } else {
-                projectionMatrix =
-                    glm::ortho(0.0f, (float)CURRENT_WIDTH, 0.0f,
-                               (float)CURRENT_HEIGHT, -1.0f, 1.0f);
+                projectionMatrix = glm::ortho(0.0f, (float)CURRENT_WIDTH, 0.0f, (float)CURRENT_HEIGHT, -1.0f, 1.0f);
             }
             glm::mat4 viewMatrix = cam.GetViewMatrix();
             glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -579,13 +531,9 @@ int main() {
             glBindVertexArray(terrainVAO);
             bool drawTerrain = false;
             if (drawTerrain) {
-                for (unsigned int strip = 0; strip < terrainData.NUM_STRIPS;
-                     ++strip) {
-                    glDrawElements(
-                        GL_TRIANGLE_STRIP, terrainData.NUM_VERTS_PER_STRIP,
-                        GL_UNSIGNED_INT,
-                        (void*)(sizeof(unsigned int) *
-                                terrainData.NUM_VERTS_PER_STRIP * strip));
+                for (unsigned int strip = 0; strip < terrainData.NUM_STRIPS; ++strip) {
+                    glDrawElements(GL_TRIANGLE_STRIP, terrainData.NUM_VERTS_PER_STRIP, GL_UNSIGNED_INT,
+                                   (void*)(sizeof(unsigned int) * terrainData.NUM_VERTS_PER_STRIP * strip));
                 }
             }
 
@@ -596,9 +544,8 @@ int main() {
                 modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
                 float angle = 20.0f * i;
                 if (UI_rotateStuff) {
-                    modelMatrix = glm::rotate(
-                        modelMatrix, glm::radians(angle + ElapsedTime() * 100),
-                        glm::vec3(1.0f, 0.3f, 0.5f));
+                    modelMatrix = glm::rotate(modelMatrix, glm::radians(angle + ElapsedTime() * 100),
+                                              glm::vec3(1.0f, 0.3f, 0.5f));
                 }
                 phongShader.SetMat4("model", modelMatrix);
 
@@ -643,10 +590,8 @@ int main() {
                 for (int rot = 0; rot < grassCount; rot++) {
                     glm::mat4 model = glm::mat4(1.0f);
                     model = glm::translate(model, vegetation[i]);
-                    float angle =
-                        (double)glm::two_pi<float>() / grassCount * rot;
-                    model =
-                        glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                    float angle = (double)glm::two_pi<float>() / grassCount * rot;
+                    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
                     grassShader.SetMat4("model", model);
                     OpenGlDraw(GL_TRIANGLES, 0, 6);
                 }
@@ -661,10 +606,8 @@ int main() {
             lightShader.SetMat4("view", viewMatrix);
             lightShader.SetMat4("projection", projectionMatrix);
             lightShader.SetVec3("LightPos", offsetedLightPos);
-            lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0],
-                                                      diffuseLightColor[1],
-                                                      diffuseLightColor[2])
-                                                  .GLM());
+            lightShader.SetVec3("LightColor",
+                                Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
             glBindVertexArray(lightVAO);
             OpenGlDraw(GL_TRIANGLES, 0, 36);
 
@@ -674,10 +617,8 @@ int main() {
                 lightModel = glm::scale(lightModel, glm::vec3(0.2f));
                 lightShader.SetMat4("model", lightModel);
                 lightShader.SetVec3("LightPos", pointLightPositions[i]);
-                lightShader.SetVec3("LightColor", Vector3(pointLightDiffuse[0],
-                                                          pointLightDiffuse[1],
-                                                          pointLightDiffuse[2])
-                                                      .GLM());
+                lightShader.SetVec3("LightColor",
+                                    Vector3(pointLightDiffuse[0], pointLightDiffuse[1], pointLightDiffuse[2]).GLM());
 
                 OpenGlDraw(GL_TRIANGLES, 0, 36);
             }
@@ -688,8 +629,7 @@ int main() {
             glBindVertexArray(skyboxVAO);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-            glm::mat4 skyboxViewWithoutTranslation =
-                glm::mat4(glm::mat3(cam.GetViewMatrix()));
+            glm::mat4 skyboxViewWithoutTranslation = glm::mat4(glm::mat3(cam.GetViewMatrix()));
             skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
             skyboxShader.SetMat4("projection", projectionMatrix);
             OpenGlDraw(GL_TRIANGLES, 0, 36);
@@ -708,13 +648,10 @@ int main() {
 
                 postProcessShader.Use();
                 postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-                postProcessShader.SetBool("uEnableChroma",
-                                          postFX.enableChromaticAberration);
-                postProcessShader.SetFloat("uChromaIntensity",
-                                           postFX.chromaIntensity);
+                postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
+                postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
                 postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
-                postProcessShader.SetBool("uEnableGrayscale",
-                                          postFX.enableGrayscale);
+                postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
                 postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
                 postProcessShader.SetInt("uKernelType", postFX.kernelType);
                 glBindVertexArray(ndcQuadVAO);
@@ -746,8 +683,7 @@ int main() {
             }
 
             if (ImGui::CollapsingHeader("User Settings")) {
-                if (ImGui ::Combo("Light Model", &lightModeSelection,
-                                  lightModeSelected,
+                if (ImGui ::Combo("Light Model", &lightModeSelection, lightModeSelected,
                                   IM_ARRAYSIZE(lightModeSelected))) {
                 }
 
@@ -756,78 +692,64 @@ int main() {
             }
 
             if (ImGui::CollapsingHeader("Post Processing")) {
-                ImGui::Checkbox("Enable Post Processing",
-                                &enablePostProcessing);
+                ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
                 ImGui::Checkbox("Invert Colors", &postFX.enableInvert);
                 ImGui::Checkbox("Grayscale", &postFX.enableGrayscale);
 
                 ImGui::Separator();
 
-                ImGui::Checkbox("Chromatic Aberration",
-                                &postFX.enableChromaticAberration);
+                ImGui::Checkbox("Chromatic Aberration", &postFX.enableChromaticAberration);
                 if (postFX.enableChromaticAberration)
-                    ImGui::SliderFloat("Chroma Intensity",
-                                       &postFX.chromaIntensity, 0.0f, 0.02f);
+                    ImGui::SliderFloat("Chroma Intensity", &postFX.chromaIntensity, 0.0f, 0.02f);
 
                 ImGui::Separator();
 
                 ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
                 if (postFX.enableKernel) {
-                    const char* kernels[] = {"Blur", "Sharpen", "BoxBlur",
-                                             "Emboss"};
-                    ImGui::Combo("Kernel Type", &postFX.kernelType, kernels,
-                                 IM_ARRAYSIZE(kernels));
+                    const char* kernels[] = {"Blur", "Sharpen", "BoxBlur", "Emboss"};
+                    ImGui::Combo("Kernel Type", &postFX.kernelType, kernels, IM_ARRAYSIZE(kernels));
                 }
             }
 
             if (ImGui::CollapsingHeader("Sun")) {
                 ImGui::Checkbox("Update Sun", &updateSun);
-                ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0,
-                                   glm::two_pi<float>());
+                ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0, glm::two_pi<float>());
                 ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
                 ImGui::SliderFloat("Sun Speed", &userSunSpeed, 0.0, 1.0f);
             }
 
             if (ImGui::CollapsingHeader("Meshes & Models")) {
                 ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
-                if (ImGui::Combo("Choose View Mode", &viewMode, viewModes,
-                                 IM_ARRAYSIZE(viewModes))) {
+                if (ImGui::Combo("Choose View Mode", &viewMode, viewModes, IM_ARRAYSIZE(viewModes))) {
                     if (viewMode == 0) {
                         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                     } else if (viewMode == 1) {
                         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                     }
                 }
-                ImGui ::Combo("Choose Object to Draw", &objectViewSelection,
-                              objectSelected, IM_ARRAYSIZE(objectSelected));
+                ImGui ::Combo("Choose Object to Draw", &objectViewSelection, objectSelected,
+                              IM_ARRAYSIZE(objectSelected));
 
-                ImGui ::Combo("Choose Wind Waker Asset", &windWakerSelection,
-                              windWakerSelected,
+                ImGui ::Combo("Choose Wind Waker Asset", &windWakerSelection, windWakerSelected,
                               IM_ARRAYSIZE(windWakerSelected));
             }
 
             if (ImGui::CollapsingHeader("Lights")) {
-                ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0,
-                                   20.0f);
-                ImGui::SliderFloat("Attenuation Linear ", &attenuation[1],
-                                   0.014, 0.7);
-                ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2],
-                                   0.000007, 1.8);
+                ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
+                ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
+                ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
                 ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
                 ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
                 ImGui::ColorEdit3("Specular Light Color", specularLightColor);
             }
 
             if (ImGui::CollapsingHeader("Camera Settings")) {
-                ImGui::SliderFloat("Camera Speed", &cam.MovementSpeed,
-                                   Camera::MIN_SPEED, Camera::MAX_SPEED);
-                if (ImGui ::Combo("Camera Mode", &cameraModeSelection,
-                                  cameraModeSelected,
+                ImGui::SliderFloat("Camera Speed", &cam.MovementSpeed, Camera::MIN_SPEED, Camera::MAX_SPEED);
+                if (ImGui ::Combo("Camera Mode", &cameraModeSelection, cameraModeSelected,
                                   IM_ARRAYSIZE(cameraModeSelected))) {
                     cam.type = (CameraType)cameraModeSelection;
                 }
-                if (ImGui ::Combo("Projection", &projectionModeSelection,
-                                  projectionModeSelected,
+                if (ImGui ::Combo("Projection", &projectionModeSelection, projectionModeSelected,
                                   IM_ARRAYSIZE(projectionModeSelected))) {
                 }
             }
@@ -850,8 +772,7 @@ int main() {
     }
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action,
-                  int mode) {
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
@@ -926,15 +847,12 @@ TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
     TerrainData terrainData;
 
     int width, height, channels;
-    unsigned short* data16 =
-        stbi_load_16(filePath, &width, &height, &channels, 0);
+    unsigned short* data16 = stbi_load_16(filePath, &width, &height, &channels, 0);
 
     if (data16) {
-        LOG(" [Terrain] - LoadHeightmap at", filePath, " -- W: ", width,
-            " --H: ", height, " --Channels: ", channels);
+        LOG(" [Terrain] - LoadHeightmap at", filePath, " -- W: ", width, " --H: ", height, " --Channels: ", channels);
     } else {
-        LOG_ERROR(LogCategory::Engine,
-                  "Failed to load heightmap data:", filePath);
+        LOG_ERROR(LogCategory::Engine, "Failed to load heightmap data:", filePath);
     }
 
     std::vector<float> vertices;
@@ -980,15 +898,9 @@ TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
 void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     // -- Directionnal Light
     shader.SetVec3("dirLight.direction", lightPos);
-    shader.SetVec3("dirLight.ambient",
-                   glm::vec3(ambientLightColor[0], ambientLightColor[1],
-                             ambientLightColor[2]));
-    shader.SetVec3("dirLight.diffuse",
-                   glm::vec3(diffuseLightColor[0], diffuseLightColor[1],
-                             diffuseLightColor[2]));
-    shader.SetVec3("dirLight.specular",
-                   glm::vec3(specularLightColor[0], specularLightColor[1],
-                             specularLightColor[2]));
+    shader.SetVec3("dirLight.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
+    shader.SetVec3("dirLight.diffuse", glm::vec3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]));
+    shader.SetVec3("dirLight.specular", glm::vec3(specularLightColor[0], specularLightColor[1], specularLightColor[2]));
 
     // -- Point Lights
     shader.SetVec3("pointLights[0].position", pointLightPositions[0]);
@@ -1026,10 +938,8 @@ void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     // Lamp Torch
     shader.SetVec3("flashLight.position", cam.Position.GLM());
     shader.SetVec3("flashLight.direction", cam.Front.GLM());
-    shader.SetFloat("flashLight.cutOff",
-                    glm::cos(glm::radians(flashLightRadius)));
-    shader.SetFloat("flashLight.outerCutOff",
-                    glm::cos(glm::radians(flashLightRadius + 2.5f)));
+    shader.SetFloat("flashLight.cutOff", glm::cos(glm::radians(flashLightRadius)));
+    shader.SetFloat("flashLight.outerCutOff", glm::cos(glm::radians(flashLightRadius + 2.5f)));
     shader.SetVec3("flashLight.ambient", flashLightAmbient);
     shader.SetVec3("flashLight.diffuse", flashLightDiffuse);
     shader.SetVec3("flashLight.specular", flashLightSpecular);
@@ -1055,17 +965,14 @@ unsigned int LoadCubeMap(std::vector<std::string> facePaths) {
     stbi_set_flip_vertically_on_load(false);
 
     for (unsigned int i = 0; i < facePaths.size(); i++) {
-        unsigned char* data =
-            stbi_load(facePaths[i].c_str(), &w, &h, &channels, 0);
+        unsigned char* data = stbi_load(facePaths[i].c_str(), &w, &h, &channels, 0);
 
         if (data) {
             LOG_INFO(LogCategory::Texture, " CUBEMAP Loaded : ", facePaths[i]);
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, w, h, 0,
-                         GL_RGB, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         } else {
-            LOG_ERROR(LogCategory::Texture, "Cubemap failed to load at path",
-                      facePaths[i]);
+            LOG_ERROR(LogCategory::Texture, "Cubemap failed to load at path", facePaths[i]);
             stbi_image_free(data);
         }
     }

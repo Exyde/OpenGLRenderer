@@ -13,8 +13,7 @@ SpriteRenderer* Renderer;
 
 const std::string PLAYER_TEXTURE = "player";
 
-Game::Game(unsigned int width, unsigned int height)
-    : State(ACTIVE), Keys(), Width(width), Height(height) {}
+Game::Game(unsigned int width, unsigned int height) : State(ACTIVE), Keys(), Width(width), Height(height) {}
 
 Game::~Game() {}
 
@@ -38,10 +37,11 @@ void Game::Initialize() {
 
     // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
-    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
     ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true, "face");
     ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false, "block");
     ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
+    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", false, "background");
+    ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", false, "skybox");
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -73,6 +73,12 @@ void Game::ProcessInput(float deltaTime) {
                 Player->Position.x -= vel;
         }
 
+        if (this->Keys[GLFW_KEY_O]) {
+            currentLevel++;
+            if (currentLevel > (Levels.size() - 1))
+                currentLevel = 0;
+        }
+
         if (this->Keys[GLFW_KEY_D]) {
             if (Player->Position.x <= this->Width - Player->Size.x) {
                 Player->Position.x += vel;
@@ -88,6 +94,8 @@ void Game::Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (this->State == ACTIVE) {
+        Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
+                             glm::vec2(this->Width, this->Height), 0.0f);
         this->Levels[this->currentLevel].Draw(*Renderer);
         Player->Draw(*Renderer);
     }

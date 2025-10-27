@@ -47,7 +47,7 @@
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
 - Implement Basic Physics
-
+- On crash si on load une texture avec bool alpha mais que le fichier à pas d'alpha, pas ouf
 ## Breakout 
 - Supporter le reload de Shader
 - Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures

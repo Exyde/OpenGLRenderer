@@ -76,6 +76,7 @@
 - DrawCall Bugger parce que pas pris en compte dans Mesh.Draw (todo : Class Renderer qui wrap tout les calls opens GL)
 - camere scroll speed pas pris en comtpe 
 - IMGUI cassé en mode Engine ?
+- Fix Skybox loading ?
 
 ### Engine Features
 - FaceCulling v2

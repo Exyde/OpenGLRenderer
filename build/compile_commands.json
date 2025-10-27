@@ -118,5 +118,17 @@
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\game\\Game.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\game\\Game.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\game\\GameLevel.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\game\\GameLevel.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\game\\GameObject.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\game\\GameObject.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameObject.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj"
 }
 ]

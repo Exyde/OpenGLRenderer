@@ -392,6 +392,54 @@ src/game/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.s
 .PHONY : src/game/Game.cpp.s
 
+src/game/GameLevel.obj: src/game/GameLevel.cpp.obj
+.PHONY : src/game/GameLevel.obj
+
+# target to build an object file
+src/game/GameLevel.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj
+.PHONY : src/game/GameLevel.cpp.obj
+
+src/game/GameLevel.i: src/game/GameLevel.cpp.i
+.PHONY : src/game/GameLevel.i
+
+# target to preprocess a source file
+src/game/GameLevel.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.i
+.PHONY : src/game/GameLevel.cpp.i
+
+src/game/GameLevel.s: src/game/GameLevel.cpp.s
+.PHONY : src/game/GameLevel.s
+
+# target to generate assembly for a file
+src/game/GameLevel.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.s
+.PHONY : src/game/GameLevel.cpp.s
+
+src/game/GameObject.obj: src/game/GameObject.cpp.obj
+.PHONY : src/game/GameObject.obj
+
+# target to build an object file
+src/game/GameObject.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj
+.PHONY : src/game/GameObject.cpp.obj
+
+src/game/GameObject.i: src/game/GameObject.cpp.i
+.PHONY : src/game/GameObject.i
+
+# target to preprocess a source file
+src/game/GameObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.i
+.PHONY : src/game/GameObject.cpp.i
+
+src/game/GameObject.s: src/game/GameObject.cpp.s
+.PHONY : src/game/GameObject.s
+
+# target to generate assembly for a file
+src/game/GameObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.s
+.PHONY : src/game/GameObject.cpp.s
+
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
 
@@ -650,6 +698,12 @@ help:
 	@echo ... src/game/Game.obj
 	@echo ... src/game/Game.i
 	@echo ... src/game/Game.s
+	@echo ... src/game/GameLevel.obj
+	@echo ... src/game/GameLevel.i
+	@echo ... src/game/GameLevel.s
+	@echo ... src/game/GameObject.obj
+	@echo ... src/game/GameObject.i
+	@echo ... src/game/GameObject.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s

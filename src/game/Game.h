@@ -3,6 +3,8 @@
 // clang-format off
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include <vector>
+#include "GameLevel.h"
 
 // clang-format on
 
@@ -13,6 +15,8 @@ class Game {
     GameState State;
     bool Keys[1024];
     unsigned int Width, Height;
+    std::vector<GameLevel> Levels;
+    unsigned int currentLevel;
 
     Game(unsigned int width, unsigned int height);
     ~Game();

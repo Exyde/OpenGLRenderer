@@ -13,25 +13,40 @@ Game::Game(unsigned int width, unsigned int height)
 Game::~Game() {}
 
 void Game::Initialize() {
+    // -- Log
     LOG_INFO(LogCategory::Game, "Initializing...");
 
-    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs",
-                               nullptr, "spriteShader");
-
+    // -- Create Orthographic Matrix
     float w = static_cast<float>(this->Width);
     float h = static_cast<float>(this->Height);
     glm::mat4 projection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
 
-    glm::mat4 perspective = glm::perspective(45.0f, w / h, 0.1f, 100.0F);
-
+    // -- Load & Setup Main Shader
+    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs",
+                               nullptr, "spriteShader");
     ResourceLoader::GetShader("spriteShader").Use();
     ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
     ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
 
+    // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
+
+    // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true,
                                   "face");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false,
+                                  "block");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false,
+                                  "block_solid");
 
+    // -- Load Levels
+    GameLevel levelOne;
+    levelOne.Load("Resources/Levels/level1.txt", this->Width, this->Height / 2);
+
+    this->Levels.push_back(levelOne);
+    this->currentLevel = 0;
+
+    // -- Log
     LOG_INFO(LogCategory::Game, "Initialized !");
 }
 
@@ -43,7 +58,5 @@ void Game::Render() {
     glClearColor(0.1, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    Renderer->DrawSprite(ResourceLoader::GetTexture2D("face"),
-                         glm::vec2(200.0, 200.0), glm::vec2(100.0, 100.0),
-                         45.0f, glm::vec4(1.0, 0.0, 0.0f, 1.0f));
+    this->Levels[this->currentLevel].Draw(*Renderer);
 }

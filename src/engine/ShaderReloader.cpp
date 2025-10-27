@@ -9,14 +9,14 @@ ShaderReloader::ShaderReloader(Shader& _shader) {
         vLastWrite = fs::last_write_time(shader->vertexSaved);
         fLastWrite = fs::last_write_time(shader->fragmentSaved);
     } catch (const std::exception& e) {
-        std::cerr << "Error initializing ShaderReloader: " << e.what()
-                  << std::endl;
+        LOG_ERROR(LogCategory::Shader,
+                  "Failed initializing ShaderReloader: ", e.what());
     }
 }
 
 void ShaderReloader::Reload() { shader->Reload(); }
 
-bool ShaderReloader::CheckForChanges() {
+void ShaderReloader::CheckForChanges() {
     try {
         auto newVWrite = fs::last_write_time(shader->vertexSaved);
         auto newFWrite = fs::last_write_time(shader->fragmentSaved);
@@ -25,12 +25,9 @@ bool ShaderReloader::CheckForChanges() {
             vLastWrite = newVWrite;
             fLastWrite = newFWrite;
             Reload();
-            return true;
         }
     } catch (const std::exception& e) {
-        std::cerr << "Error checking shader file changes: " << e.what()
-                  << std::endl;
+        LOG_ERROR(LogCategory::Shader,
+                  "Failed checking file changes : ", e.what());
     }
-
-    return false;
 }

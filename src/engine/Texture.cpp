@@ -1,5 +1,6 @@
 #include "Texture.h"
 
+#include "Logger.h"
 Texture::Texture(const char* filePath, int clampMode, bool useAlpha,
                  std::string type) {
     glGenTextures(1, &ID);
@@ -26,11 +27,11 @@ Texture::Texture(const char* filePath, int clampMode, bool useAlpha,
 
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        std::cout << "[TEXTURE] Loaded : " << filePath << std::endl;
-        ;
+        Logger::Log(LogCategory::Texture, LogLevel::Info,
+                    "Loaded : ", filePath);
 
     } else {
-        std::cerr << "Failed to load texture" << std::endl;
+        LOG_ERROR(LogCategory::Texture, "Failed to load texture : ", filePath);
     }
     stbi_image_free(data);
 }

@@ -10,6 +10,8 @@
 #include <sstream>
 #include <string>
 
+#include "Logger.h"
+
 class Shader {
    public:
     int ID;

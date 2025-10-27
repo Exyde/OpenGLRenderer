@@ -8,7 +8,7 @@ namespace fs = std::filesystem;
 class ShaderReloader {
    public:
     ShaderReloader(Shader& shader);
-    bool CheckForChanges();
+    void CheckForChanges();
 
    private:
     Shader* shader;

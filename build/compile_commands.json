@@ -13,6 +13,12 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Logger.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Logger.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Mesh.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Mesh.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj"
@@ -43,6 +49,12 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\SpriteRenderer.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\SpriteRenderer.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Texture.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Texture.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj"
@@ -58,12 +70,6 @@
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\stb_image.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\stb_image.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
-},
-{
-  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
-  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\game\\Game.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\game\\Game.cpp",
-  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.cpp",
-  "output": "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj"
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
@@ -106,5 +112,11 @@
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\imgui\\imgui_widgets.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\imgui\\imgui_widgets.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_widgets.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\game\\Game.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\game\\Game.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj"
 }
 ]

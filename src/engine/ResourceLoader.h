@@ -13,11 +13,11 @@ class ResourceLoader {
 
     static Shader LoadShader(const char* vFile, const char* fFile,
                              const char* gFile, std::string name);
-    static Shader GetShader(std::string name);
+    static Shader& GetShader(std::string name);
 
     static Texture2D LoadTexture2D(const char* file, bool useAlpha,
                                    std::string name);
-    static Texture2D GetTexture2D(std::string name);
+    static Texture2D& GetTexture2D(std::string name);
 
     // -- De-allocate everything properly.
     static void Clear();

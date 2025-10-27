@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Répertoire de sortie du binaire
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-
 # === Include paths ===
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
@@ -25,8 +24,8 @@ add_executable(OpenGLRenderer
     ${CMAKE_SOURCE_DIR}/src/main.cpp
     ${CMAKE_SOURCE_DIR}/src/glad.c
     ${ENGINE_SRC}
-    ${GAME_SRC}
     ${IMGUI_SRC}
+    ${GAME_SRC}
 )
 
 # === Libraries ===

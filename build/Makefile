@@ -128,6 +128,30 @@ OpenGLRenderer/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/build
 .PHONY : OpenGLRenderer/fast
 
+src/engine/Logger.obj: src/engine/Logger.cpp.obj
+.PHONY : src/engine/Logger.obj
+
+# target to build an object file
+src/engine/Logger.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj
+.PHONY : src/engine/Logger.cpp.obj
+
+src/engine/Logger.i: src/engine/Logger.cpp.i
+.PHONY : src/engine/Logger.i
+
+# target to preprocess a source file
+src/engine/Logger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.i
+.PHONY : src/engine/Logger.cpp.i
+
+src/engine/Logger.s: src/engine/Logger.cpp.s
+.PHONY : src/engine/Logger.s
+
+# target to generate assembly for a file
+src/engine/Logger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.s
+.PHONY : src/engine/Logger.cpp.s
+
 src/engine/Mesh.obj: src/engine/Mesh.cpp.obj
 .PHONY : src/engine/Mesh.obj
 
@@ -247,6 +271,30 @@ src/engine/ShaderReloader.s: src/engine/ShaderReloader.cpp.s
 src/engine/ShaderReloader.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.s
 .PHONY : src/engine/ShaderReloader.cpp.s
+
+src/engine/SpriteRenderer.obj: src/engine/SpriteRenderer.cpp.obj
+.PHONY : src/engine/SpriteRenderer.obj
+
+# target to build an object file
+src/engine/SpriteRenderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj
+.PHONY : src/engine/SpriteRenderer.cpp.obj
+
+src/engine/SpriteRenderer.i: src/engine/SpriteRenderer.cpp.i
+.PHONY : src/engine/SpriteRenderer.i
+
+# target to preprocess a source file
+src/engine/SpriteRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.i
+.PHONY : src/engine/SpriteRenderer.cpp.i
+
+src/engine/SpriteRenderer.s: src/engine/SpriteRenderer.cpp.s
+.PHONY : src/engine/SpriteRenderer.s
+
+# target to generate assembly for a file
+src/engine/SpriteRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.s
+.PHONY : src/engine/SpriteRenderer.cpp.s
 
 src/engine/Texture.obj: src/engine/Texture.cpp.obj
 .PHONY : src/engine/Texture.obj
@@ -569,6 +617,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... OpenGLRenderer
+	@echo ... src/engine/Logger.obj
+	@echo ... src/engine/Logger.i
+	@echo ... src/engine/Logger.s
 	@echo ... src/engine/Mesh.obj
 	@echo ... src/engine/Mesh.i
 	@echo ... src/engine/Mesh.s
@@ -584,6 +635,9 @@ help:
 	@echo ... src/engine/ShaderReloader.obj
 	@echo ... src/engine/ShaderReloader.i
 	@echo ... src/engine/ShaderReloader.s
+	@echo ... src/engine/SpriteRenderer.obj
+	@echo ... src/engine/SpriteRenderer.i
+	@echo ... src/engine/SpriteRenderer.s
 	@echo ... src/engine/Texture.obj
 	@echo ... src/engine/Texture.i
 	@echo ... src/engine/Texture.s

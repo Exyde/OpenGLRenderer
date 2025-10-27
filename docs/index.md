@@ -25,10 +25,13 @@
   - [Radiance Cascades](#radiance-cascades)
 
 ### Main Path (Learn Open GL) - TodoList
-- Static Logger
+
+- Afficher les logs dans une console IMGUI <3
+- Double main loop to handle switching between game and engine with K
 - Resource Loader ---> Support Texture.cpp or remove it
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Add renter textures for differents maps views (different buffer, could be nice)
+- Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
 - Improve Site/Files system here (clean all links)
 - Camera : F to focus current mesh ?
@@ -46,6 +49,8 @@
 - Implement Basic Physics
 
 ## Breakout 
+- Supporter le reload de Shader
+- 
 
 ## Core Goals for Portolio
 - Finish Learn open GL
@@ -70,6 +75,7 @@
 - Fix Orthographic Camera
 - DrawCall Bugger parce que pas pris en compte dans Mesh.Draw (todo : Class Renderer qui wrap tout les calls opens GL)
 - camere scroll speed pas pris en comtpe 
+- IMGUI cassé en mode Engine ?
 
 ### Engine Features
 - FaceCulling v2
@@ -81,9 +87,7 @@
 ### Engine Struture
 - Color Class / Struct (ou lib) 
 - Utility Class
-- ResourceLoader Class
 - Faire des classes (Framebuffer, GameObject...) même wip, marre de dupliquer des VAO/BVO
-- Logger at some point (when engine refactoring I guess)
 
 # Inital Goals
 

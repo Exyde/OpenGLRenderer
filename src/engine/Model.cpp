@@ -5,15 +5,15 @@ void Model::Draw(Shader& shader) {
 }
 
 void Model::loadModel(std::string path) {
-    std::cout << "[MODEL] Loading model at " << path << std::endl;
+    LOG_INFO(LogCategory::Model, "Loading : ", path);
     Assimp::Importer import;
     const aiScene* scene =
         import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
         !scene->mRootNode) {
-        std::cout << "[ASSIMP] : ERROR " << import.GetErrorString()
-                  << std::endl;
+        LOG_ERROR(LogCategory::Model,
+                  "Failed loading model: ", import.GetErrorString());
         return;
     }
     directory = path.substr(0, path.find_last_of('/'));
@@ -151,6 +151,8 @@ unsigned int Model::TextureFromFile(const char* path,
         else if (nrComponents == 4)
             format = GL_RGBA;
 
+        // -- Todo : Use Texture Class
+
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
                      GL_UNSIGNED_BYTE, data);
@@ -164,7 +166,7 @@ unsigned int Model::TextureFromFile(const char* path,
 
         stbi_image_free(data);
     } else {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        LOG_ERROR(LogCategory::Texture, "Failed to load texture : ", path);
         stbi_image_free(data);
     }
 

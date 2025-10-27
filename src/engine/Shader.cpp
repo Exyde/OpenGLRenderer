@@ -15,8 +15,8 @@ std::string Shader::LoadShaderCodeFromFile(const char* filePath) {
     }
 
     catch (std::ifstream::failure& e) {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what()
-                  << std::endl;
+        LOG_ERROR(LogCategory::Shader,
+                  "Failed reading shader file: ", e.what());
     }
 
     return shaderCode;
@@ -24,8 +24,6 @@ std::string Shader::LoadShaderCodeFromFile(const char* filePath) {
 
 int Shader::CompileShaderFromCode(std::string vertexCode,
                                   std::string fragmentCode) {
-    // std::cout << "Compiling Shader Program..." << std::endl;
-
     // -- Compile Shader File
     int vertex, fragment;
     int success;
@@ -41,8 +39,7 @@ int Shader::CompileShaderFromCode(std::string vertexCode,
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
+        LOG_ERROR(LogCategory::Shader, "Vertex compilation failed: ", infoLog);
     }
 
     // Fragment Shader
@@ -52,8 +49,8 @@ int Shader::CompileShaderFromCode(std::string vertexCode,
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
+        LOG_ERROR(LogCategory::Shader,
+                  "Fragment compilation failed: ", infoLog);
     }
 
     // -3. Program
@@ -66,23 +63,23 @@ int Shader::CompileShaderFromCode(std::string vertexCode,
     glGetProgramiv(id, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(id, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-                  << infoLog << std::endl;
+        LOG_ERROR(LogCategory::Shader, "Linking failed: ", infoLog);
     }
 
     // Delete the shaders as they're linked into our program now and no longer
     // necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-
-    std::cout << "[SHADER] Created succesfully : " << vertexSaved << " || "
-              << fragmentSaved << std::endl;
+    if (success) {
+        Logger::Log(LogCategory::Shader, LogLevel::Info,
+                    "Created succesfully : ", vertexSaved, " | ",
+                    fragmentSaved);
+    }
     return id;
 }
 
 int Shader::CreateShaderFromFiles(const char* vertexPath,
                                   const char* fragmentPath) {
-    // std::cout << "Create Shader Program..." << std::endl;
     this->vertexSaved = vertexPath;
     this->fragmentSaved = fragmentPath;
     // -- Load Shaders File
@@ -95,8 +92,8 @@ int Shader::CreateShaderFromFiles(const char* vertexPath,
 }
 
 void Shader::Reload() {
-    std::cout << "Reloading Shader : " << vertexSaved << " - " << fragmentSaved
-              << std::endl;
+    LOG_INFO(LogCategory::Shader, "Reloading Shader: ", vertexSaved, " - ",
+             fragmentSaved);
 
     int reloadedID = CreateShaderFromFiles(vertexSaved, fragmentSaved);
 

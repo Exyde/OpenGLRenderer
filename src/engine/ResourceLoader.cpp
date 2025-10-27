@@ -16,7 +16,7 @@ Shader ResourceLoader::LoadShader(const char* vShaderFile,
     return Shaders[name];
 }
 
-Shader ResourceLoader::GetShader(std::string name) { return Shaders[name]; }
+Shader& ResourceLoader::GetShader(std::string name) { return Shaders[name]; }
 
 Texture2D ResourceLoader::LoadTexture2D(const char* file, bool alpha,
                                         std::string name) {
@@ -24,7 +24,7 @@ Texture2D ResourceLoader::LoadTexture2D(const char* file, bool alpha,
     return Textures2D[name];
 }
 
-Texture2D ResourceLoader::GetTexture2D(std::string name) {
+Texture2D& ResourceLoader::GetTexture2D(std::string name) {
     return Textures2D[name];
 }
 
@@ -53,11 +53,11 @@ Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath,
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
     if (data) {
-        std::cout << "[TEXTURE] Loaded : " << filePath << std::endl;
+        LOG_INFO(LogCategory::Texture, " Loaded : ", filePath);
         texture.Generate(width, height, data);
         stbi_image_free(data);
     } else {
-        std::cerr << "Failed to load texture" << std::endl;
+        LOG_ERROR(LogCategory::Texture, "Failed to load texture : ", filePath);
     }
     return texture;
 }

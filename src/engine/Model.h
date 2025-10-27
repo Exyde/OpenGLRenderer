@@ -4,6 +4,7 @@
 
 #include <assimp/Importer.hpp>
 
+#include "Logger.h"
 #include "Mesh.h"
 #include "Shader.h"
 

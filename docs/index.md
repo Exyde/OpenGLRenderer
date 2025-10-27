@@ -50,7 +50,8 @@
 
 ## Breakout 
 - Supporter le reload de Shader
-- 
+- Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures
+- Juicy un max, post process/ shader un max
 
 ## Core Goals for Portolio
 - Finish Learn open GL

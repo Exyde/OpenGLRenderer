@@ -5,7 +5,13 @@
 #include "../engine/SpriteRenderer.h"
 #include "../glm/glm.hpp"
 
+const glm::vec2 PLAYER_SIZE(100.0F, 20.0f);
+const float PLAYER_VELOCITY(500.0f);
+
+GameObject* Player;
 SpriteRenderer* Renderer;
+
+const std::string PLAYER_TEXTURE = "player";
 
 Game::Game(unsigned int width, unsigned int height)
     : State(ACTIVE), Keys(), Width(width), Height(height) {}
@@ -22,8 +28,7 @@ void Game::Initialize() {
     glm::mat4 projection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
 
     // -- Load & Setup Main Shader
-    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs",
-                               nullptr, "spriteShader");
+    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
     ResourceLoader::GetShader("spriteShader").Use();
     ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
     ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
@@ -32,25 +37,49 @@ void Game::Initialize() {
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
     // -- Load Textures
-    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true,
-                                  "face");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false,
-                                  "block");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false,
-                                  "block_solid");
+    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
+    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
+    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true, "face");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false, "block");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
+
+    // -- Create Player
+    glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
+    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceLoader::GetTexture2D(PLAYER_TEXTURE));
 
     // -- Load Levels
-    GameLevel levelOne;
+    GameLevel levelOne, levelTwo, levelThree, levelFour;
     levelOne.Load("Resources/Levels/level1.txt", this->Width, this->Height / 2);
+    levelTwo.Load("Resources/Levels/level2.txt", this->Width, this->Height / 2);
+    levelThree.Load("Resources/Levels/level3.txt", this->Width, this->Height / 2);
+    levelFour.Load("Resources/Levels/level4.txt", this->Width, this->Height / 2);
 
     this->Levels.push_back(levelOne);
-    this->currentLevel = 0;
+    this->Levels.push_back(levelTwo);
+    this->Levels.push_back(levelThree);
+    this->Levels.push_back(levelFour);
+    this->currentLevel = 1;
 
     // -- Log
     LOG_INFO(LogCategory::Game, "Initialized !");
 }
 
-void Game::ProcessInput(float deltaTime) {}
+void Game::ProcessInput(float deltaTime) {
+    if (this->State == ACTIVE) {
+        float vel = PLAYER_VELOCITY * deltaTime;
+
+        if (this->Keys[GLFW_KEY_A]) {
+            if (Player->Position.x >= 0)
+                Player->Position.x -= vel;
+        }
+
+        if (this->Keys[GLFW_KEY_D]) {
+            if (Player->Position.x <= this->Width - Player->Size.x) {
+                Player->Position.x += vel;
+            }
+        }
+    }
+}
 
 void Game::Update(float deltaTime) {}
 
@@ -58,5 +87,8 @@ void Game::Render() {
     glClearColor(0.1, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    this->Levels[this->currentLevel].Draw(*Renderer);
+    if (this->State == ACTIVE) {
+        this->Levels[this->currentLevel].Draw(*Renderer);
+        Player->Draw(*Renderer);
+    }
 }

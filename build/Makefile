@@ -128,6 +128,30 @@ OpenGLRenderer/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/build
 .PHONY : OpenGLRenderer/fast
 
+src/engine/Engine.obj: src/engine/Engine.cpp.obj
+.PHONY : src/engine/Engine.obj
+
+# target to build an object file
+src/engine/Engine.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj
+.PHONY : src/engine/Engine.cpp.obj
+
+src/engine/Engine.i: src/engine/Engine.cpp.i
+.PHONY : src/engine/Engine.i
+
+# target to preprocess a source file
+src/engine/Engine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.i
+.PHONY : src/engine/Engine.cpp.i
+
+src/engine/Engine.s: src/engine/Engine.cpp.s
+.PHONY : src/engine/Engine.s
+
+# target to generate assembly for a file
+src/engine/Engine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.s
+.PHONY : src/engine/Engine.cpp.s
+
 src/engine/Logger.obj: src/engine/Logger.cpp.obj
 .PHONY : src/engine/Logger.obj
 
@@ -689,6 +713,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... OpenGLRenderer
+	@echo ... src/engine/Engine.obj
+	@echo ... src/engine/Engine.i
+	@echo ... src/engine/Engine.s
 	@echo ... src/engine/Logger.obj
 	@echo ... src/engine/Logger.i
 	@echo ... src/engine/Logger.s

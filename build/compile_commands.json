@@ -13,6 +13,12 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Engine.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Engine.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Engine.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\Logger.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\Logger.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj"

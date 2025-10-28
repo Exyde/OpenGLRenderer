@@ -49,6 +49,8 @@
 - Implement Basic Physics
 - On crash si on load une texture avec bool alpha mais que le fichier à pas d'alpha, pas ouf
 ## Breakout 
+- Box2D ?
+- Draw BoxExtents / Collider ?
 - Supporter le reload de Shader
 - Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures
 - Juicy un max, post process/ shader un max

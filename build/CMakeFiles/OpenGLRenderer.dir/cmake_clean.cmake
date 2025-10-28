@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe"
   "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe.manifest"
   "C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.pdb"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj"

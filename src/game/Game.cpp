@@ -17,9 +17,18 @@ Game::Game(unsigned int width, unsigned int height) : State(ACTIVE), Keys(), Wid
 
 Game::~Game() {}
 
+void Game::Exit() {
+    ResourceLoader::Clear();
+    glfwTerminate();
+}
+
 void Game::Initialize() {
     // -- Log
-    LOG_INFO(LogCategory::Game, "Initializing...");
+    LOG_INFO(LogCategory::Game, "Initializing Game Mode...");
+
+    // -- Init Open GL States
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // -- Create Orthographic Matrix
     float w = static_cast<float>(this->Width);
@@ -108,6 +117,7 @@ void Game::ProcessInput(float deltaTime) {
 
 void Game::Update(float deltaTime) {
     Ball->Move(deltaTime, this->Width);
+    this->ComputeCollisions();
 }
 
 void Game::Render() {
@@ -120,5 +130,44 @@ void Game::Render() {
         this->Levels[this->currentLevel].Draw(*Renderer);
         Player->Draw(*Renderer);
         Ball->Draw(*Renderer);
+    }
+}
+
+bool Game::CheckCollisionAABB(GameObject& A, GameObject& B) {
+    bool collisionX = (A.Position.x + A.Size.x) >= B.Position.x && B.Position.x + B.Size.x >= A.Position.x;
+    bool collisionY = (A.Position.y + A.Size.y) >= B.Position.y && B.Position.y + B.Size.y >= A.Position.y;
+    return collisionX && collisionY;
+}
+
+bool Game::CheckCollisionSphereBox(BallObject& A, GameObject& B) {
+    // -- Circle
+    auto center = A.Position + A.Radius;
+
+    // -- AABB Center & Half-Extents
+    glm::vec2 aabb_halfextents(B.Size.y / 2.0f,
+                               B.Size.y / 2.0f);  // -- You could cache this but also that's why it's expsenive to
+                                                  // recompute bounds everytime you change transform
+    glm::vec2 aabb_center(B.Position.x + aabb_halfextents.x, B.Position.y + aabb_halfextents.y);
+
+    // -- Difference (D Vector)
+    glm::vec2 D = center - aabb_center;
+    glm::vec2 clamped = glm::clamp(D, -aabb_halfextents, aabb_halfextents);
+
+    glm::vec2 closestPoint = aabb_center + clamped;
+    glm::vec2 centerToBoxEdge = closestPoint - center;
+
+    // -- Collision if Inside
+    return glm::length(centerToBoxEdge) < A.Radius;
+}
+
+void Game::ComputeCollisions() {
+    for (GameObject& other : this->Levels[this->currentLevel].Bricks) {
+        if (!other.IsDestroyed) {
+            if (CheckCollisionSphereBox(*Ball, other)) {
+                if (!other.IsSolid) {
+                    other.IsDestroyed = true;
+                }
+            }
+        }
     }
 }

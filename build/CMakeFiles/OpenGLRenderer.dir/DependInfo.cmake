@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/youne/Desktop/OpenGLRenderer/src/glad.c" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Engine.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj.d"

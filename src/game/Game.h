@@ -14,7 +14,7 @@
 #include "BallObject.h"
 #include "GameLevel.h"
 
-enum GameState { ACTIVE, MENU, PAUSED, WIN };
+enum class GameState { ACTIVE, MENU, PAUSED, WIN };
 
 class Game {
    public:
@@ -31,4 +31,8 @@ class Game {
     void ProcessInput(float deltaTime);
     void Update(float deltaTime);
     void Render();
+    void Exit();
+    bool CheckCollisionAABB(GameObject& A, GameObject& B);
+    bool CheckCollisionSphereBox(BallObject& A, GameObject& B);
+    void ComputeCollisions();
 };

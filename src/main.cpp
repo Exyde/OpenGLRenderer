@@ -36,15 +36,22 @@ int main() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     InitIMGUI(window);
     stbi_set_flip_vertically_on_load(false);
-#pragma endregion
-    // -- From Here, TODO : Specify call back, and unregister them at the end
+
     // -- Callback
     glfwSetFramebufferSizeCallback(window, FrameBuffer_Size_Callback);
     glfwSetCursorPosCallback(window, Mouse_Callback);
     glfwSetScrollCallback(window, Scroll_Callback);
     glfwSetKeyCallback(window, Keyboard_Callback);
+#pragma endregion
 
     while (!glfwWindowShouldClose(window)) {
+        // -- Skip everything if windows not focused.
+        if (!glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            glfwPollEvents();
+            continue;
+        }
+
         if (appMode == ApplicationMode::Game) {
             game.Initialize();
             float deltaTime = 0.0f;
@@ -80,7 +87,7 @@ int main() {
 
                 engine.ProcessInput(deltaTime);
                 engine.Update(deltaTime);
-                engine.Render();
+                engine.Render(deltaTime);
 
                 glfwSwapBuffers(window);
             }
@@ -91,11 +98,64 @@ int main() {
     }
 }
 
+#pragma region Init
+bool InitializeGLFW() {
+    if (!glfwInit()) {
+        return false;
+    }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    LOG("Succesfully Initialized GLFW");
+    return true;
+}
+
+GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
+    LOG("Creating main window");
+
+    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
+    return window;
+}
+
+void InitIMGUI(GLFWwindow* window) {
+    LOG("Initializing ImGUI");
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+}
+#pragma endregion
+
 #pragma region CallbackOpenGL
 void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    // -- Close Application
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        if (cursorVisible) {
+            cursorVisible = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            return;
+        }
+    }
+
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS) {
+        if (!cursorVisible) {
+            cursorVisible = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+            return;
+        }
+    }
+
+    // -- Toggle Between Engine & Game Mode
     if (key == GLFW_KEY_K && action == GLFW_PRESS) {
         LOG("Switching Engine Mode");
         if (appMode == ApplicationMode::Engine)
@@ -104,14 +164,13 @@ void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, in
             appMode = ApplicationMode::Engine;
         return;
     }
+
+    // -- Register inputs -- // TODO : Check, might bug ?
     if (key >= 0 && key < 1024) {
-        if (action == GLFW_PRESS) {
-            game.Keys[key] = true;
-            engine.Keys[key] = true;
-        } else if (action == GLFW_RELEASE) {
-            game.Keys[key] = false;
-            engine.Keys[key] = false;
-        }
+        if (action == GLFW_PRESS)
+            game.Keys[key] = engine.Keys[key] = true;
+        else if (action == GLFW_RELEASE)
+            game.Keys[key] = engine.Keys[key] = true;
     }
 }
 
@@ -161,40 +220,5 @@ void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
     lastMouseY = ypos;
 
     cam.ProcessMouseMovement(deltaX, deltaY, true);
-}
-#pragma endregion
-
-#pragma region Init
-bool InitializeGLFW() {
-    if (!glfwInit()) {
-        return false;
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    LOG("Succesfully Initialized GLFW");
-    return true;
-}
-
-GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
-    LOG("Creating main window");
-
-    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
-    return window;
-}
-
-void InitIMGUI(GLFWwindow* window) {
-    LOG("Initializing ImGUI");
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-    (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
 }
 #pragma endregion

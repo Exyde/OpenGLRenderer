@@ -23,6 +23,42 @@
 #include "glm/glm.hpp"
 #include "stb_image.h"
 
+// --  Globals ? Todo : Classes ^^
+unsigned int skyboxVAO, skyboxVBO;
+GLuint terrainVAO, terrainVBO, terrainEBO;
+unsigned int ndcQuadVAO, ndcQuadVBO;
+unsigned int QuadVAO, QuadVBO;
+unsigned int CubeVBO, CubeVAO;
+unsigned int lightVAO;
+unsigned int cubemapTexture;
+std::vector<Model> models;
+std::vector<glm::vec3> vegetation;
+unsigned int framebuffer;
+std::vector<ShaderReloader*> reloaders;
+auto lastCheck = std::chrono::steady_clock::now();
+const std::chrono::milliseconds checkInterval(500);
+glm::highp_mat4 projectionMatrix;
+static double currentFPS = 0;
+
+Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, false, "diffuse");
+Texture diffuse("Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
+Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false, "diffuse");
+Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true, "diffuse");
+Texture specular("Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
+Texture emissive("Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+Model backpackModel("Resources/Models/backpack/backpack.obj");
+Model waterPlane("Resources/Models//Water/waterplane.obj");
+// Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
+// Model villageModel("Resources/Models/rungholt/rungholt.obj");
+
+Shader lightShader("Shaders/light_source_vertex.vs", "Shaders/light_source_frag.fs");
+Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
+Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
+Shader waterShader("Shaders/water.vs", "Shaders/water.fs");
+Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
+Shader postProcessShader("Shaders/postprocess_vert.vs", "Shaders/postprocess_frag.fs");
+
 struct PostProcessSettings {
     bool enableChromaticAberration = false;
     float chromaIntensity = 0.02f;
@@ -209,6 +245,6 @@ class Engine {
     void Initialize();
     void ProcessInput(float deltaTime);
     void Update(float deltaTime);
-    void Render();
+    void Render(float deltaTime);
     void Exit();
 };

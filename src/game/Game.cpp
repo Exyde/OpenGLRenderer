@@ -13,7 +13,7 @@ SpriteRenderer* Renderer;
 BallObject* Ball;
 const std::string PLAYER_TEXTURE = "player";
 
-Game::Game(unsigned int width, unsigned int height) : State(ACTIVE), Keys(), Width(width), Height(height) {}
+Game::Game(unsigned int width, unsigned int height) : State(GameState::ACTIVE), Keys(), Width(width), Height(height) {}
 
 Game::~Game() {}
 
@@ -78,7 +78,7 @@ void Game::Initialize() {
 }
 
 void Game::ProcessInput(float deltaTime) {
-    if (this->State == ACTIVE) {
+    if (this->State == GameState::ACTIVE) {
         float vel = PLAYER_VELOCITY * deltaTime;
 
         // -- Change Level
@@ -124,7 +124,7 @@ void Game::Render() {
     glClearColor(0.1, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (this->State == ACTIVE) {
+    if (this->State == GameState::ACTIVE) {
         Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
                              glm::vec2(this->Width, this->Height), 0.0f);
         this->Levels[this->currentLevel].Draw(*Renderer);

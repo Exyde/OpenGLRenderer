@@ -8,40 +8,25 @@ GameObject* Player;
 SpriteRenderer* Renderer;
 const std::string PLAYER_TEXTURE = "player";
 
-Engine::Engine(unsigned int width, unsigned int height) : State(ACTIVE), Keys(), Width(width), Height(height) {}
+Engine::Engine(unsigned int width, unsigned int height)
+    : State(EngineState::ACTIVE), Keys(), Width(width), Height(height) {}
 
 Engine::~Engine() {}
-
-void Engine::Exit() {
-    glDeleteFramebuffers(1, &framebuffer);
-    ResourceLoader::Clear();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    glfwTerminate();
-}
 
 void Engine::Initialize() {
     // -- Log
     LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
 
-    // -- Depth Buffer Config
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    // Vertex Shader Config
-    glEnable(GL_PROGRAM_POINT_SIZE);
-
-    // -- Create Orthographic Matrix
+    // -- Create Projection Matrix
     float w = static_cast<float>(this->Width);
     float h = static_cast<float>(this->Height);
-    glm::mat4 projection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
+    // Todo : projection
 
     // -- Load & Setup Main Shader
     ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
     ResourceLoader::GetShader("spriteShader").Use();
     ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
-    ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
+    // ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
 
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
@@ -60,6 +45,13 @@ void Engine::Initialize() {
 
     // -- INIT FROM MAIN
 
+    // -- Depth Buffer Config
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // Vertex Shader Config
+    glEnable(GL_PROGRAM_POINT_SIZE);
+
     // -- Initial Culling Config
     // glEnable(GL_CULL_FACE);
     // glCullFace(GL_FRONT);
@@ -73,7 +65,6 @@ void Engine::Initialize() {
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
     // -- Skybox --
-    unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
     glBindVertexArray(skyboxVAO);
@@ -84,7 +75,6 @@ void Engine::Initialize() {
 
     // -- Terrain
     TerrainData terrainData = GetTerrainDataFromHeightMap("Resources/Textures/iceland_heightmap.png");
-    GLuint terrainVAO, terrainVBO, terrainEBO;
     glGenVertexArrays(1, &terrainVAO);
     glBindVertexArray(terrainVAO);
     glGenBuffers(1, &terrainVBO);
@@ -102,7 +92,6 @@ void Engine::Initialize() {
                  GL_STATIC_DRAW);
 
     // -- NDC Quad
-    unsigned int ndcQuadVAO, ndcQuadVBO;
     glGenVertexArrays(1, &ndcQuadVAO);
     glGenBuffers(1, &ndcQuadVBO);
     glBindVertexArray(ndcQuadVAO);
@@ -114,7 +103,6 @@ void Engine::Initialize() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
     // -- Quad Datas
-    unsigned int QuadVAO, QuadVBO;
     glGenVertexArrays(1, &QuadVAO);
     glGenBuffers(1, &QuadVBO);
     glBindVertexArray(QuadVAO);
@@ -128,7 +116,6 @@ void Engine::Initialize() {
     glEnableVertexAttribArray(2);
 
     // -- Cube Datas ---
-    unsigned int CubeVBO, CubeVAO;
     glGenVertexArrays(1, &CubeVAO);
     glGenBuffers(1, &CubeVBO);
     glBindVertexArray(CubeVAO);
@@ -142,7 +129,6 @@ void Engine::Initialize() {
     glEnableVertexAttribArray(2);
 
     // -- Light Data
-    unsigned int lightVAO;
     glGenVertexArrays(1, &lightVAO);
     glBindVertexArray(lightVAO);
     glBindBuffer(GL_ARRAY_BUFFER, CubeVBO);
@@ -152,46 +138,29 @@ void Engine::Initialize() {
 #pragma endregion
 #pragma region Texture Shaders Models
 
-    Shader lightShader("Shaders/light_source_vertex.vs", "Shaders/light_source_frag.fs");
-    Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
-    Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
-    Shader waterShader("Shaders/water.vs", "Shaders/water.fs");
-    Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
-    Shader postProcessShader("Shaders/postprocess_vert.vs", "Shaders/postprocess_frag.fs");
-
     ShaderReloader mainReloader(phongShader);
     ShaderReloader grassReloader(grassShader);
     ShaderReloader fullScreenReloader(postProcessShader);
     ShaderReloader skyboxReloader(skyboxShader);
     ShaderReloader waterReloader(waterShader);
-
-    std::vector<ShaderReloader> reloaders{mainReloader, grassReloader, fullScreenReloader, skyboxReloader,
-                                          waterReloader};
+    reloaders.push_back(&mainReloader);
+    reloaders.push_back(&grassReloader);
+    reloaders.push_back(&fullScreenReloader);
+    reloaders.push_back(&waterReloader);
 
     std::vector<std::string> cubemapPaths{
         "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
         "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/bottom.png",
         "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
     };
-    unsigned int cubemapTexture = LoadCubeMap(cubemapPaths);
+
+    cubemapTexture = LoadCubeMap(cubemapPaths);
 
     skyboxShader.Use();
     skyboxShader.SetInt("skybox", 0);
 
-    Texture albedo("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture mask("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture diffuse("Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
-    Texture cat("Resources/Textures/cat.png", GL_CLAMP_TO_BORDER, false, "diffuse");
-    Texture grass("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true, "diffuse");
-    Texture specular("Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
-    Texture emissive("Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-
-    Model backpackModel("Resources/Models/backpack/backpack.obj");
-    Model waterPlane("Resources/Models//Water/waterplane.obj");
-    // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    // Model villageModel("Resources/Models/rungholt/rungholt.obj");
-
-    std::vector<Model> models{backpackModel, waterPlane, backpackModel, backpackModel, backpackModel};
+    models.push_back(backpackModel);
+    models.push_back(waterPlane);
 
 #ifdef WIND_WAKER
     std::vector<Model> wwModels;
@@ -207,7 +176,6 @@ void Engine::Initialize() {
     wwModels.push_back(Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
 #endif
 
-    std::vector<glm::vec3> vegetation;
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
     vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
     vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
@@ -216,13 +184,12 @@ void Engine::Initialize() {
 
     // -- FrameBuffers
 
-    unsigned int framebuffer;
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
     glGenTextures(1, &renderTexture);
     glBindTexture(GL_TEXTURE_2D, renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -234,7 +201,7 @@ void Engine::Initialize() {
     // only
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, Width, Height);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
@@ -246,9 +213,6 @@ void Engine::Initialize() {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    auto lastCheck = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds checkInterval(500);
-
 #pragma endregion
 
     // -- Log
@@ -256,105 +220,72 @@ void Engine::Initialize() {
 }
 
 void Engine::ProcessInput(float deltaTime) {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        if (cursorVisible) {
-            cursorVisible = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            return;
-        }
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        if (!cursorVisible) {
-            cursorVisible = true;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
-            return;
-        }
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
-
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+    if (this->Keys[GLFW_KEY_UP]) {
         userUpDown += 0.001;
     }
-
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    if (this->Keys[GLFW_KEY_DOWN]) {
         userUpDown -= 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+    if (this->Keys[GLFW_KEY_LEFT]) {
         userLeftRight -= 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    if (this->Keys[GLFW_KEY_RIGHT]) {
         userLeftRight += 0.001;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (this->Keys[GLFW_KEY_W]) {
         cam.ProcessKeyboardInputs(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    }
+    if (this->Keys[GLFW_KEY_S]) {
         cam.ProcessKeyboardInputs(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    }
+    if (this->Keys[GLFW_KEY_A]) {
         cam.ProcessKeyboardInputs(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    }
+    if (this->Keys[GLFW_KEY_D]) {
         cam.ProcessKeyboardInputs(RIGHT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    }
+    if (this->Keys[GLFW_KEY_Q]) {
         cam.ProcessKeyboardInputs(UP, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+    }
+    if (this->Keys[GLFW_KEY_E]) {
         cam.ProcessKeyboardInputs(DOWN, deltaTime);
+    }
 }
 
-void Engine::Update(float deltaTime) {}
+void Engine::Update(float deltaTime) {
+    // -- FPS Computation --
+    static double lastTime = glfwGetTime();
+    static int frameCount = 0;
+    double currentTime = glfwGetTime();
+    frameCount++;
 
-void Engine::Render() {
-    glClearColor(0.1, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    if (currentTime - lastTime >= 1.0) {
+        double fps = double(frameCount) / (currentTime - lastTime);
+        frameCount = 0;
+        lastTime = currentTime;
 
-    if (this->State == ACTIVE) {
+        currentFPS = fps;
+    }
+
+    // -- Check Shader Reloaders
+    auto now = std::chrono::steady_clock::now();
+    if (now - lastCheck > checkInterval) {
+        lastCheck = now;
+        for (ShaderReloader* r : reloaders) {
+            r->CheckForChanges();
+        }
+    }
+}
+
+void Engine::Render(float deltaTime) {
+    if (this->State == EngineState::ACTIVE) {
         Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
                              glm::vec2(this->Width, this->Height), 0.0f);
 
-        // -- Skip everything if windows not focused.
-        if (!glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            glfwPollEvents();
-            continue;
-        }
-
-        // -- Input Handling
-        GetInputs(window);
         DrawCallsCounter = 0;
-
-        // -- Update Shader Timer
-        auto now = std::chrono::steady_clock::now();
-        if (now - lastCheck > checkInterval) {
-            lastCheck = now;
-            for (ShaderReloader r : reloaders) {
-                r.CheckForChanges();
-            }
-        }
-
-        // -- Time Update
-        float currentFrame = ElapsedTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        // -- FPS Computation --
-        static double lastTime = glfwGetTime();
-        static int frameCount = 0;
-        static double currentFPS = 0;
-        double currentTime = glfwGetTime();
-        frameCount++;
-
-        if (currentTime - lastTime >= 1.0) {
-            double fps = double(frameCount) / (currentTime - lastTime);
-            frameCount = 0;
-            lastTime = currentTime;
-
-            currentFPS = fps;
-        }
 
 #pragma region SunUpdate
         // -- Transformed positions
@@ -365,38 +296,32 @@ void Engine::Render() {
         glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
         auto offsetedLightPos = LightPosition.GLM() + sunYaw + sunPitch;
 #pragma endregion
-
+#pragma region ImGui Begin
         // -- UI IMGUI
         // 1. New Frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-
+#pragma endregion
 #pragma region FIRST PASS
 
-        //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING (Well
-        // that's
-        // the
-        // way to Deferred I guess)
+        //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING
         if (enablePostProcessing) {
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         } else {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
-        // here FOV, aspect ratio, near and far plane for perspective (w
-        // scaled)
-
-        glm::highp_mat4 projectionMatrix;
         if (projectionModeSelection == 0) {
-            projectionMatrix = glm::perspective(glm::radians(cam.Fov), (float)CURRENT_WIDTH / (float)CURRENT_HEIGHT,
-                                                NearPlane, FarPlane);
+            projectionMatrix =
+                glm::perspective(glm::radians(cam.Fov), (float)Width / (float)Height, NearPlane, FarPlane);
         } else {
-            projectionMatrix = glm::ortho(0.0f, (float)CURRENT_WIDTH, 0.0f, (float)CURRENT_HEIGHT, -1.0f, 1.0f);
+            projectionMatrix = glm::ortho(0.0f, (float)Width, 0.0f, (float)Height, -1.0f, 1.0f);
         }
         glm::mat4 viewMatrix = cam.GetViewMatrix();
         glm::mat4 modelMatrix = glm::mat4(1.0F);
@@ -439,6 +364,7 @@ void Engine::Render() {
         glBindVertexArray(CubeVAO);
         OpenGlDraw(GL_TRIANGLES, 0, 36);
 
+        /*
         //-- Draw Terrain
         glBindVertexArray(terrainVAO);
         bool drawTerrain = false;
@@ -448,6 +374,7 @@ void Engine::Render() {
                                (void*)(sizeof(unsigned int) * terrainData.NUM_VERTS_PER_STRIP * strip));
             }
         }
+        */
 
         // -- Multiples Floating Cubes
         glBindVertexArray(CubeVAO);
@@ -545,7 +472,6 @@ void Engine::Render() {
         skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
         skyboxShader.SetMat4("projection", projectionMatrix);
         OpenGlDraw(GL_TRIANGLES, 0, 36);
-
         glDepthFunc(GL_LESS);
 
 #pragma endregion
@@ -553,7 +479,6 @@ void Engine::Render() {
 #pragma region SECOND PASS POST PROCESS
 
         if (enablePostProcessing) {
-            // -- SECOND PASS FOR FULL SCREEN POST PROCESSING
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -575,8 +500,6 @@ void Engine::Render() {
 #pragma endregion
 
 #pragma region IMGUI
-        // -- IMGUI FOLLOW UP
-
         ImGui::Begin("Scene");
         ImGui::End();
 
@@ -670,11 +593,16 @@ void Engine::Render() {
 #pragma endregion
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        // -- Buffer Swap & Events
-        glfwSwapBuffers(window);
-        glfwPollEvents();  // We will register event callbacks soon :)
     }
+}
+
+void Engine::Exit() {
+    glDeleteFramebuffers(1, &framebuffer);
+    ResourceLoader::Clear();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwTerminate();
 }
 
 TerrainData GetTerrainDataFromHeightMap(const char* filePath) {

@@ -120,7 +120,8 @@
 				20,
 				21,
 				22,
-				23
+				23,
+				24
 			]
 		},
 		{
@@ -228,7 +229,8 @@
 				20,
 				21,
 				22,
-				23
+				23,
+				24
 			]
 		}
 	],
@@ -268,6 +270,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/engine/Model.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/engine/Particles.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

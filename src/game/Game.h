@@ -7,12 +7,20 @@
 // clang-format on
 #include <vector>
 
+#include "../engine/Direction.h"
 #include "../engine/Logger.h"
+#include "../engine/Particles.h"
 #include "../engine/ResourceLoader.h"
 #include "../engine/SpriteRenderer.h"
 #include "../glm/glm.hpp"
 #include "BallObject.h"
 #include "GameLevel.h"
+
+struct Collision {
+    bool collided;
+    Direction direction;
+    glm::vec2 penetration;
+};
 
 enum class GameState { ACTIVE, MENU, PAUSED, WIN };
 
@@ -33,6 +41,8 @@ class Game {
     void Render();
     void Exit();
     bool CheckCollisionAABB(GameObject& A, GameObject& B);
-    bool CheckCollisionSphereBox(BallObject& A, GameObject& B);
+    Collision CheckCollisionSphereBox(BallObject& A, GameObject& B);
     void ComputeCollisions();
+    void ResetLevel();
+    void ResetPlayer();
 };

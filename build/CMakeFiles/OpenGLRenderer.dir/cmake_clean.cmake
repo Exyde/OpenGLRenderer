@@ -10,6 +10,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj.d"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj"
+  "CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj"

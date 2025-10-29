@@ -224,6 +224,30 @@ src/engine/Model.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.s
 .PHONY : src/engine/Model.cpp.s
 
+src/engine/Particles.obj: src/engine/Particles.cpp.obj
+.PHONY : src/engine/Particles.obj
+
+# target to build an object file
+src/engine/Particles.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj
+.PHONY : src/engine/Particles.cpp.obj
+
+src/engine/Particles.i: src/engine/Particles.cpp.i
+.PHONY : src/engine/Particles.i
+
+# target to preprocess a source file
+src/engine/Particles.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.i
+.PHONY : src/engine/Particles.cpp.i
+
+src/engine/Particles.s: src/engine/Particles.cpp.s
+.PHONY : src/engine/Particles.s
+
+# target to generate assembly for a file
+src/engine/Particles.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.s
+.PHONY : src/engine/Particles.cpp.s
+
 src/engine/ResourceLoader.obj: src/engine/ResourceLoader.cpp.obj
 .PHONY : src/engine/ResourceLoader.obj
 
@@ -725,6 +749,9 @@ help:
 	@echo ... src/engine/Model.obj
 	@echo ... src/engine/Model.i
 	@echo ... src/engine/Model.s
+	@echo ... src/engine/Particles.obj
+	@echo ... src/engine/Particles.i
+	@echo ... src/engine/Particles.s
 	@echo ... src/engine/ResourceLoader.obj
 	@echo ... src/engine/ResourceLoader.i
 	@echo ... src/engine/ResourceLoader.s

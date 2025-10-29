@@ -3,6 +3,8 @@
 int main() {
 #pragma region Init
 
+    LOG("Welcome !");
+
     // -- Global Initialisions
     if (!InitializeGLFW()) {
         LOG_ERROR(LogCategory::Engine, "Failed to initialize GLFW");
@@ -170,7 +172,7 @@ void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, in
         if (action == GLFW_PRESS)
             game.Keys[key] = engine.Keys[key] = true;
         else if (action == GLFW_RELEASE)
-            game.Keys[key] = engine.Keys[key] = true;
+            game.Keys[key] = engine.Keys[key] = false;
     }
 }
 
@@ -182,11 +184,7 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
     if (appMode == ApplicationMode::Game)
         return;
 
-    glBindTexture(GL_TEXTURE_2D, renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    engine.UpdatePostProcessFrameBuffer(width, height);
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -196,7 +194,7 @@ void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
     if (cursorVisible)
         return;
     // cam.ProcessMouseScroll(yoffset);
-    cam.MovementSpeed += (float)yoffset;
+    engine.cam.MovementSpeed += (float)yoffset;
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
@@ -219,6 +217,6 @@ void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
     lastMouseX = xpos;
     lastMouseY = ypos;
 
-    cam.ProcessMouseMovement(deltaX, deltaY, true);
+    engine.cam.ProcessMouseMovement(deltaX, deltaY, true);
 }
 #pragma endregion

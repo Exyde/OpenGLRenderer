@@ -11,11 +11,19 @@ const float BALL_RADIUS = 12.5f;
 GameObject* Player;
 SpriteRenderer* Renderer;
 BallObject* Ball;
+ParticleEmitter* trailFX;
 const std::string PLAYER_TEXTURE = "player";
 
-Game::Game(unsigned int width, unsigned int height) : State(GameState::ACTIVE), Keys(), Width(width), Height(height) {}
+Game::Game(unsigned int width, unsigned int height) : State(GameState::ACTIVE), Keys(), Width(width), Height(height) {
+    LOG_INFO(LogCategory::Game, "Creating Game Mode...");
+}
 
-Game::~Game() {}
+Game::~Game() {
+    delete Renderer;
+    delete Player;
+    delete Ball;
+    delete trailFX;
+}
 
 void Game::Exit() {
     ResourceLoader::Clear();
@@ -38,8 +46,13 @@ void Game::Initialize() {
     // -- Load & Setup Main Shader
     ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
     ResourceLoader::GetShader("spriteShader").Use();
-    ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
     ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
+    ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
+
+    ResourceLoader::LoadShader("Shaders/particle.vs", "Shaders/particle.fs", nullptr, "particle");
+    ResourceLoader::GetShader("particle").Use();
+    ResourceLoader::GetShader("particle").SetMat4("projection", projection);
+    ResourceLoader::GetShader("particle").SetInt("sprite", 0);
 
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
@@ -51,6 +64,7 @@ void Game::Initialize() {
     ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
     ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", false, "background");
     ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", false, "skybox");
+    ResourceLoader::LoadTexture2D("Resources/Textures/particle.png", true, "particle");
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -58,7 +72,11 @@ void Game::Initialize() {
 
     // -- Ball
     glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -BALL_RADIUS * 2.0f);
-    Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY, ResourceLoader::GetTexture2D("face"));
+    Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY, ResourceLoader::GetTexture2D("skybox"));
+
+    // -- Particles
+    trailFX =
+        new ParticleEmitter(ResourceLoader::GetShader("particle"), ResourceLoader::GetTexture2D("particle"), 1000);
 
     // -- Load Levels
     GameLevel levelOne, levelTwo, levelThree, levelFour;
@@ -118,6 +136,13 @@ void Game::ProcessInput(float deltaTime) {
 void Game::Update(float deltaTime) {
     Ball->Move(deltaTime, this->Width);
     this->ComputeCollisions();
+
+    if (Ball->CheckForBottomBound(this->Height)) {
+        this->ResetLevel();
+        this->ResetPlayer();
+    }
+
+    trailFX->Update(deltaTime, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
 }
 
 void Game::Render() {
@@ -129,6 +154,7 @@ void Game::Render() {
                              glm::vec2(this->Width, this->Height), 0.0f);
         this->Levels[this->currentLevel].Draw(*Renderer);
         Player->Draw(*Renderer);
+        trailFX->Render();
         Ball->Draw(*Renderer);
     }
 }
@@ -139,14 +165,15 @@ bool Game::CheckCollisionAABB(GameObject& A, GameObject& B) {
     return collisionX && collisionY;
 }
 
-bool Game::CheckCollisionSphereBox(BallObject& A, GameObject& B) {
+Collision Game::CheckCollisionSphereBox(BallObject& A, GameObject& B) {
     // -- Circle
     auto center = A.Position + A.Radius;
 
     // -- AABB Center & Half-Extents
-    glm::vec2 aabb_halfextents(B.Size.y / 2.0f,
-                               B.Size.y / 2.0f);  // -- You could cache this but also that's why it's expsenive to
-                                                  // recompute bounds everytime you change transform
+    glm::vec2 aabb_halfextents(B.Size.x / 2.0f,
+                               B.Size.y / 2.0f);  // -- You could cache this but also that's why it's
+                                                  // expsenive to recompute bounds everytime you change
+                                                  // transform
     glm::vec2 aabb_center(B.Position.x + aabb_halfextents.x, B.Position.y + aabb_halfextents.y);
 
     // -- Difference (D Vector)
@@ -154,20 +181,84 @@ bool Game::CheckCollisionSphereBox(BallObject& A, GameObject& B) {
     glm::vec2 clamped = glm::clamp(D, -aabb_halfextents, aabb_halfextents);
 
     glm::vec2 closestPoint = aabb_center + clamped;
-    glm::vec2 centerToBoxEdge = closestPoint - center;
+    glm::vec2 circleCenterToBoxEdge = closestPoint - center;
 
     // -- Collision if Inside
-    return glm::length(centerToBoxEdge) < A.Radius;
+
+    Collision coll;
+    if (glm::length(circleCenterToBoxEdge) < A.Radius) {
+        coll.collided = true;
+        coll.direction = GetVectorClosestDirection(circleCenterToBoxEdge);
+        coll.penetration = circleCenterToBoxEdge;
+    } else {
+        coll.collided = false;
+        coll.direction = Direction::UP;
+        coll.penetration = glm::vec2(0.0);
+    }
+
+    return coll;
 }
 
 void Game::ComputeCollisions() {
     for (GameObject& other : this->Levels[this->currentLevel].Bricks) {
         if (!other.IsDestroyed) {
-            if (CheckCollisionSphereBox(*Ball, other)) {
-                if (!other.IsSolid) {
+            Collision collision = CheckCollisionSphereBox(*Ball, other);
+
+            if (collision.collided) {
+                if (!other.IsSolid)
                     other.IsDestroyed = true;
+
+                if (collision.direction == Direction::LEFT || collision.direction == Direction::RIGHT) {
+                    Ball->Velocity.x = -Ball->Velocity.x;
+                    float penetration = Ball->Radius - std::abs(collision.penetration.x);
+                    if (collision.direction == Direction::LEFT) {
+                        Ball->Position.x += penetration;
+                    } else {
+                        Ball->Position.x -= penetration;
+                    }
+                } else {
+                    Ball->Velocity.y = -Ball->Velocity.y;
+                    float penetration = Ball->Radius - std::abs(collision.penetration.y);
+
+                    if (collision.direction == Direction::UP)
+                        Ball->Position.y -= penetration;
+                    else
+                        Ball->Position.y += penetration;
                 }
             }
         }
     }
+
+    // -- Player
+    Collision result = CheckCollisionSphereBox(*Ball, *Player);
+
+    if (!Ball->Locked && result.collided) {
+        float centerBoard = Player->Position.x + Player->Size.x / 2.0f;
+        float dst = (Ball->Position.x + Ball->Radius) - centerBoard;
+        float pct = dst / (Player->Size.x / 2.0f);
+        float strength = 2.0f;
+
+        glm::vec2 oldVel = Ball->Velocity;
+        Ball->Velocity.x = INITIAL_BALL_VELOCITY.x * pct * strength;
+        Ball->Velocity.y = -1.0 * abs(Ball->Velocity.y);  // -- sticky paddle hack
+        Ball->Velocity = glm::normalize(Ball->Velocity) * glm::length(oldVel);
+    }
+}
+
+void Game::ResetLevel() {
+    if (this->currentLevel == 0)
+        this->Levels[0].Load("Resources/Levels/level1.txt", this->Width, this->Height / 2);
+    else if (this->currentLevel == 1)
+        this->Levels[1].Load("Resources/Levels/level2.txt", this->Width, this->Height / 2);
+    else if (this->currentLevel == 2)
+        this->Levels[2].Load("Resources/Levels/level3.txt", this->Width, this->Height / 2);
+    else if (this->currentLevel == 3)
+        this->Levels[3].Load("Resources/Levels/level4.txt", this->Width, this->Height / 2);
+}
+
+void Game::ResetPlayer() {
+    Player->Size = PLAYER_SIZE;
+    Player->Position = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+    Ball->Reset(Player->Position + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -(BALL_RADIUS * 2.0f)),
+                INITIAL_BALL_VELOCITY);
 }

@@ -3,19 +3,30 @@
 // -- Player
 const glm::vec2 PLAYER_SIZE(100.0F, 20.0f);
 const float PLAYER_VELOCITY(500.0f);
-
-GameObject* Player;
-SpriteRenderer* Renderer;
 const std::string PLAYER_TEXTURE = "player";
 
 Engine::Engine(unsigned int width, unsigned int height)
-    : State(EngineState::ACTIVE), Keys(), Width(width), Height(height) {}
+    : State(EngineState::ACTIVE), Keys(), Width(width), Height(height) {
+    LOG_INFO(LogCategory::Engine, "Creating Engine Mode...");
+}
 
 Engine::~Engine() {}
 
 void Engine::Initialize() {
     // -- Log
     LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
+
+    // -- Init Static
+    pointLightAmbient = glm::vec3(0.05f);
+    pointLightDiffuse = glm::vec3(0.0f, 0.2f, 0.7f);
+    pointLightSpecular = glm::vec3(1.0f);
+    flashLightAmbient = glm::vec3(0.05f);
+    flashLightDiffuse = glm::vec3(0.8f, 0.2f, 0.6f);
+    flashLightSpecular = glm::vec3(1.0f);
+
+    LightPosition = glm::vec3(-2.0f, 1.5F, 3.3F);
+    cam = Camera(Vector3(0.0f, 0.0f, 0.0f));
+    checkInterval = std::chrono::milliseconds(500);
 
     // -- Create Projection Matrix
     float w = static_cast<float>(this->Width);
@@ -24,9 +35,12 @@ void Engine::Initialize() {
 
     // -- Load & Setup Main Shader
     ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
+    ResourceLoader::LoadShader("Shaders/vert.vs", "Shaders/frag.fs", nullptr, "phong");
     ResourceLoader::GetShader("spriteShader").Use();
     ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
     // ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
+
+    // -- Shaders
 
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
@@ -38,6 +52,24 @@ void Engine::Initialize() {
     ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
     ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", false, "background");
     ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", false, "skybox");
+
+    auto albedoTex = Texture("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+    auto maskTex = Texture("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, false, "diffuse");
+    auto diffuseTex = Texture("Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
+    auto grassTex = Texture("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true, "diffuse");
+    auto specularTex = Texture("Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
+    auto emissiveTex = Texture("Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
+    auto backpackModelTex = Model("Resources/Models/backpack/backpack.obj");
+    auto waterPlaneTex = Model("Resources/Models//Water/waterplane.obj");
+
+    albedo = &albedoTex;
+    mask = &maskTex;
+    diffuse = &diffuseTex;
+    grass = &grassTex;
+    specular = &specularTex;
+    emissive = &emissiveTex;
+    backpackModel = &backpackModelTex;
+    waterPlane = &waterPlaneTex;
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -74,6 +106,7 @@ void Engine::Initialize() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
     // -- Terrain
+    /*
     TerrainData terrainData = GetTerrainDataFromHeightMap("Resources/Textures/iceland_heightmap.png");
     glGenVertexArrays(1, &terrainVAO);
     glBindVertexArray(terrainVAO);
@@ -90,6 +123,7 @@ void Engine::Initialize() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrainData.indices.size() * sizeof(unsigned int), &terrainData.indices[0],
                  GL_STATIC_DRAW);
+                 */
 
     // -- NDC Quad
     glGenVertexArrays(1, &ndcQuadVAO);
@@ -138,15 +172,15 @@ void Engine::Initialize() {
 #pragma endregion
 #pragma region Texture Shaders Models
 
-    ShaderReloader mainReloader(phongShader);
-    ShaderReloader grassReloader(grassShader);
-    ShaderReloader fullScreenReloader(postProcessShader);
-    ShaderReloader skyboxReloader(skyboxShader);
-    ShaderReloader waterReloader(waterShader);
+    ShaderReloader mainReloader(ResourceLoader::GetShader("phong"));
+    // ShaderReloader grassReloader(grassShader);
+    // ShaderReloader fullScreenReloader(postProcessShader);
+    // ShaderReloader skyboxReloader(skyboxShader);
+    // ShaderReloader waterReloader(waterShader);
     reloaders.push_back(&mainReloader);
-    reloaders.push_back(&grassReloader);
-    reloaders.push_back(&fullScreenReloader);
-    reloaders.push_back(&waterReloader);
+    // reloaders.push_back(&grassReloader);
+    // reloaders.push_back(&fullScreenReloader);
+    // reloaders.push_back(&waterReloader);
 
     std::vector<std::string> cubemapPaths{
         "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
@@ -154,10 +188,10 @@ void Engine::Initialize() {
         "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
     };
 
-    cubemapTexture = LoadCubeMap(cubemapPaths);
+    // cubemapTexture = LoadCubeMap(cubemapPaths);
 
-    skyboxShader.Use();
-    skyboxShader.SetInt("skybox", 0);
+    // skyboxShader.Use();
+    // skyboxShader.SetInt("skybox", 0);
 
     models.push_back(backpackModel);
     models.push_back(waterPlane);
@@ -270,11 +304,28 @@ void Engine::Update(float deltaTime) {
         currentFPS = fps;
     }
 
-    // -- Check Shader Reloaders
+    // -- Check Shader Reloaders -- Todo : CRASH
+    bool checkreloaders = false;
     auto now = std::chrono::steady_clock::now();
-    if (now - lastCheck > checkInterval) {
+    if (checkreloaders && now - lastCheck > checkInterval) {
         lastCheck = now;
+        LOG("Going to check Shaders Reloaders ");
+
+        if (reloaders.size() == 0) {
+            LOG("Going to check EMPTYYYYYYYYYYYYYYYYYY Reloaders ");
+        }
+
         for (ShaderReloader* r : reloaders) {
+            if (r == NULL) {
+                LOG_ERROR(LogCategory::Shader, "Reloader IS NULL");
+                continue;
+            }
+
+            if (r == nullptr) {
+                LOG_ERROR(LogCategory::Shader, "Reloader IS NULLPTR");
+                continue;
+            }
+
             r->CheckForChanges();
         }
     }
@@ -282,9 +333,6 @@ void Engine::Update(float deltaTime) {
 
 void Engine::Render(float deltaTime) {
     if (this->State == EngineState::ACTIVE) {
-        Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
-                             glm::vec2(this->Width, this->Height), 0.0f);
-
         DrawCallsCounter = 0;
 
 #pragma region SunUpdate
@@ -294,7 +342,7 @@ void Engine::Render(float deltaTime) {
             sunTheta += sunSpeed;
         glm::vec3 sunYaw = glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
         glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
-        auto offsetedLightPos = LightPosition.GLM() + sunYaw + sunPitch;
+        auto offsetedLightPos = LightPosition + sunYaw + sunPitch;
 #pragma endregion
 #pragma region ImGui Begin
         // -- UI IMGUI
@@ -328,13 +376,14 @@ void Engine::Render(float deltaTime) {
 
         // -- Textures Units ?
         glActiveTexture(GL_TEXTURE0);
-        diffuse.Bind();
+        diffuse->Bind();
         glActiveTexture(GL_TEXTURE1);
-        specular.Bind();
+        specular->Bind();
         glActiveTexture(GL_TEXTURE2);
-        emissive.Bind();
+        emissive->Bind();
 
         // -- Phong Shader
+        auto phongShader = ResourceLoader::GetShader("phong");
         phongShader.Use();
         phongShader.SetMat4("view", viewMatrix);
         phongShader.SetMat4("projection", projectionMatrix);
@@ -362,7 +411,7 @@ void Engine::Render(float deltaTime) {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
         phongShader.SetMat4("model", modelMatrix);
         glBindVertexArray(CubeVAO);
-        OpenGlDraw(GL_TRIANGLES, 0, 36);
+        // OpenGlDraw(GL_TRIANGLES, 0, 36);
 
         /*
         //-- Draw Terrain
@@ -388,19 +437,18 @@ void Engine::Render(float deltaTime) {
             }
             phongShader.SetMat4("model", modelMatrix);
 
-            OpenGlDraw(GL_POINTS, 0, 36);
+            // OpenGlDraw(GL_POINTS, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
-
-        models[objectViewSelection].Draw(phongShader);
+        models[objectViewSelection]->Draw(phongShader);
 
 #ifdef WIND_WAKER
         wwModels[windWakerSelection].Draw(phongShader);
 #endif
-
+        /*
         waterShader.Use();
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(1000.0f));
@@ -409,12 +457,12 @@ void Engine::Render(float deltaTime) {
         waterShader.SetMat4("projection", projectionMatrix);
         waterShader.SetFloat("uTime", ElapsedTime() * userUpDown);
         // -- Water
-        waterPlane.Draw(waterShader);
+        waterPlane->Draw(waterShader);
 
         // -- Grass
         grassShader.Use();
         glActiveTexture(GL_TEXTURE0);
-        grass.Bind();
+        grass->Bind();
         grassShader.SetMat4("view", viewMatrix);
         grassShader.SetMat4("projection", projectionMatrix);
         grassShader.SetInt("mat.diffuse", 0);
@@ -474,28 +522,32 @@ void Engine::Render(float deltaTime) {
         OpenGlDraw(GL_TRIANGLES, 0, 36);
         glDepthFunc(GL_LESS);
 
+        */
+
 #pragma endregion
 
 #pragma region SECOND PASS POST PROCESS
+        /*
+                if (enablePostProcessing) {
+                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                    glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    postProcessShader.Use();
+                    postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+                    postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
+                    postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
+                    postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
+                    postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
+                    postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
+                    postProcessShader.SetInt("uKernelType", postFX.kernelType);
 
-        if (enablePostProcessing) {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
-            glClear(GL_COLOR_BUFFER_BIT);
+                    glBindVertexArray(ndcQuadVAO);
+                    glDisable(GL_DEPTH_TEST);
+                    glBindTexture(GL_TEXTURE_2D, renderTexture);
+                    OpenGlDraw(GL_TRIANGLES, 0, 6);
+                }
 
-            postProcessShader.Use();
-            postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-            postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
-            postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
-            postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
-            postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
-            postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
-            postProcessShader.SetInt("uKernelType", postFX.kernelType);
-            glBindVertexArray(ndcQuadVAO);
-            glDisable(GL_DEPTH_TEST);
-            glBindTexture(GL_TEXTURE_2D, renderTexture);
-            OpenGlDraw(GL_TRIANGLES, 0, 6);
-        }
+                */
 
 #pragma endregion
 
@@ -657,7 +709,7 @@ TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
     return terrainData;
 }
 
-void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
+void Engine::SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     // -- Directionnal Light
     shader.SetVec3("dirLight.direction", lightPos);
     shader.SetVec3("dirLight.ambient", glm::vec3(ambientLightColor[0], ambientLightColor[1], ambientLightColor[2]));
@@ -708,6 +760,14 @@ void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     shader.SetFloat("flashLight.constant", attenuation[0]);
     shader.SetFloat("flashLight.linear", attenuation[1]);
     shader.SetFloat("flashLight.quadratic", attenuation[2]);
+}
+
+void Engine::UpdatePostProcessFrameBuffer(int width, int height) {
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 }
 
 unsigned int LoadCubeMap(std::vector<std::string> facePaths) {

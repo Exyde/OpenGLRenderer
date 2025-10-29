@@ -54,6 +54,12 @@
 - Supporter le reload de Shader
 - Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures
 - Juicy un max, post process/ shader un max
+- Instance GPU particles 
+- Improve style and FX (Shapes)
+- Music on hit + big sound thinggy game for un max de juice
+- Level Win
+- Menu & Progress
+- Power Up
 
 ## Core Goals for Portolio
 - Finish Learn open GL

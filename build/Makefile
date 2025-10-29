@@ -248,6 +248,30 @@ src/engine/Particles.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.s
 .PHONY : src/engine/Particles.cpp.s
 
+src/engine/PostProcessor.obj: src/engine/PostProcessor.cpp.obj
+.PHONY : src/engine/PostProcessor.obj
+
+# target to build an object file
+src/engine/PostProcessor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj
+.PHONY : src/engine/PostProcessor.cpp.obj
+
+src/engine/PostProcessor.i: src/engine/PostProcessor.cpp.i
+.PHONY : src/engine/PostProcessor.i
+
+# target to preprocess a source file
+src/engine/PostProcessor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.i
+.PHONY : src/engine/PostProcessor.cpp.i
+
+src/engine/PostProcessor.s: src/engine/PostProcessor.cpp.s
+.PHONY : src/engine/PostProcessor.s
+
+# target to generate assembly for a file
+src/engine/PostProcessor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.s
+.PHONY : src/engine/PostProcessor.cpp.s
+
 src/engine/ResourceLoader.obj: src/engine/ResourceLoader.cpp.obj
 .PHONY : src/engine/ResourceLoader.obj
 
@@ -752,6 +776,9 @@ help:
 	@echo ... src/engine/Particles.obj
 	@echo ... src/engine/Particles.i
 	@echo ... src/engine/Particles.s
+	@echo ... src/engine/PostProcessor.obj
+	@echo ... src/engine/PostProcessor.i
+	@echo ... src/engine/PostProcessor.s
 	@echo ... src/engine/ResourceLoader.obj
 	@echo ... src/engine/ResourceLoader.i
 	@echo ... src/engine/ResourceLoader.s

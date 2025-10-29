@@ -7,11 +7,13 @@ const float PLAYER_VELOCITY(500.0f);
 // -- Ball
 const glm::vec2 INITIAL_BALL_VELOCITY(100.0f, -350.0f);
 const float BALL_RADIUS = 12.5f;
+float shakeTime = 0.0f;
 
 GameObject* Player;
 SpriteRenderer* Renderer;
 BallObject* Ball;
 ParticleEmitter* trailFX;
+PostProcessor* postProcess;
 const std::string PLAYER_TEXTURE = "player";
 
 Game::Game(unsigned int width, unsigned int height) : State(GameState::ACTIVE), Keys(), Width(width), Height(height) {
@@ -23,6 +25,7 @@ Game::~Game() {
     delete Player;
     delete Ball;
     delete trailFX;
+    delete postProcess;
 }
 
 void Game::Exit() {
@@ -54,6 +57,8 @@ void Game::Initialize() {
     ResourceLoader::GetShader("particle").SetMat4("projection", projection);
     ResourceLoader::GetShader("particle").SetInt("sprite", 0);
 
+    ResourceLoader::LoadShader("Shaders/postprocess2D.vs", "Shaders/postprocess2D.fs", nullptr, "postprocess2D");
+
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
@@ -77,6 +82,9 @@ void Game::Initialize() {
     // -- Particles
     trailFX =
         new ParticleEmitter(ResourceLoader::GetShader("particle"), ResourceLoader::GetTexture2D("particle"), 1000);
+
+    // -- Post-Process
+    postProcess = new PostProcessor(ResourceLoader::GetShader("postprocess2D"), this->Width, this->Height);
 
     // -- Load Levels
     GameLevel levelOne, levelTwo, levelThree, levelFour;
@@ -134,6 +142,13 @@ void Game::ProcessInput(float deltaTime) {
 }
 
 void Game::Update(float deltaTime) {
+    if (shakeTime > 0.0f) {
+        shakeTime -= deltaTime;
+        if (shakeTime <= 0.0) {
+            postProcess->Shake = false;
+        }
+    }
+
     Ball->Move(deltaTime, this->Width);
     this->ComputeCollisions();
 
@@ -150,12 +165,16 @@ void Game::Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (this->State == GameState::ACTIVE) {
+        postProcess->BeginRender();
+
         Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
                              glm::vec2(this->Width, this->Height), 0.0f);
         this->Levels[this->currentLevel].Draw(*Renderer);
         Player->Draw(*Renderer);
         trailFX->Render();
         Ball->Draw(*Renderer);
+        postProcess->EndRender();
+        postProcess->RenderPostProcess(glfwGetTime());
     }
 }
 
@@ -207,6 +226,10 @@ void Game::ComputeCollisions() {
             if (collision.collided) {
                 if (!other.IsSolid)
                     other.IsDestroyed = true;
+                else {
+                    shakeTime = 0.05f;
+                    postProcess->Shake = true;
+                }
 
                 if (collision.direction == Direction::LEFT || collision.direction == Direction::RIGHT) {
                     Ball->Velocity.x = -Ball->Velocity.x;

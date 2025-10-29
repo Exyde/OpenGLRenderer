@@ -10,6 +10,7 @@
 #include "../engine/Direction.h"
 #include "../engine/Logger.h"
 #include "../engine/Particles.h"
+#include "../engine/PostProcessor.h"
 #include "../engine/ResourceLoader.h"
 #include "../engine/SpriteRenderer.h"
 #include "../glm/glm.hpp"

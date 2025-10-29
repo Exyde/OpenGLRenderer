@@ -27,13 +27,11 @@
 ### Main Path (Learn Open GL) - TodoList
 
 - Afficher les logs dans une console IMGUI <3
-- Double main loop to handle switching between game and engine with K
 - Resource Loader ---> Support Texture.cpp or remove it
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Add renter textures for differents maps views (different buffer, could be nice)
 - Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
-- Improve Site/Files system here (clean all links)
 - Camera : F to focus current mesh ?
 - Next Video : Nouvelle Era - Clozee
 - Flag for post process FragCoord influence
@@ -48,6 +46,7 @@
 - Implement Frustrum Culling
 - Implement Basic Physics
 - On crash si on load une texture avec bool alpha mais que le fichier à pas d'alpha, pas ouf
+  
 ## Breakout 
 - Box2D ?
 - Draw BoxExtents / Collider ?

@@ -6,6 +6,7 @@ class BallObject : public GameObject {
    public:
     float Radius;
     bool Locked;
+    bool PassThrough, Sticky;  // -- PowerUps
 
     BallObject();
     BallObject(glm::vec2 pos, float radius, glm::vec2 velocity, Texture2D sprite);

@@ -15,7 +15,7 @@ void main(){
     TexCoords = tex;
 
     if (chaos){
-        float strength = 0.3;
+        float strength = 0.12;
         vec2 pos = vec2(tex.x +sin(uTime) * strength, tex.y + cos(uTime) * strength);
         TexCoords = pos;
     } else if (confuse){

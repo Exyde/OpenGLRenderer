@@ -16,6 +16,8 @@ GameObject::GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec
 GameObject::~GameObject() {}
 
 void GameObject::Draw(SpriteRenderer& renderer) {
+    if (IsDestroyed)
+        return;
     renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation, this->Color);
 }
 

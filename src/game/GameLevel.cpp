@@ -1,7 +1,6 @@
 #include "GameLevel.h"
 
-void GameLevel::Load(const char* filePath, unsigned int levelWidth,
-                     unsigned int levelHeight) {
+void GameLevel::Load(const char* filePath, unsigned int levelWidth, unsigned int levelHeight) {
     LOG_INFO(logCat, "Game Level: Loading...");
     this->Bricks.clear();
 
@@ -27,8 +26,7 @@ void GameLevel::Load(const char* filePath, unsigned int levelWidth,
         if (data.Rows.size() > 0) {
             this->init(data, levelWidth, levelHeight);
         } else {
-            LOG_ERROR(logCat,
-                      "Failed to load correctly level from file:", filePath);
+            LOG_ERROR(logCat, "Failed to load correctly level from file:", filePath);
         }
     } else {
         LOG_ERROR(logCat, "Failed to open fstream @path: ", filePath);
@@ -37,22 +35,22 @@ void GameLevel::Load(const char* filePath, unsigned int levelWidth,
 
 void GameLevel::Draw(SpriteRenderer& renderer) {
     for (auto obj : Bricks) {
-        if (!obj.IsDestroyed) obj.Draw(renderer);
+        if (!obj.IsDestroyed)
+            obj.Draw(renderer);
     }
 }
 
 bool GameLevel::IsCompleted() {
     for (auto obj : Bricks) {
-        if (!obj.IsSolid && !obj.IsDestroyed) return false;
+        if (!obj.IsSolid && !obj.IsDestroyed)
+            return false;
     }
     return true;
 }
 
-bool GameLevel::init(TileData data, unsigned int levelWidth,
-                     unsigned int levelHeight) {
+bool GameLevel::init(TileData data, unsigned int levelWidth, unsigned int levelHeight) {
     if (levelWidth <= 0 || levelHeight <= 0) {
-        LOG_ERROR(logCat, "Invalid level dimensions : ", levelWidth, ",",
-                  levelHeight, ". Provide a positive value !");
+        LOG_ERROR(logCat, "Invalid level dimensions : ", levelWidth, ",", levelHeight, ". Provide a positive value !");
         return false;
     }
 
@@ -72,17 +70,17 @@ bool GameLevel::init(TileData data, unsigned int levelWidth,
             glm::vec2 pos(cellWidth * x, cellWidth * y);
             // -- Solid
             if (currentTileCode == 1) {
-                GameObject brick(pos, cellSize,
-                                 ResourceLoader::GetTexture2D("block_solid"),
-                                 solidColor);
+                GameObject brick(pos, cellSize, ResourceLoader::GetTexture2D("block_solid"), solidColor);
                 brick.IsSolid = true;
                 this->Bricks.push_back(brick);
 
                 // -- Gameplay Tiles
-            } else if (currentTileCode >= 1) {
-                GameObject brick(pos, cellSize,
-                                 ResourceLoader::GetTexture2D("block"),
-                                 gameplayColor);
+            } else if (currentTileCode == 1) {
+                GameObject brick(pos, cellSize, ResourceLoader::GetTexture2D("particle"),
+                                 glm::vec4(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f, 1.0f));
+                this->Bricks.push_back(brick);
+            } else if (currentTileCode >= 2) {
+                GameObject brick(pos, cellSize, ResourceLoader::GetTexture2D("cat"), glm::vec4(1.0f));
                 this->Bricks.push_back(brick);
             }
         }

@@ -4515,8 +4515,10 @@ CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj: C:/Users/youne/Desktop/Open
   C:/msys64/mingw64/include/_mingw_stat64.h \
   C:/msys64/mingw64/include/_timeval.h \
   C:/msys64/mingw64/include/assert.h \
+  C:/msys64/mingw64/include/c++/15.2.0/algorithm \
   C:/msys64/mingw64/include/c++/15.2.0/backward/binders.h \
   C:/msys64/mingw64/include/c++/15.2.0/bit \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/algorithmfwd.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/alloc_traits.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/allocator.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/basic_ios.h \
@@ -4564,16 +4566,19 @@ CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj: C:/Users/youne/Desktop/Open
   C:/msys64/mingw64/include/c++/15.2.0/bits/specfun.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/sstream.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/bits/std_abs.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/stl_algo.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_algobase.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_bvector.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_construct.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_function.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/stl_heap.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_iterator.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_iterator_base_funcs.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_iterator_base_types.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_map.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_multimap.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_pair.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/stl_tempbuf.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_tree.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_uninitialized.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stl_vector.h \
@@ -4581,6 +4586,7 @@ CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj: C:/Users/youne/Desktop/Open
   C:/msys64/mingw64/include/c++/15.2.0/bits/streambuf_iterator.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/string_view.tcc \
   C:/msys64/mingw64/include/c++/15.2.0/bits/stringfwd.h \
+  C:/msys64/mingw64/include/c++/15.2.0/bits/uniform_int_dist.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/uses_allocator.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/uses_allocator_args.h \
   C:/msys64/mingw64/include/c++/15.2.0/bits/utility.h \
@@ -4620,6 +4626,8 @@ CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj: C:/Users/youne/Desktop/Open
   C:/msys64/mingw64/include/c++/15.2.0/map \
   C:/msys64/mingw64/include/c++/15.2.0/new \
   C:/msys64/mingw64/include/c++/15.2.0/ostream \
+  C:/msys64/mingw64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/mingw64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/mingw64/include/c++/15.2.0/pstl/pstl_config.h \
   C:/msys64/mingw64/include/c++/15.2.0/sstream \
   C:/msys64/mingw64/include/c++/15.2.0/stdexcept \
@@ -4704,7 +4712,8 @@ CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj: C:/Users/youne/Desktop/Open
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/game/BallObject.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/game/PowerUp.h
 
 CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.cpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/KHR/khrplatform.h \
@@ -7748,6 +7757,7 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/src/game/BallObject.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/game/Game.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/game/PowerUp.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/main.h
 
 
@@ -8597,9 +8607,9 @@ C:/msys64/mingw64/include/c++/15.2.0/bits/functexcept.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/hash_bytes.h:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h:
-
 C:/msys64/mingw64/include/ddeml.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/hashtable.h:
 
@@ -8961,6 +8971,12 @@ C:/msys64/mingw64/include/rpcndr.h:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.h:
 
+C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/gfniintrin.h:
+
+C:/msys64/mingw64/include/wow64apiset.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/game/PowerUp.h:
+
 C:/Users/youne/Desktop/OpenGLRenderer/src/glad.c:
 
 C:/msys64/mingw64/include/_bsd_types.h:
@@ -9144,10 +9160,6 @@ C:/msys64/mingw64/include/winspool.h:
 C:/msys64/mingw64/include/winuser.h:
 
 C:/msys64/mingw64/include/wnnc.h:
-
-C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/gfniintrin.h:
-
-C:/msys64/mingw64/include/wow64apiset.h:
 
 C:/msys64/mingw64/include/wtypes.h:
 

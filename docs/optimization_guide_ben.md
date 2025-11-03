@@ -4,6 +4,7 @@
 
 Analyse First, then optimize : Where are we bottle neck ? Enemies ? Physics ? AI ?
 Frame Rate vs Frame Time (much better for details)
+// -- Todo : ARRAY MD HERE
 - 15 fps : 66.66 ms
 - 30 fps : 33.33 ms
 - 60 fps : 16.66 ms

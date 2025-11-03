@@ -45,7 +45,7 @@
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
 - Implement Basic Physics
-- On crash si on load une texture avec bool alpha mais que le fichier à pas d'alpha, pas ouf
+- Tracy integration for profiling ?
   
 ## Breakout 
 - Box2D ?
@@ -58,14 +58,14 @@
 - Music on hit + big sound thinggy game for un max de juice
 - Level Win
 - Menu & Progress
-- Power Up
+- Render Texts
 
 ## Core Goals for Portolio
 - Finish Learn open GL
-- PBR : Industry Standard (Require Gamma Correction, FrameBuffer, Cubemaps, HDR)
-- ShadowMaps : Require Advenced Lighting
-- Deffered Rendering : Requir at least both above I guess. Last fight ? 
-- One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? You've got time :)
+- 1] ShadowMaps : Require Advenced Lighting
+- 2] PBR : Industry Standard (Require Gamma Correction, FrameBuffer, Cubemaps, HDR)
+- 2] Deffered Rendering : Requir at least both above I guess. Last fight ? 
+- 3] One thing from a reasearch  / siggraph paper : Volumetric Clouds ? Simulation ? GI  / Cascade Radiance .. ? You've got time :)
 
 ## GPU Instancing (Advanced Fun Goals)
 - Grass Shader With Vertex displacement + Color UV + Instancing (voir Acerola)

@@ -63,31 +63,31 @@ void Game::Initialize() {
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
     // -- Load Textures
-    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
-    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true, "face");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false, "block");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
-    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", false, "background");
-    ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", false, "skybox");
-    ResourceLoader::LoadTexture2D("Resources/Textures/particle.png", true, "particle");
-    ResourceLoader::LoadTexture2D("Resources/Textures/cat.png", false, "cat");
+    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", PLAYER_TEXTURE);
+    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", "face");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", "block");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", "block_solid");
+    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", "background");
+    ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", "skybox");
+    ResourceLoader::LoadTexture2D("Resources/Textures/particle.png", "particle");
+    ResourceLoader::LoadTexture2D("Resources/Textures/cat.png", "cat");
 
     powerUpsTextures[PowerUpType::Speed] =
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_speed.png", true, "powerup_speed");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_speed.png", "powerup_speed");
     powerUpsTextures[PowerUpType::Sticky] =
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_sticky.png", true, "powerup_sticky");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_sticky.png", "powerup_sticky");
     powerUpsTextures[PowerUpType::PadSizeIncrease] =
 
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_increase.png", true, "powerup_increase");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_increase.png", "powerup_increase");
     powerUpsTextures[PowerUpType::Confuse] =
 
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_confuse.png", true, "powerup_confuse");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_confuse.png", "powerup_confuse");
     powerUpsTextures[PowerUpType::Chaos] =
 
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_chaos.png", true, "powerup_chaos");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_chaos.png", "powerup_chaos");
     powerUpsTextures[PowerUpType::PassThrough] =
 
-        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_passthrough.png", true, "powerup_passthrough");
+        ResourceLoader::LoadTexture2D("Resources/Textures/powerup_passthrough.png", "powerup_passthrough");
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);

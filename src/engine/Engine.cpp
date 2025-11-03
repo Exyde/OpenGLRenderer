@@ -12,64 +12,77 @@ Engine::Engine(unsigned int width, unsigned int height)
 
 Engine::~Engine() {}
 
-void Engine::Initialize() {
-    // -- Log
-    LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
+void LoadTextures() {
+    // -- Load Textures
+    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", PLAYER_TEXTURE);
+    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", "face");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", "block");
+    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", "block_solid");
+    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", "background");
+    ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", "skybox");
+    ResourceLoader::LoadTexture2D("Resources/Textures/grass.png", "grass");
+    ResourceLoader::LoadTexture2D("Resources/Textures/container_diffuse.png", "diffuse");
+    ResourceLoader::LoadTexture2D("Resources/Textures/container_specular.png", "specular");
+    ResourceLoader::LoadTexture2D("Resources/Textures/container_emmisive.jpg", "emissive");
+}
 
-    // -- Init Static
+void LoadShaders() {
+    // -- Load & Setup Main Shader
+    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
+    ResourceLoader::GetShader("spriteShader").Use();
+    ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
+
+    // -- Shaders
+    ResourceLoader::LoadShader("Shaders/vert.vs", "Shaders/frag.fs", nullptr, "phong");
+    ResourceLoader::LoadShader("Shaders/grass.vs", "Shaders/grass.fs", nullptr, "grass");
+    ResourceLoader::LoadShader("Shaders/skybox.vs", "Shaders/skybox.fs", nullptr, "skybox");
+    ResourceLoader::LoadShader("Shaders/light.vs", "Shaders/light.fs", nullptr, "light");
+    ResourceLoader::LoadShader("Shaders/postprocess.vs", "Shaders/postprocess.fs", nullptr, "postProcess");
+}
+
+void Engine::InitStatics() {
     pointLightAmbient = glm::vec3(0.05f);
     pointLightDiffuse = glm::vec3(0.0f, 0.2f, 0.7f);
     pointLightSpecular = glm::vec3(1.0f);
     flashLightAmbient = glm::vec3(0.05f);
     flashLightDiffuse = glm::vec3(0.8f, 0.2f, 0.6f);
     flashLightSpecular = glm::vec3(1.0f);
-
     LightPosition = glm::vec3(-2.0f, 1.5F, 3.3F);
     cam = Camera(Vector3(0.0f, 0.0f, 0.0f));
     checkInterval = std::chrono::milliseconds(500);
+}
+
+void Engine::Initialize() {
+    // -- Log
+    LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
+
+    stbi_set_flip_vertically_on_load(true);
 
     // -- Create Projection Matrix
     float w = static_cast<float>(this->Width);
     float h = static_cast<float>(this->Height);
     // Todo : projection
 
-    // -- Load & Setup Main Shader
-    ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
-    ResourceLoader::LoadShader("Shaders/vert.vs", "Shaders/frag.fs", nullptr, "phong");
-    ResourceLoader::GetShader("spriteShader").Use();
-    ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
-    // ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
+    InitStatics();
+    LoadTextures();
+    LoadShaders();
 
-    // -- Shaders
+    std::vector<std::string> cubemapPaths{
+        "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
+        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/bottom.png",
+        "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
+    };
+
+    // -- Skybox
+    cubemapTexture = LoadCubeMap(cubemapPaths);
 
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
-    // -- Load Textures
-    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", true, PLAYER_TEXTURE);
-    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", true, "face");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", false, "block");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", false, "block_solid");
-    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", false, "background");
-    ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", false, "skybox");
-
-    auto albedoTex = Texture("Resources/Textures/container.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    auto maskTex = Texture("Resources/Textures/awesomeface.png", GL_CLAMP_TO_BORDER, false, "diffuse");
-    auto diffuseTex = Texture("Resources/Textures/container_diffuse.png", GL_CLAMP_TO_BORDER, true, "diffuse");
-    auto grassTex = Texture("Resources/Textures/grass.png", GL_CLAMP_TO_EDGE, true, "diffuse");
-    auto specularTex = Texture("Resources/Textures/container_specular.png", GL_CLAMP_TO_BORDER, true, "specular");
-    auto emissiveTex = Texture("Resources/Textures/container_emmisive.jpg", GL_CLAMP_TO_BORDER, false, "diffuse");
-    auto backpackModelTex = Model("Resources/Models/backpack/backpack.obj");
-    auto waterPlaneTex = Model("Resources/Models//Water/waterplane.obj");
-
-    albedo = &albedoTex;
-    mask = &maskTex;
-    diffuse = &diffuseTex;
-    grass = &grassTex;
-    specular = &specularTex;
-    emissive = &emissiveTex;
-    backpackModel = &backpackModelTex;
-    waterPlane = &waterPlaneTex;
+    // auto backpackModelTex = Model("Resources/Models/backpack/backpack.obj");
+    // auto waterPlaneTex = Model("Resources/Models//Water/waterplane.obj");
+    // backpackModel = &backpackModelTex;
+    // waterPlane = &waterPlaneTex;
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -173,25 +186,16 @@ void Engine::Initialize() {
 #pragma region Texture Shaders Models
 
     ShaderReloader mainReloader(ResourceLoader::GetShader("phong"));
-    // ShaderReloader grassReloader(grassShader);
+    ShaderReloader grassReloader(ResourceLoader::GetShader("grass"));
     // ShaderReloader fullScreenReloader(postProcessShader);
     // ShaderReloader skyboxReloader(skyboxShader);
     // ShaderReloader waterReloader(waterShader);
     reloaders.push_back(&mainReloader);
-    // reloaders.push_back(&grassReloader);
+    reloaders.push_back(&grassReloader);
     // reloaders.push_back(&fullScreenReloader);
     // reloaders.push_back(&waterReloader);
 
-    std::vector<std::string> cubemapPaths{
-        "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
-        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/bottom.png",
-        "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
-    };
-
-    // cubemapTexture = LoadCubeMap(cubemapPaths);
-
-    // skyboxShader.Use();
-    // skyboxShader.SetInt("skybox", 0);
+    ResourceLoader::GetShader("skybox").Use().SetInt("skybox", 0);
 
     models.push_back(backpackModel);
     models.push_back(waterPlane);
@@ -376,11 +380,11 @@ void Engine::Render(float deltaTime) {
 
         // -- Textures Units ?
         glActiveTexture(GL_TEXTURE0);
-        diffuse->Bind();
+        ResourceLoader::GetTexture2D("diffuse").Bind();
         glActiveTexture(GL_TEXTURE1);
-        specular->Bind();
+        ResourceLoader::GetTexture2D("specular").Bind();
         glActiveTexture(GL_TEXTURE2);
-        emissive->Bind();
+        ResourceLoader::GetTexture2D("emmisive").Bind();
 
         // -- Phong Shader
         auto phongShader = ResourceLoader::GetShader("phong");
@@ -411,7 +415,7 @@ void Engine::Render(float deltaTime) {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
         phongShader.SetMat4("model", modelMatrix);
         glBindVertexArray(CubeVAO);
-        // OpenGlDraw(GL_TRIANGLES, 0, 36);
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
 
         /*
         //-- Draw Terrain
@@ -437,13 +441,15 @@ void Engine::Render(float deltaTime) {
             }
             phongShader.SetMat4("model", modelMatrix);
 
-            // OpenGlDraw(GL_POINTS, 0, 36);
+            OpenGlDraw(GL_POINTS, 0, 36);
         }
 
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
-        models[objectViewSelection]->Draw(phongShader);
+
+        // -- Crash -- TODO
+        // models[objectViewSelection]->Draw(phongShader);
 
 #ifdef WIND_WAKER
         wwModels[windWakerSelection].Draw(phongShader);
@@ -458,11 +464,13 @@ void Engine::Render(float deltaTime) {
         waterShader.SetFloat("uTime", ElapsedTime() * userUpDown);
         // -- Water
         waterPlane->Draw(waterShader);
+        */
 
         // -- Grass
+        auto grassShader = ResourceLoader::GetShader("grass");
         grassShader.Use();
         glActiveTexture(GL_TEXTURE0);
-        grass->Bind();
+        ResourceLoader::GetTexture2D("grass").Bind();
         grassShader.SetMat4("view", viewMatrix);
         grassShader.SetMat4("projection", projectionMatrix);
         grassShader.SetInt("mat.diffuse", 0);
@@ -485,7 +493,7 @@ void Engine::Render(float deltaTime) {
         }
 
         // -- Light Object -- //
-        lightShader.Use();
+        auto lightShader = ResourceLoader::GetShader("light").Use();
         glm::mat4 lightModel = glm::mat4(1.0f);
         lightModel = glm::translate(lightModel, offsetedLightPos);
         lightModel = glm::scale(lightModel, glm::vec3(25.0f));
@@ -512,7 +520,7 @@ void Engine::Render(float deltaTime) {
 
         // -- Skybox
         glDepthFunc(GL_LEQUAL);
-        skyboxShader.Use();
+        auto skyboxShader = ResourceLoader::GetShader("skybox").Use();
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
@@ -522,32 +530,28 @@ void Engine::Render(float deltaTime) {
         OpenGlDraw(GL_TRIANGLES, 0, 36);
         glDepthFunc(GL_LESS);
 
-        */
-
 #pragma endregion
 
 #pragma region SECOND PASS POST PROCESS
-        /*
-                if (enablePostProcessing) {
-                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                    glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
-                    glClear(GL_COLOR_BUFFER_BIT);
-                    postProcessShader.Use();
-                    postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-                    postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
-                    postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
-                    postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
-                    postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
-                    postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
-                    postProcessShader.SetInt("uKernelType", postFX.kernelType);
+        if (enablePostProcessing) {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
+            glClear(GL_COLOR_BUFFER_BIT);
+            auto postProcessShader = ResourceLoader::GetShader("postProcess");
+            postProcessShader.Use();
+            postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+            postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
+            postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
+            postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
+            postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
+            postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
+            postProcessShader.SetInt("uKernelType", postFX.kernelType);
 
-                    glBindVertexArray(ndcQuadVAO);
-                    glDisable(GL_DEPTH_TEST);
-                    glBindTexture(GL_TEXTURE_2D, renderTexture);
-                    OpenGlDraw(GL_TRIANGLES, 0, 6);
-                }
-
-                */
+            glBindVertexArray(ndcQuadVAO);
+            glDisable(GL_DEPTH_TEST);
+            glBindTexture(GL_TEXTURE_2D, renderTexture);
+            OpenGlDraw(GL_TRIANGLES, 0, 6);
+        }
 
 #pragma endregion
 

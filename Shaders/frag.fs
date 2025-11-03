@@ -84,6 +84,7 @@ void main()
     float h = (inData.Height)/  32.0f;
     FragColor = vec4(1.0,h,h, 1.0);
 
+
     // UV's Debug
     FragColor = vec4(uvs, 0., 1.0);
     FragColor = vec4(inData.FragPosWorldSpace, 1.0);
@@ -93,7 +94,7 @@ void main()
 
     FragColor = vec4(normal, 1.0);
 
-    if (gl_FrontFacing == false) return; // Draw normal for backfaces
+    //if (gl_FrontFacing == false) return; // Draw normal for backfaces
 
     // -- Create curses
     //gl_FragDepth = gl_FragCoord.z - 0.1;

@@ -84,6 +84,7 @@ class Engine {
     ~Engine();
 
     void Initialize();
+    void InitStatics();
     void ProcessInput(float deltaTime);
     void Update(float deltaTime);
     void Render(float deltaTime);
@@ -92,12 +93,6 @@ class Engine {
     void UpdatePostProcessFrameBuffer(int width, int height);
     void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos);
 
-    const Texture* albedo;
-    Texture* mask;
-    Texture* diffuse;
-    Texture* grass;
-    Texture* specular;
-    Texture* emissive;
     Model* backpackModel;
     Model* waterPlane;
     // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
@@ -146,7 +141,7 @@ class Engine {
 #pragma region UI EXPOSED
     // -- IMGUI EXPOSED
 
-    inline static bool enablePostProcessing = false;
+    inline static bool enablePostProcessing = true;
     static inline bool UI_rotateStuff = true;
     static inline float ambientLightColor[3] = {1.0, 1.0f, 1.0f};
     static inline float diffuseLightColor[3] = {0.8f, 0.8f, 0.8f};

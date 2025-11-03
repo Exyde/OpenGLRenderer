@@ -20,7 +20,7 @@ constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
 constexpr glm::vec4 ColorGray = glm::vec4(0.5);
 
 enum class ApplicationMode { Engine, Game };
-ApplicationMode appMode = ApplicationMode::Game;
+ApplicationMode appMode = ApplicationMode::Engine;
 
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
 uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;

@@ -9,18 +9,18 @@
 std::map<std::string, Texture2D> ResourceLoader::Textures2D;
 std::map<std::string, Shader> ResourceLoader::Shaders;
 
-Shader ResourceLoader::LoadShader(const char* vShaderFile,
-                                  const char* fShaderFile,
-                                  const char* gShaderFile, std::string name) {
+Shader ResourceLoader::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile,
+                                  std::string name) {
     Shaders[name] = LoadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
 
-Shader& ResourceLoader::GetShader(std::string name) { return Shaders[name]; }
+Shader& ResourceLoader::GetShader(std::string name) {
+    return Shaders[name];
+}
 
-Texture2D ResourceLoader::LoadTexture2D(const char* file, bool alpha,
-                                        std::string name) {
-    Textures2D[name] = LoadTexture2DFromFile(file, alpha);
+Texture2D ResourceLoader::LoadTexture2D(const char* file, std::string name) {
+    Textures2D[name] = LoadTexture2DFromFile(file);
     return Textures2D[name];
 }
 
@@ -33,24 +33,28 @@ void ResourceLoader::Clear() {
     for (auto iter : Textures2D) glDeleteTextures(1, &iter.second.ID);
 }
 
-Shader ResourceLoader::LoadShaderFromFile(const char* vertexPath,
-                                          const char* fragmentPath,
+Shader ResourceLoader::LoadShaderFromFile(const char* vertexPath, const char* fragmentPath,
                                           const char* geometryShaderPath) {
     Shader shader(vertexPath, fragmentPath);
     return shader;
 }
 
-Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath,
-                                                bool useAlpha) {
+Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath) {
     Texture2D texture;
-
-    if (useAlpha) {
-        texture.InternalFormat = GL_RGBA;
-        texture.ImageFormat = GL_RGBA;
-    }
 
     int width, height, channels;
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
+
+    if (channels == 4) {
+        texture.InternalFormat = GL_RGBA;
+        texture.ImageFormat = GL_RGBA;
+    } else if (channels == 1) {
+        texture.InternalFormat = GL_RED;
+        texture.ImageFormat = GL_RED;
+    } else {
+        texture.InternalFormat = GL_RGB;
+        texture.ImageFormat = GL_RGB;
+    }
 
     if (data) {
         LOG_INFO(LogCategory::Texture, " Loaded : ", filePath);

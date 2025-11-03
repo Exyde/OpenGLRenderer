@@ -8,6 +8,8 @@
 
 std::map<std::string, Texture2D> ResourceLoader::Textures2D;
 std::map<std::string, Shader> ResourceLoader::Shaders;
+std::map<std::string, Model> ResourceLoader::Models;
+std::map<Shader, ShaderReloader> ResourceLoader::Reloaders;
 
 Shader ResourceLoader::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile,
                                   std::string name) {
@@ -28,14 +30,27 @@ Texture2D& ResourceLoader::GetTexture2D(std::string name) {
     return Textures2D[name];
 }
 
+Model ResourceLoader::LoadModel(const char* file, std::string name) {
+    Models[name] = LoadModelFromFile(file);
+    return Models[name];
+}
+
+Model& ResourceLoader::GetModel(std::string name) {
+    return Models[name];
+}
+
 void ResourceLoader::Clear() {
     for (auto iter : Shaders) glDeleteProgram(iter.second.ID);
     for (auto iter : Textures2D) glDeleteTextures(1, &iter.second.ID);
+    // for (auto iter : Models)
 }
 
 Shader ResourceLoader::LoadShaderFromFile(const char* vertexPath, const char* fragmentPath,
                                           const char* geometryShaderPath) {
     Shader shader(vertexPath, fragmentPath);
+
+    ShaderReloader reloader(shader);
+    Reloaders[shader] = reloader;
     return shader;
 }
 
@@ -64,4 +79,9 @@ Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath) {
         LOG_ERROR(LogCategory::Texture, "Failed to load texture : ", filePath);
     }
     return texture;
+}
+
+Model ResourceLoader::LoadModelFromFile(const char* filePath) {
+    auto model = Model(filePath);
+    return model;
 }

@@ -7,6 +7,7 @@
 namespace fs = std::filesystem;
 class ShaderReloader {
    public:
+    ShaderReloader() = default;
     ShaderReloader(Shader& shader);
     void CheckForChanges();
 

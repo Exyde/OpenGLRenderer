@@ -38,6 +38,26 @@ void LoadShaders() {
     ResourceLoader::LoadShader("Shaders/skybox.vs", "Shaders/skybox.fs", nullptr, "skybox");
     ResourceLoader::LoadShader("Shaders/light.vs", "Shaders/light.fs", nullptr, "light");
     ResourceLoader::LoadShader("Shaders/postprocess.vs", "Shaders/postprocess.fs", nullptr, "postProcess");
+    ResourceLoader::LoadShader("Shaders/water.vs", "Shaders/water.fs", nullptr, "water");
+}
+
+void LoadMeshes() {
+    ResourceLoader::LoadModel("Resources/Models/backpack/backpack.obj", "backpack");
+    ResourceLoader::LoadModel("Resources/Models/Water/waterplane.obj", "water");
+    ResourceLoader::LoadModel("Resources/Models/WindWaker/Windfall/Windfall.obj", "mercantile");
+
+#ifdef WIND_WAKER
+    wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
+    wwModels.push_back(
+        Model("Resources/Models/WindWaker/HelmarocKing/"
+              "HelmarocKingMask.obj"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Shield/Shield.obj"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Valoo/dr.dae"));
+    wwModels.push_back(Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
+#endif
 }
 
 void Engine::InitStatics() {
@@ -66,6 +86,7 @@ void Engine::Initialize() {
     InitStatics();
     LoadTextures();
     LoadShaders();
+    LoadMeshes();
 
     std::vector<std::string> cubemapPaths{
         "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
@@ -78,11 +99,6 @@ void Engine::Initialize() {
 
     // -- Setup Sprite Renderer
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
-
-    // auto backpackModelTex = Model("Resources/Models/backpack/backpack.obj");
-    // auto waterPlaneTex = Model("Resources/Models//Water/waterplane.obj");
-    // backpackModel = &backpackModelTex;
-    // waterPlane = &waterPlaneTex;
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -185,34 +201,7 @@ void Engine::Initialize() {
 #pragma endregion
 #pragma region Texture Shaders Models
 
-    ShaderReloader mainReloader(ResourceLoader::GetShader("phong"));
-    ShaderReloader grassReloader(ResourceLoader::GetShader("grass"));
-    // ShaderReloader fullScreenReloader(postProcessShader);
-    // ShaderReloader skyboxReloader(skyboxShader);
-    // ShaderReloader waterReloader(waterShader);
-    reloaders.push_back(&mainReloader);
-    reloaders.push_back(&grassReloader);
-    // reloaders.push_back(&fullScreenReloader);
-    // reloaders.push_back(&waterReloader);
-
     ResourceLoader::GetShader("skybox").Use().SetInt("skybox", 0);
-
-    models.push_back(backpackModel);
-    models.push_back(waterPlane);
-
-#ifdef WIND_WAKER
-    std::vector<Model> wwModels;
-    wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
-    wwModels.push_back(
-        Model("Resources/Models/WindWaker/HelmarocKing/"
-              "HelmarocKingMask.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Shield/Shield.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Valoo/dr.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
-#endif
 
     vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
     vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
@@ -308,29 +297,14 @@ void Engine::Update(float deltaTime) {
         currentFPS = fps;
     }
 
-    // -- Check Shader Reloaders -- Todo : CRASH
-    bool checkreloaders = false;
+    bool checkreloaders = true;
     auto now = std::chrono::steady_clock::now();
     if (checkreloaders && now - lastCheck > checkInterval) {
         lastCheck = now;
-        LOG("Going to check Shaders Reloaders ");
 
-        if (reloaders.size() == 0) {
-            LOG("Going to check EMPTYYYYYYYYYYYYYYYYYY Reloaders ");
-        }
-
-        for (ShaderReloader* r : reloaders) {
-            if (r == NULL) {
-                LOG_ERROR(LogCategory::Shader, "Reloader IS NULL");
-                continue;
-            }
-
-            if (r == nullptr) {
-                LOG_ERROR(LogCategory::Shader, "Reloader IS NULLPTR");
-                continue;
-            }
-
-            r->CheckForChanges();
+        for (auto& [_, r] : ResourceLoader::Reloaders) {
+            LOG("CHECKING");
+            r.CheckForChanges();  // -- TODO CRASH : This seems NULL ?
         }
     }
 }
@@ -447,14 +421,14 @@ void Engine::Render(float deltaTime) {
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
         phongShader.SetMat4("model", modelMatrix);
-
-        // -- Crash -- TODO
-        // models[objectViewSelection]->Draw(phongShader);
+        ResourceLoader::GetModel("backpack").Draw(phongShader);
+        ResourceLoader::GetModel("mercantile").Draw(phongShader);
 
 #ifdef WIND_WAKER
-        wwModels[windWakerSelection].Draw(phongShader);
+        // Todo : Current WW Models Reload ? Sorte de cache
 #endif
-        /*
+
+        auto waterShader = ResourceLoader::GetShader("water");
         waterShader.Use();
         modelMatrix = glm::mat4(1.0F);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(1000.0f));
@@ -463,8 +437,7 @@ void Engine::Render(float deltaTime) {
         waterShader.SetMat4("projection", projectionMatrix);
         waterShader.SetFloat("uTime", ElapsedTime() * userUpDown);
         // -- Water
-        waterPlane->Draw(waterShader);
-        */
+        ResourceLoader::GetModel("water").Draw(waterShader);
 
         // -- Grass
         auto grassShader = ResourceLoader::GetShader("grass");
@@ -642,6 +615,8 @@ void Engine::Render(float deltaTime) {
                               IM_ARRAYSIZE(projectionModeSelected))) {
             }
         }
+
+        g_ImGuiConsole.Draw("Console");
 
         ImGui::End();
 

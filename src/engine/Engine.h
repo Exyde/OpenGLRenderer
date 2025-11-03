@@ -93,20 +93,6 @@ class Engine {
     void UpdatePostProcessFrameBuffer(int width, int height);
     void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos);
 
-    Model* backpackModel;
-    Model* waterPlane;
-    // Model cathedralModel("Resources/Models/sibenik/sibenik.obj");
-    // Model villageModel("Resources/Models/rungholt/rungholt.obj");
-
-    /*
-    Shader phongShader("Shaders/vert.vs", "Shaders/frag.fs");
-    Shader lightShader("Shaders/light_source_vertex.vs", "Shaders/light_source_frag.fs");
-    Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");
-    Shader waterShader("Shaders/water.vs", "Shaders/water.fs");
-    Shader grassShader("Shaders/grass_vert.vs", "Shaders/grass_frag.fs");
-    Shader postProcessShader("Shaders/postprocess_vert.vs", "Shaders/postprocess_frag.fs");
-    */
-
     //--Globals ? Todo : Classes ^ ^
     static inline unsigned int skyboxVAO, skyboxVBO;
     static inline GLuint terrainVAO, terrainVBO, terrainEBO;
@@ -115,10 +101,8 @@ class Engine {
     static inline unsigned int CubeVBO, CubeVAO;
     static inline unsigned int lightVAO;
     static inline unsigned int cubemapTexture;
-    static inline std::vector<Model*> models;
     static inline std::vector<glm::vec3> vegetation;
     static inline unsigned int framebuffer;
-    static inline std::vector<ShaderReloader*> reloaders;
     static inline auto lastCheck = std::chrono::steady_clock::now();
     static inline glm::highp_mat4 projectionMatrix;
     static inline double currentFPS = 0;

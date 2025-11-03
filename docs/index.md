@@ -26,18 +26,17 @@
 
 ### Main Path (Learn Open GL) - TodoList
 
-- Afficher les logs dans une console IMGUI <3
+- Fix les shaders reloaders : Wip
+- Fix la skybox
 - Resource Loader ---> Support Texture.cpp or remove it
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Resources loader : node view en éditeur 
-- Resources Loader : Support Mesh 
 - Add renter textures for differents maps views (different buffer, could be nice)
 - Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
 - Camera : F to focus current mesh ?
 - Next Video : Nouvelle Era - Clozee
 - Flag for post process FragCoord influence
-- Big Water plane genre WindWaker ? 
 - RayLibEngine at some point ? Game or Jam maybe ? Or Haxe/Heaps... At Least Ray = C++
 - Finnish Advanced Lighting
 - Finish Advanced GLSL

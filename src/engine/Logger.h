@@ -4,6 +4,10 @@
 #include <sstream>
 #include <string>
 
+#include "ImGuiConsole.h"
+
+inline ImGuiConsole g_ImGuiConsole;
+
 enum class LogCategory {
     Logger,
     Game,
@@ -18,32 +22,32 @@ enum class LogLevel { Info, Warning, Error, Disabled };
 class Logger {
    public:
     template <typename... Args>
-    static void Log(LogCategory category, LogLevel level = LogLevel::Info,
-                    Args&&... args) {
+    static void Log(LogCategory category, LogLevel level = LogLevel::Info, Args&&... args) {
         std::ostringstream oss;
         (oss << ... << args);  // C++17 fold expression
         Log(oss.str(), category, level);
     }
 
-    static void Log(const std::string& msg,
-                    LogCategory category = LogCategory::Logger,
+    static void Log(const std::string& msg, LogCategory category = LogCategory::Logger,
                     LogLevel level = LogLevel::Info);
 
     static void Shader(const std::string& msg, LogLevel level = LogLevel::Info);
-    static void Texture(const std::string& msg,
-                        LogLevel level = LogLevel::Info);
+    static void Texture(const std::string& msg, LogLevel level = LogLevel::Info);
     static void Game(const std::string& msg, LogLevel level = LogLevel::Info);
     static void Engine(const std::string& msg, LogLevel level = LogLevel::Info);
     static void Model(const std::string& msg, LogLevel level = LogLevel::Info);
 
     // -- Enable / Disable Logging
-    static void SetMinLevel(LogLevel level) { s_MinLogLevel = level; }
-    static LogLevel GetMinLevel() { return s_MinLogLevel; }
+    static void SetMinLevel(LogLevel level) {
+        s_MinLogLevel = level;
+    }
+    static LogLevel GetMinLevel() {
+        return s_MinLogLevel;
+    }
 
    private:
-    static inline LogLevel s_MinLogLevel =
-        LogLevel::Info;  // -- Inline, define in header but static aswell, so
-                         // only one occurence.
+    static inline LogLevel s_MinLogLevel = LogLevel::Info;  // -- Inline, define in header but static aswell, so
+                                                            // only one occurence.
     Logger();
     static const char* CategoryToString(LogCategory category);
     static const char* CategoryToColor(LogCategory category);

@@ -12,12 +12,13 @@
 #define BOLD "\033[1m"
 
 void Logger::Log(const std::string& msg, LogCategory category, LogLevel level) {
-    if (level < s_MinLogLevel) return;
+    if (level < s_MinLogLevel)
+        return;
 
-    std::cout << BOLD << LevelToColor(level) << "[" << LevelToString(level)
-              << "] " << CategoryToColor(category) << "["
-              << CategoryToString(category) << "] " << RESET << msg << RESET
-              << std::endl;
+    std::cout << BOLD << LevelToColor(level) << "[" << LevelToString(level) << "] " << CategoryToColor(category) << "["
+              << CategoryToString(category) << "] " << RESET << msg << RESET << std::endl;
+
+    g_ImGuiConsole.Log(msg);
 }
 
 void Logger::Shader(const std::string& msg, LogLevel level) {

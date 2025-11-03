@@ -20,6 +20,14 @@ class Shader {
     Shader(const char* vertexPath, const char* fragmentPath);
     ~Shader();
 
+        bool operator<(const Shader& other) const noexcept {
+        return ID < other.ID;
+    }
+
+    bool operator==(const Shader& other) const noexcept {
+        return ID == other.ID;
+    }
+
     void Reload();
     Shader Use();
     void SetBool(const std::string& name, bool value) const;

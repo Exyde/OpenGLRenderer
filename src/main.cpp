@@ -137,22 +137,23 @@ void InitIMGUI(GLFWwindow* window) {
 
 #pragma region CallbackOpenGL
 void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mode);
     // -- Close Application
     if (key == GLFW_KEY_M && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        if (cursorVisible) {
-            cursorVisible = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if (!cursorVisible) {
+            cursorVisible = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
             return;
         }
     }
 
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS) {
-        if (!cursorVisible) {
-            cursorVisible = true;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+        if (cursorVisible) {
+            cursorVisible = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             return;
         }
     }
@@ -188,6 +189,7 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
+    ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
     if (appMode == ApplicationMode::Game)
         return;
 
@@ -198,13 +200,12 @@ void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
-    if (appMode == ApplicationMode::Game)
-        return;
-
-    if (cursorVisible)
-        return;
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
+    ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+
+    if (appMode == ApplicationMode::Game)
+        return;
 
     //-- avoid first frame snapping (should have a bool for first frame ?)
     if (FIRST_MOUSE) {
@@ -217,6 +218,8 @@ void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
     lastMouseX = xpos;
     lastMouseY = ypos;
 
+    if (cursorVisible)
+        return;
     engine.cam.ProcessMouseMovement(deltaX, deltaY, true);
 }
 #pragma endregion

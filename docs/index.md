@@ -29,6 +29,8 @@
 - Afficher les logs dans une console IMGUI <3
 - Resource Loader ---> Support Texture.cpp or remove it
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
+- Resources loader : node view en éditeur 
+- Resources Loader : Support Mesh 
 - Add renter textures for differents maps views (different buffer, could be nice)
 - Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
@@ -36,11 +38,9 @@
 - Next Video : Nouvelle Era - Clozee
 - Flag for post process FragCoord influence
 - Big Water plane genre WindWaker ? 
-- REFACTORING HERE (Voir ~Engine~) - En vrai, pas la peine de GROS Refactoring avant d'avoir fini tout et de savoir un peu mieux ce qu'on fait - Genre la refactoring avec Uniform Buffer Object cool !
-- RayLibEngine at some point ? Game or Jam maybe ? 
+- RayLibEngine at some point ? Game or Jam maybe ? Or Haxe/Heaps... At Least Ray = C++
 - Finnish Advanced Lighting
 - Finish Advanced GLSL
-- Resources loader class avec vector de model textures shader etc + node view?
 - Éditeur shader dans IMGUI pour faire comme shadertoy ?
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
@@ -83,7 +83,6 @@
 - Fix Orthographic Camera
 - DrawCall Bugger parce que pas pris en compte dans Mesh.Draw (todo : Class Renderer qui wrap tout les calls opens GL)
 - camere scroll speed pas pris en comtpe 
-- IMGUI cassé en mode Engine ?
 - Fix Skybox loading ?
 
 ### Engine Features

@@ -627,12 +627,9 @@ void Engine::Render(float deltaTime) {
 }
 
 void Engine::Exit() {
+    LOG("Exit engine...");
     glDeleteFramebuffers(1, &framebuffer);
     ResourceLoader::Clear();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    glfwTerminate();
 }
 
 TerrainData GetTerrainDataFromHeightMap(const char* filePath) {

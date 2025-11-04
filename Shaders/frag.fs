@@ -94,7 +94,7 @@ void main()
 
     FragColor = vec4(normal, 1.0);
 
-    if (gl_FrontFacing == false) return; // Draw normal for backfaces
+   // if (gl_FrontFacing == false) return; // Draw normal for backfaces
 
     // -- Create curses
     //gl_FragDepth = gl_FragCoord.z - 0.1;

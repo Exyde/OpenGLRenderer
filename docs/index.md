@@ -26,8 +26,9 @@
 
 ### Main Path (Learn Open GL) - TodoList
 
+- Gérer le buffer d'inputs avec process 
 - Refaire une skybox maison
-- Resource Loader ---> Support Texture.cpp or remove it
+- Mesh : Use Texture Class
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Resources loader : node view en éditeur 
 - Add renter textures for differents maps views (different buffer, could be nice)

@@ -73,9 +73,6 @@ int main() {
             }
 
             game.Exit();
-            ResourceLoader::Clear();
-            glfwTerminate();
-            return 0;
         }
 
         if (appMode == ApplicationMode::Engine) {
@@ -95,9 +92,15 @@ int main() {
             }
 
             engine.Exit();
-            return 0;
         }
     }
+
+    LOG("EXIT ALL SYSTEMS");
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwTerminate();
+    return 0;
 }
 
 #pragma region Init
@@ -168,7 +171,7 @@ void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, in
         return;
     }
 
-    // -- Register inputs -- // TODO : Check, might bug ?
+    // -- Register inputs --
     if (key >= 0 && key < 1024) {
         if (action == GLFW_PRESS)
             game.Keys[key] = engine.Keys[key] = true;

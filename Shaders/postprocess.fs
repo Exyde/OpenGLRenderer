@@ -62,7 +62,7 @@ void main(){
     vec4 finalColor = scene;
 
     // -- Stylized post process
-    if (gl_FragCoord.y < sin(uTime * 100.0) * 1080){
+    if (gl_FragCoord.x < sin(uTime * 100.0) * 1920){
         if (uEnableInvert)
             finalColor = vec4(vec3(1.0) - finalColor.rgb, 1.0);
         

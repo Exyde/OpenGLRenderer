@@ -29,8 +29,8 @@ Game::~Game() {
 }
 
 void Game::Exit() {
+    LOG("Exit Game...");
     ResourceLoader::Clear();
-    glfwTerminate();
 }
 
 void Game::Initialize() {

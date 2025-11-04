@@ -19,6 +19,7 @@
 #include "ShaderReloader.h"
 #include "SlyMath.H"
 #include "SpriteRenderer.h"
+#include "World.h"
 #include "glm/glm.hpp"
 #include "stb_image.h"
 
@@ -84,6 +85,9 @@ class Engine {
 
     void Initialize();
     void InitStatics();
+    void InitOpenGlSettings();
+    void LoadShaders();
+    void LoadTextures();
     void ProcessInput(float deltaTime);
     void Update(float deltaTime);
     void Render(float deltaTime);
@@ -102,7 +106,6 @@ class Engine {
     static inline unsigned int cubemapTexture;
     static inline std::vector<glm::vec3> vegetation;
     static inline unsigned int framebuffer;
-    static inline auto lastCheck = std::chrono::steady_clock::now();
     static inline glm::highp_mat4 projectionMatrix;
     static inline double currentFPS = 0;
     static inline unsigned int renderTexture;
@@ -119,7 +122,10 @@ class Engine {
 
     static inline glm::vec3 LightPosition;
     static inline Camera cam;
+
+    // -- Time : Could be in parent right ?
     static inline std::chrono::milliseconds checkInterval;
+    static inline auto lastCheck = std::chrono::steady_clock::now();
 
 #pragma region UI EXPOSED
     // -- IMGUI EXPOSED

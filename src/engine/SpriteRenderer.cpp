@@ -5,10 +5,11 @@ SpriteRenderer::SpriteRenderer(Shader& shader) {
     InitRenderData();
 }
 
-SpriteRenderer::~SpriteRenderer() { glDeleteVertexArrays(1, &this->quadVAO); }
+SpriteRenderer::~SpriteRenderer() {
+    glDeleteVertexArrays(1, &this->quadVAO);
+}
 
-void SpriteRenderer::DrawSprite(const Texture2D& texture, glm::vec2 pos,
-                                glm::vec2 size, float angle, glm::vec4 color) {
+void SpriteRenderer::DrawSprite(const Texture2D& texture, glm::vec2 pos, glm::vec2 size, float angle, glm::vec4 color) {
     this->shader.Use();
 
     // -- Translation
@@ -17,11 +18,9 @@ void SpriteRenderer::DrawSprite(const Texture2D& texture, glm::vec2 pos,
 
     // -- Rotation
 
-    model =
-        glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+    model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
     model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-    model =
-        glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+    model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
     // -- Scaling
     model = glm::scale(model, glm::vec3(size, 1.0));
@@ -37,12 +36,15 @@ void SpriteRenderer::DrawSprite(const Texture2D& texture, glm::vec2 pos,
     glBindVertexArray(0);
 }
 
+void SpriteRenderer::UpdateShader(Shader& shader) {
+    this->shader = shader;
+}
+
 void SpriteRenderer::InitRenderData() {
     // -- Quad vertices (pos, tc)
-    float vertices[] = {
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    float vertices[] = {0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+                        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 
     glGenVertexArrays(1, &this->quadVAO);
     unsigned int VBO;
@@ -53,8 +55,7 @@ void SpriteRenderer::InitRenderData() {
 
     glBindVertexArray(this->quadVAO);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                          (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
     // -- Unbind --
     glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -1,11 +1,5 @@
 #include "ResourceLoader.h"
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
-#include "stb_image.h"
-
 std::map<std::string, Texture2D> ResourceLoader::Textures2D;
 std::map<std::string, Shader> ResourceLoader::Shaders;
 std::map<std::string, Model> ResourceLoader::Models;

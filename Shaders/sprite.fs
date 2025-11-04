@@ -7,6 +7,6 @@ in vec2 TexCoord;
 uniform vec4 tint;
 
 void main(){
-    FragColor = vec4(1.0);
+    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     FragColor = tint * vec4(texture(sprite, TexCoord));
 }

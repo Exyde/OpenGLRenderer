@@ -121,7 +121,9 @@
 				21,
 				22,
 				23,
-				24
+				24,
+				25,
+				26
 			]
 		},
 		{
@@ -230,7 +232,9 @@
 				21,
 				22,
 				23,
-				24
+				24,
+				25,
+				26
 			]
 		}
 	],
@@ -312,6 +316,18 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/engine/Texture2D.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/engine/World.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/engine/WorldObject.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

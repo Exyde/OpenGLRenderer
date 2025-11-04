@@ -79,6 +79,18 @@
 },
 {
   "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\World.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\World.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/World.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\WorldObject.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\WorldObject.cpp",
+  "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/WorldObject.cpp",
+  "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj"
+},
+{
+  "directory": "C:/Users/youne/Desktop/OpenGLRenderer/build",
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\OpenGLRenderer.dir\\src\\engine\\stb_image.cpp.obj -c C:\\Users\\youne\\Desktop\\OpenGLRenderer\\src\\engine\\stb_image.cpp",
   "file": "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp",
   "output": "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"

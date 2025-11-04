@@ -19,6 +19,10 @@
 #include "PowerUp.h"
 #include "algorithm"
 
+// -- Time : Could be in parent right ?
+static inline std::chrono::milliseconds checkInterval;
+static inline auto lastCheck = std::chrono::steady_clock::now();
+
 struct Collision {
     bool collided;
     Direction direction;
@@ -45,6 +49,9 @@ class Game {
     void Update(float deltaTime);
     void Render();
     void Exit();
+
+    void LoadShaders();
+    void LoadTextures();
 
     // -- Collision
     bool CheckCollisionAABB(GameObject& A, GameObject& B);

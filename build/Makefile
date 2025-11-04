@@ -392,6 +392,54 @@ src/engine/Texture2D.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.s
 .PHONY : src/engine/Texture2D.cpp.s
 
+src/engine/World.obj: src/engine/World.cpp.obj
+.PHONY : src/engine/World.obj
+
+# target to build an object file
+src/engine/World.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj
+.PHONY : src/engine/World.cpp.obj
+
+src/engine/World.i: src/engine/World.cpp.i
+.PHONY : src/engine/World.i
+
+# target to preprocess a source file
+src/engine/World.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.i
+.PHONY : src/engine/World.cpp.i
+
+src/engine/World.s: src/engine/World.cpp.s
+.PHONY : src/engine/World.s
+
+# target to generate assembly for a file
+src/engine/World.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.s
+.PHONY : src/engine/World.cpp.s
+
+src/engine/WorldObject.obj: src/engine/WorldObject.cpp.obj
+.PHONY : src/engine/WorldObject.obj
+
+# target to build an object file
+src/engine/WorldObject.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj
+.PHONY : src/engine/WorldObject.cpp.obj
+
+src/engine/WorldObject.i: src/engine/WorldObject.cpp.i
+.PHONY : src/engine/WorldObject.i
+
+# target to preprocess a source file
+src/engine/WorldObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.i
+.PHONY : src/engine/WorldObject.cpp.i
+
+src/engine/WorldObject.s: src/engine/WorldObject.cpp.s
+.PHONY : src/engine/WorldObject.s
+
+# target to generate assembly for a file
+src/engine/WorldObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.s
+.PHONY : src/engine/WorldObject.cpp.s
+
 src/engine/stb_image.obj: src/engine/stb_image.cpp.obj
 .PHONY : src/engine/stb_image.obj
 
@@ -770,6 +818,12 @@ help:
 	@echo ... src/engine/Texture2D.obj
 	@echo ... src/engine/Texture2D.i
 	@echo ... src/engine/Texture2D.s
+	@echo ... src/engine/World.obj
+	@echo ... src/engine/World.i
+	@echo ... src/engine/World.s
+	@echo ... src/engine/WorldObject.obj
+	@echo ... src/engine/WorldObject.i
+	@echo ... src/engine/WorldObject.s
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s

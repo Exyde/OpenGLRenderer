@@ -25,14 +25,16 @@
   - [Radiance Cascades](#radiance-cascades)
 
 ### Main Path (Learn Open GL) - TodoList
-
-- Gérer le buffer d'inputs avec process 
+- Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab + World.h / World.cpp
+- Big tension entre GameObject & WorldObject actually, mais normal
+- Parent Application Class + Virtual things ?
+- Phi + Baleines + Cats
 - Refaire une skybox maison
+- Add renter textures for differents maps views (different buffer, could be nice)
+- Gérer le buffer d'inputs avec process 
 - Mesh : Use Texture Class
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Resources loader : node view en éditeur 
-- Add renter textures for differents maps views (different buffer, could be nice)
-- Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
 - Camera : F to focus current mesh ?
 - Next Video : Nouvelle Era - Clozee ou sons de Saudea ?
@@ -40,24 +42,23 @@
 - RayLibEngine at some point ? Game or Jam maybe ? Or Haxe/Heaps... At Least Ray = C++
 - Finnish Advanced Lighting
 - Finish Advanced GLSL
-- Éditeur shader dans IMGUI pour faire comme shadertoy ?
-- Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab
 - Implement Frustrum Culling
 - Implement Basic Physics
+- Éditeur shader dans IMGUI pour faire comme shadertoy ?
 - Tracy integration for profiling ?
+- Render Doc For Frames ?
   
 ## Breakout 
+- Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures
+- Music on hit + big sound thinggy game for un max de juice
+- Improve style and FX (Shapes)
+- Render Texts
+- Level Win
+- Juicy un max, post process/ shader un max
+- Menu & Progress
 - Box2D ?
 - Draw BoxExtents / Collider ?
-- Supporter le reload de Shader
-- Avoir de meilleurs couleurs / différentes couleurs pour les briques gameplay + custom textures
-- Juicy un max, post process/ shader un max
 - Instance GPU particles 
-- Improve style and FX (Shapes)
-- Music on hit + big sound thinggy game for un max de juice
-- Level Win
-- Menu & Progress
-- Render Texts
 
 ## Core Goals for Portolio
 - Finish Learn open GL

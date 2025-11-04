@@ -33,14 +33,7 @@ void Game::Exit() {
     ResourceLoader::Clear();
 }
 
-void Game::Initialize() {
-    // -- Log
-    LOG_INFO(LogCategory::Game, "Initializing Game Mode...");
-
-    // -- Init Open GL States
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+void Game::LoadShaders() {
     // -- Create Orthographic Matrix
     float w = static_cast<float>(this->Width);
     float h = static_cast<float>(this->Height);
@@ -48,9 +41,6 @@ void Game::Initialize() {
 
     // -- Load & Setup Main Shader
     ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
-    ResourceLoader::GetShader("spriteShader").Use();
-    ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
-    ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
 
     ResourceLoader::LoadShader("Shaders/particle.vs", "Shaders/particle.fs", nullptr, "particle");
     ResourceLoader::GetShader("particle").Use();
@@ -58,10 +48,9 @@ void Game::Initialize() {
     ResourceLoader::GetShader("particle").SetInt("sprite", 0);
 
     ResourceLoader::LoadShader("Shaders/postprocess2D.vs", "Shaders/postprocess2D.fs", nullptr, "postprocess2D");
+}
 
-    // -- Setup Sprite Renderer
-    Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
-
+void Game::LoadTextures() {
     // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", PLAYER_TEXTURE);
     ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", "face");
@@ -88,6 +77,23 @@ void Game::Initialize() {
     powerUpsTextures[PowerUpType::PassThrough] =
 
         ResourceLoader::LoadTexture2D("Resources/Textures/powerup_passthrough.png", "powerup_passthrough");
+}
+
+void Game::Initialize() {
+    // -- Log
+    LOG_INFO(LogCategory::Game, "Initializing Game Mode...");
+
+    // -- Init Open GL States
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    checkInterval = std::chrono::milliseconds(500);
+
+    LoadShaders();
+    LoadTextures();
+
+    // -- Setup Sprite Renderer
+    Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
     // -- Create Player
     glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
@@ -177,6 +183,16 @@ void Game::Update(float deltaTime) {
     }
 
     trailFX->Update(deltaTime, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
+
+    auto now = std::chrono::steady_clock::now();
+    if (now - lastCheck > checkInterval) {
+        lastCheck = now;
+
+        for (auto& [s, r] : ResourceLoader::Reloaders) {
+            r.CheckForChanges();
+            Renderer->UpdateShader(ResourceLoader::GetShader("spriteShader"));
+        }
+    }
 }
 
 void Game::Render() {
@@ -185,6 +201,14 @@ void Game::Render() {
 
     if (this->State == GameState::ACTIVE) {
         postProcess->BeginRender();
+
+        // -- Create Orthographic Matrix
+        float w = static_cast<float>(this->Width);
+        float h = static_cast<float>(this->Height);
+        glm::mat4 projection = glm::ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
+        ResourceLoader::GetShader("spriteShader").Use();
+        ResourceLoader::GetShader("spriteShader").SetMat4("projection", projection);
+        ResourceLoader::GetShader("spriteShader").SetInt("sprite", 0);
 
         Renderer->DrawSprite(ResourceLoader::GetTexture2D("skybox"), glm::vec2(0.0f, 0.0f),
                              glm::vec2(this->Width, this->Height), 0.0f);

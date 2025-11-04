@@ -12,7 +12,7 @@ Engine::Engine(unsigned int width, unsigned int height)
 
 Engine::~Engine() {}
 
-void LoadTextures() {
+void Engine::LoadTextures() {
     // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", PLAYER_TEXTURE);
     ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", "face");
@@ -24,9 +24,18 @@ void LoadTextures() {
     ResourceLoader::LoadTexture2D("Resources/Textures/container_diffuse.png", "diffuse");
     ResourceLoader::LoadTexture2D("Resources/Textures/container_specular.png", "specular");
     ResourceLoader::LoadTexture2D("Resources/Textures/container_emmisive.jpg", "emissive");
+
+    // -- Skybox
+    std::vector<std::string> cubemapPaths{
+        "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
+        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/back.png",
+        "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
+    };
+
+    cubemapTexture = LoadCubeMap(cubemapPaths);
 }
 
-void LoadShaders() {
+void Engine::LoadShaders() {
     // -- Load & Setup Main Shader
     ResourceLoader::LoadShader("Shaders/sprite.vs", "Shaders/sprite.fs", nullptr, "spriteShader");
     ResourceLoader::GetShader("spriteShader").Use();
@@ -39,6 +48,8 @@ void LoadShaders() {
     ResourceLoader::LoadShader("Shaders/light.vs", "Shaders/light.fs", nullptr, "light");
     ResourceLoader::LoadShader("Shaders/postprocess.vs", "Shaders/postprocess.fs", nullptr, "postProcess");
     ResourceLoader::LoadShader("Shaders/water.vs", "Shaders/water.fs", nullptr, "water");
+
+    ResourceLoader::GetShader("skybox").Use().SetInt("skybox", 0);
 }
 
 void LoadMeshes() {
@@ -46,7 +57,7 @@ void LoadMeshes() {
     ResourceLoader::LoadModel("Resources/Models/Water/waterplane.obj", "water");
     ResourceLoader::LoadModel("Resources/Models/WindWaker/Windfall/Windfall.obj", "mercantile");
 
-#ifdef WIND_WAKER
+#ifdef WIND_WAKER  // -- TODO
     wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
     wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
     wwModels.push_back(
@@ -72,40 +83,7 @@ void Engine::InitStatics() {
     checkInterval = std::chrono::milliseconds(500);
 }
 
-void Engine::Initialize() {
-    // -- Log
-    LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
-
-    stbi_set_flip_vertically_on_load(true);
-
-    // -- Create Projection Matrix
-    float w = static_cast<float>(this->Width);
-    float h = static_cast<float>(this->Height);
-    // Todo : projection
-
-    InitStatics();
-    LoadTextures();
-    LoadShaders();
-    LoadMeshes();
-
-    std::vector<std::string> cubemapPaths{
-        "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
-        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/back.png",
-        "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
-    };
-
-    // -- Skybox
-    cubemapTexture = LoadCubeMap(cubemapPaths);
-
-    // -- Setup Sprite Renderer
-    Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
-
-    // -- Create Player
-    glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
-    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceLoader::GetTexture2D(PLAYER_TEXTURE));
-
-    // -- INIT FROM MAIN
-
+void Engine::InitOpenGlSettings() {
     // -- Depth Buffer Config
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -122,6 +100,38 @@ void Engine::Initialize() {
     // glEnable(GL_STENCIL_TEST);
     // glStencilMask(0xFF);  // -- Write as 1
     // glStencilMask(0x00);  // -- Write as 0
+}
+
+void Engine::Initialize() {
+    // -- Log
+    LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
+
+    stbi_set_flip_vertically_on_load(true);
+
+    // -- Create Projection Matrix // -- Todo : Remove this ?
+    float w = static_cast<float>(this->Width);
+    float h = static_cast<float>(this->Height);
+
+    InitStatics();
+    LoadTextures();
+    LoadShaders();
+    LoadMeshes();
+    InitOpenGlSettings();
+
+    // -- Setup Sprite Renderer -- Not used in 3D, legacy from Game :: Todo : Remove ?
+    Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
+    // -- Create Player
+    glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
+    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceLoader::GetTexture2D(PLAYER_TEXTURE));
+
+    /// -- World Elements --- ?
+
+    // -- TODO : Move this
+    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
@@ -133,26 +143,6 @@ void Engine::Initialize() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-    // -- Terrain
-    /*
-    TerrainData terrainData = GetTerrainDataFromHeightMap("Resources/Textures/iceland_heightmap.png");
-    glGenVertexArrays(1, &terrainVAO);
-    glBindVertexArray(terrainVAO);
-    glGenBuffers(1, &terrainVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
-    glBufferData(GL_ARRAY_BUFFER, terrainData.vertices.size() * sizeof(float), &terrainData.vertices[0],
-                 GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glGenBuffers(1, &terrainEBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrainData.indices.size() * sizeof(unsigned int), &terrainData.indices[0],
-                 GL_STATIC_DRAW);
-                 */
 
     // -- NDC Quad
     glGenVertexArrays(1, &ndcQuadVAO);
@@ -199,15 +189,7 @@ void Engine::Initialize() {
     glEnableVertexAttribArray(0);
 
 #pragma endregion
-#pragma region Texture Shaders Models
-
-    ResourceLoader::GetShader("skybox").Use().SetInt("skybox", 0);
-
-    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
-    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
-    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
-    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
-    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+#pragma region FrameBuffers
 
     // -- FrameBuffers
 
@@ -297,20 +279,24 @@ void Engine::Update(float deltaTime) {
         currentFPS = fps;
     }
 
-    bool checkreloaders = true;
     auto now = std::chrono::steady_clock::now();
-    if (checkreloaders && now - lastCheck > checkInterval) {
+    if (now - lastCheck > checkInterval) {
         lastCheck = now;
 
         for (auto& [s, r] : ResourceLoader::Reloaders) {
             r.CheckForChanges();
         }
     }
+
+    World::Update(deltaTime);
 }
 
 void Engine::Render(float deltaTime) {
     if (this->State == EngineState::ACTIVE) {
         DrawCallsCounter = 0;
+
+        // -- Our Goal
+        World::Render();
 
 #pragma region SunUpdate
         // -- Transformed positions
@@ -389,18 +375,6 @@ void Engine::Render(float deltaTime) {
         phongShader.SetMat4("model", modelMatrix);
         glBindVertexArray(CubeVAO);
         OpenGlDraw(GL_TRIANGLES, 0, 36);
-
-        /*
-        //-- Draw Terrain
-        glBindVertexArray(terrainVAO);
-        bool drawTerrain = false;
-        if (drawTerrain) {
-            for (unsigned int strip = 0; strip < terrainData.NUM_STRIPS; ++strip) {
-                glDrawElements(GL_TRIANGLE_STRIP, terrainData.NUM_VERTS_PER_STRIP, GL_UNSIGNED_INT,
-                               (void*)(sizeof(unsigned int) * terrainData.NUM_VERTS_PER_STRIP * strip));
-            }
-        }
-        */
 
         // -- Multiples Floating Cubes
         glBindVertexArray(CubeVAO);

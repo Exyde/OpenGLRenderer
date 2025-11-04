@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "Shader.h"
-#include "Texture.h"
+#include "stb_image.h"
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -31,8 +31,7 @@ class Mesh {
     std::vector<unsigned int> indices;
     std::vector<Tex> textures;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-         std::vector<Tex> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Tex> textures);
     void Draw(Shader& shader);
 
    private:

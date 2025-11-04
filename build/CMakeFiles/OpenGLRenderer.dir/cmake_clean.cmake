@@ -22,8 +22,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj.d"
-  "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj"
-  "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj.d"
   "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"

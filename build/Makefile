@@ -368,30 +368,6 @@ src/engine/SpriteRenderer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.s
 .PHONY : src/engine/SpriteRenderer.cpp.s
 
-src/engine/Texture.obj: src/engine/Texture.cpp.obj
-.PHONY : src/engine/Texture.obj
-
-# target to build an object file
-src/engine/Texture.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.obj
-.PHONY : src/engine/Texture.cpp.obj
-
-src/engine/Texture.i: src/engine/Texture.cpp.i
-.PHONY : src/engine/Texture.i
-
-# target to preprocess a source file
-src/engine/Texture.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.i
-.PHONY : src/engine/Texture.cpp.i
-
-src/engine/Texture.s: src/engine/Texture.cpp.s
-.PHONY : src/engine/Texture.s
-
-# target to generate assembly for a file
-src/engine/Texture.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Texture.cpp.s
-.PHONY : src/engine/Texture.cpp.s
-
 src/engine/Texture2D.obj: src/engine/Texture2D.cpp.obj
 .PHONY : src/engine/Texture2D.obj
 
@@ -791,9 +767,6 @@ help:
 	@echo ... src/engine/SpriteRenderer.obj
 	@echo ... src/engine/SpriteRenderer.i
 	@echo ... src/engine/SpriteRenderer.s
-	@echo ... src/engine/Texture.obj
-	@echo ... src/engine/Texture.i
-	@echo ... src/engine/Texture.s
 	@echo ... src/engine/Texture2D.obj
 	@echo ... src/engine/Texture2D.i
 	@echo ... src/engine/Texture2D.s

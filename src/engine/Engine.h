@@ -19,7 +19,6 @@
 #include "ShaderReloader.h"
 #include "SlyMath.H"
 #include "SpriteRenderer.h"
-#include "Texture.h"
 #include "glm/glm.hpp"
 #include "stb_image.h"
 

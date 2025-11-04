@@ -121,8 +121,7 @@
 				21,
 				22,
 				23,
-				24,
-				25
+				24
 			]
 		},
 		{
@@ -231,8 +230,7 @@
 				21,
 				22,
 				23,
-				24,
-				25
+				24
 			]
 		}
 	],
@@ -308,12 +306,6 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/engine/SpriteRenderer.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/engine/Texture.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

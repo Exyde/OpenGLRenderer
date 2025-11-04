@@ -34,7 +34,7 @@
 - Phi + Baleines + Cats
 - Mesh Reload from IMGUI + Filesystem
 - Camera : F to focus current mesh ?
-- Next Video : Nouvelle Era - Clozee
+- Next Video : Nouvelle Era - Clozee ou sons de Saudea ?
 - Flag for post process FragCoord influence
 - RayLibEngine at some point ? Game or Jam maybe ? Or Haxe/Heaps... At Least Ray = C++
 - Finnish Advanced Lighting

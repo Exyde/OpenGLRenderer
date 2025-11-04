@@ -90,7 +90,7 @@ void Engine::Initialize() {
 
     std::vector<std::string> cubemapPaths{
         "Resources/Textures/skybox/right.png", "Resources/Textures/skybox/left.png",
-        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/bottom.png",
+        "Resources/Textures/skybox/top.png",   "Resources/Textures/skybox/back.png",
         "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
     };
 
@@ -302,9 +302,8 @@ void Engine::Update(float deltaTime) {
     if (checkreloaders && now - lastCheck > checkInterval) {
         lastCheck = now;
 
-        for (auto& [_, r] : ResourceLoader::Reloaders) {
-            LOG("CHECKING");
-            r.CheckForChanges();  // -- TODO CRASH : This seems NULL ?
+        for (auto& [s, r] : ResourceLoader::Reloaders) {
+            r.CheckForChanges();
         }
     }
 }

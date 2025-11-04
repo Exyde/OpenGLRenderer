@@ -26,8 +26,7 @@
 
 ### Main Path (Learn Open GL) - TodoList
 
-- Fix les shaders reloaders : Wip
-- Fix la skybox
+- Refaire une skybox maison
 - Resource Loader ---> Support Texture.cpp or remove it
 - Resource Loader ---> remove file loading code from Shader.cpp to resourceLoader.cpp
 - Resources loader : node view en éditeur 

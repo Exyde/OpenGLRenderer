@@ -9,11 +9,12 @@
 std::map<std::string, Texture2D> ResourceLoader::Textures2D;
 std::map<std::string, Shader> ResourceLoader::Shaders;
 std::map<std::string, Model> ResourceLoader::Models;
-std::map<Shader, ShaderReloader> ResourceLoader::Reloaders;
+std::map<int, ShaderReloader> ResourceLoader::Reloaders;
 
 Shader ResourceLoader::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile,
                                   std::string name) {
     Shaders[name] = LoadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
+    Reloaders[GetShader(name).ID] = ShaderReloader(GetShader(name));
     return Shaders[name];
 }
 
@@ -47,11 +48,7 @@ void ResourceLoader::Clear() {
 
 Shader ResourceLoader::LoadShaderFromFile(const char* vertexPath, const char* fragmentPath,
                                           const char* geometryShaderPath) {
-    Shader shader(vertexPath, fragmentPath);
-
-    ShaderReloader reloader(shader);
-    Reloaders[shader] = reloader;
-    return shader;
+    return Shader(vertexPath, fragmentPath);
 }
 
 Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath) {

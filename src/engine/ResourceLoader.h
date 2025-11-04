@@ -15,7 +15,7 @@ class ResourceLoader {
     static std::map<std::string, Shader> Shaders;
     static std::map<std::string, Texture2D> Textures2D;
     static std::map<std::string, Model> Models;
-    static std::map<Shader, ShaderReloader> Reloaders;
+    static std::map<int, ShaderReloader> Reloaders;
 
     static Shader LoadShader(const char* vFile, const char* fFile, const char* gFile, std::string name);
     static Shader& GetShader(std::string name);

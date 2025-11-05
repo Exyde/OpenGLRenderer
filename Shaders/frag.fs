@@ -145,9 +145,11 @@ vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection){
     float correctedTheta = max(theta, 0.0);
     vec3 diffuse = light.diffuse * correctedTheta * vec3(texture(mat.diffuse, uvs));
 
-    // -- Specular
+    // -- Specular -- Blinn-Phong
+    vec3 halfwayDir = normalize(lightDirection + viewDirection);
     vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess);
+    //float spec = pow(max(dot(viewDirection, reflectionDirection), 0.0) , mat.shininess); // -- Phong
+    float spec = pow(max(dot(normal, halfwayDir), 0.0) , mat.shininess * 2.0); // -- Blinn-Phong 
     vec3 specularSampled = vec3(texture(mat.specular, uvs));
     vec3 specular = light.specular * spec * specularSampled;
 

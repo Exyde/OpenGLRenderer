@@ -14,14 +14,9 @@ Engine::~Engine() {}
 
 void Engine::LoadTextures() {
     // -- Load Textures
-    ResourceLoader::LoadTexture2D("Resources/Textures/paddle.png", PLAYER_TEXTURE);
-    ResourceLoader::LoadTexture2D("Resources/Textures/awesomeface.png", "face");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block.png", "block");
-    ResourceLoader::LoadTexture2D("Resources/Textures/block_solid.png", "block_solid");
-    ResourceLoader::LoadTexture2D("Resources/Textures/background.jpg", "background");
     ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", "skybox");
-    ResourceLoader::LoadTexture2D("Resources/Textures/grass.png", "grass");
-    ResourceLoader::LoadTexture2D("Resources/Textures/container_diffuse.png", "diffuse");
+    ResourceLoader::LoadTexture2D("Resources/Textures/grass.png", "grass", true);
+    ResourceLoader::LoadTexture2D("Resources/Textures/container_diffuse.png", "diffuse", true);
     ResourceLoader::LoadTexture2D("Resources/Textures/container_specular.png", "specular");
     ResourceLoader::LoadTexture2D("Resources/Textures/container_emmisive.jpg", "emissive");
 
@@ -492,6 +487,7 @@ void Engine::Render(float deltaTime) {
             postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
             postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
             postProcessShader.SetInt("uKernelType", postFX.kernelType);
+            postProcessShader.SetInt("uCorrectGamma", postFX.correctGamma);
 
             glBindVertexArray(ndcQuadVAO);
             glDisable(GL_DEPTH_TEST);
@@ -539,6 +535,8 @@ void Engine::Render(float deltaTime) {
                 ImGui::SliderFloat("Chroma Intensity", &postFX.chromaIntensity, 0.0f, 0.02f);
 
             ImGui::Separator();
+
+            ImGui::Checkbox("Correct Gamma", &postFX.correctGamma);
 
             ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
             if (postFX.enableKernel) {

@@ -25,6 +25,8 @@
   - [Radiance Cascades](#radiance-cascades)
 
 ### Main Path (Learn Open GL) - TodoList
+
+- Actuaclly swithing more is a big memory leak but who care ?
 - Class scene object avec Une ref a une transform 3 vecteurs pour les matrices + Hierarchy display in Scene tab + World.h / World.cpp
 - Big tension entre GameObject & WorldObject actually, mais normal
 - Parent Application Class + Virtual things ?

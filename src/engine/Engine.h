@@ -32,7 +32,7 @@ struct PostProcessSettings {
     float blurRadius = 1.0f;
 
     bool enableInvert = false;
-
+    bool correctGamma = false;
     bool enableKernel;
     int kernelType = 0;
 };

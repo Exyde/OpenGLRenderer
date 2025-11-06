@@ -16,8 +16,8 @@ Shader& ResourceLoader::GetShader(std::string name) {
     return Shaders[name];
 }
 
-Texture2D ResourceLoader::LoadTexture2D(const char* file, std::string name) {
-    Textures2D[name] = LoadTexture2DFromFile(file);
+Texture2D ResourceLoader::LoadTexture2D(const char* file, std::string name, bool sRGB) {
+    Textures2D[name] = LoadTexture2DFromFile(file, sRGB);
     return Textures2D[name];
 }
 
@@ -45,20 +45,20 @@ Shader ResourceLoader::LoadShaderFromFile(const char* vertexPath, const char* fr
     return Shader(vertexPath, fragmentPath);
 }
 
-Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath) {
+Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath, bool sRGB) {
     Texture2D texture;
 
     int width, height, channels;
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
     if (channels == 4) {
-        texture.InternalFormat = GL_RGBA;
+        texture.InternalFormat = sRGB ? GL_SRGB_ALPHA : GL_RGBA;
         texture.ImageFormat = GL_RGBA;
     } else if (channels == 1) {
         texture.InternalFormat = GL_RED;
         texture.ImageFormat = GL_RED;
     } else {
-        texture.InternalFormat = GL_RGB;
+        texture.InternalFormat = sRGB ? GL_SRGB : GL_RGB;
         texture.ImageFormat = GL_RGB;
     }
 

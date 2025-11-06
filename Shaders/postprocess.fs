@@ -9,6 +9,7 @@ uniform float uChromaIntensity;
 
 uniform bool uEnableInvert;
 uniform bool uEnableGrayscale;
+uniform bool uCorrectGamma;
 
 uniform bool uEnableKernel;
 uniform int uKernelType; // 0=blur, 1=sharpen, 2=boxBlur, 3=emboss
@@ -101,6 +102,9 @@ void main(){
     }
 
 
-
+    float gamma = 1.2;
     FragColor = finalColor;
+    if (uCorrectGamma){
+        FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma)); // Gamma Correction in one line (flag it)
+    }
 }

@@ -122,8 +122,7 @@
 				22,
 				23,
 				24,
-				25,
-				26
+				25
 			]
 		},
 		{
@@ -233,8 +232,7 @@
 				22,
 				23,
 				24,
-				25,
-				26
+				25
 			]
 		}
 	],
@@ -268,6 +266,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/engine/Mesh.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/engine/MeshRenderer.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -376,18 +380,6 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/imgui/imgui_widgets.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/game/BallObject.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/game/Game.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

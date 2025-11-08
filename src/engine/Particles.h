@@ -8,7 +8,7 @@
 #include "glm.hpp"
 
 struct Particle {
-    glm::vec2 Position, Velocity;
+    glm::vec3 Position, Velocity;
     glm::vec4 Color;
     float Lifetime;
 
@@ -18,7 +18,7 @@ struct Particle {
 class ParticleEmitter {
    public:
     ParticleEmitter(Shader shader, Texture2D texture, unsigned int amount);
-    void Update(float deltaTime, GameObject& object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f));
+    void Update(float deltaTime, GameObject& object, unsigned int newParticles, glm::vec3 offset = glm::vec3(0.0f));
     void Render();
 
    private:
@@ -29,5 +29,5 @@ class ParticleEmitter {
     unsigned int VAO;
     void Init();
     unsigned int FirstAvailableParticle();
-    void RespawnParticle(Particle& particle, GameObject& object, glm::vec2 offset = glm::vec2(0.0f));
+    void RespawnParticle(Particle& particle, GameObject& object, glm::vec3 offset = glm::vec3(0.0f));
 };

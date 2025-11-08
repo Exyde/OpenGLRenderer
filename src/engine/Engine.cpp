@@ -25,7 +25,7 @@ std::vector<std::string> GetImagesPath(const std::string& rootDir) {
 
 void Engine::LoadTextures() {
     // -- Load Jam Textures from main root
-    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages");
+    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages/Art");
     int imageID = 0;
 
     for (const auto& path : imagesPaths) {

@@ -56,27 +56,6 @@ int main() {
             continue;
         }
 
-        if (appMode == ApplicationMode::Game) {
-            game.Initialize();
-            float deltaTime = 0.0f;
-            float lastFrame = 0.0f;
-
-            while (!glfwWindowShouldClose(window) && appMode == ApplicationMode::Game) {
-                float currentFrame = ElapsedTime();
-                deltaTime = currentFrame - lastFrame;
-                lastFrame = currentFrame;
-                glfwPollEvents();
-
-                game.ProcessInput(deltaTime);
-                game.Update(deltaTime);
-                game.Render();
-
-                glfwSwapBuffers(window);
-            }
-
-            game.Exit();
-        }
-
         if (appMode == ApplicationMode::Engine) {
             engine.Initialize();
 
@@ -163,22 +142,12 @@ void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, in
         }
     }
 
-    // -- Toggle Between Engine & Game Mode
-    if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-        LOG("Switching Engine Mode");
-        if (appMode == ApplicationMode::Engine)
-            appMode = ApplicationMode::Game;
-        else if (appMode == ApplicationMode::Game)
-            appMode = ApplicationMode::Engine;
-        return;
-    }
-
     // -- Register inputs --
     if (key >= 0 && key < 1024) {
         if (action == GLFW_PRESS)
-            game.Keys[key] = engine.Keys[key] = true;
+            engine.Keys[key] = true;
         else if (action == GLFW_RELEASE)
-            game.Keys[key] = engine.Keys[key] = false;
+            engine.Keys[key] = false;
     }
 }
 
@@ -187,16 +156,11 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height) {
     CURRENT_HEIGHT = height;
     glViewport(0, 0, width, height);
 
-    if (appMode == ApplicationMode::Game)
-        return;
-
     engine.UpdatePostProcessFrameBuffer(width, height);
 }
 
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset) {
     ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
-    if (appMode == ApplicationMode::Game)
-        return;
 
     if (cursorVisible)
         return;
@@ -208,9 +172,6 @@ void Mouse_Callback(GLFWwindow* window, double xposin, double yposin) {
     float xpos = static_cast<float>(xposin);
     float ypos = static_cast<float>(yposin);
     ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
-
-    if (appMode == ApplicationMode::Game)
-        return;
 
     //-- avoid first frame snapping (should have a bool for first frame ?)
     if (FIRST_MOUSE) {

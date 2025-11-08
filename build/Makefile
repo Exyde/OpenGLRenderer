@@ -200,6 +200,30 @@ src/engine/Mesh.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.s
 .PHONY : src/engine/Mesh.cpp.s
 
+src/engine/MeshRenderer.obj: src/engine/MeshRenderer.cpp.obj
+.PHONY : src/engine/MeshRenderer.obj
+
+# target to build an object file
+src/engine/MeshRenderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj
+.PHONY : src/engine/MeshRenderer.cpp.obj
+
+src/engine/MeshRenderer.i: src/engine/MeshRenderer.cpp.i
+.PHONY : src/engine/MeshRenderer.i
+
+# target to preprocess a source file
+src/engine/MeshRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.i
+.PHONY : src/engine/MeshRenderer.cpp.i
+
+src/engine/MeshRenderer.s: src/engine/MeshRenderer.cpp.s
+.PHONY : src/engine/MeshRenderer.s
+
+# target to generate assembly for a file
+src/engine/MeshRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.s
+.PHONY : src/engine/MeshRenderer.cpp.s
+
 src/engine/Model.obj: src/engine/Model.cpp.obj
 .PHONY : src/engine/Model.obj
 
@@ -463,54 +487,6 @@ src/engine/stb_image.s: src/engine/stb_image.cpp.s
 src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
-
-src/game/BallObject.obj: src/game/BallObject.cpp.obj
-.PHONY : src/game/BallObject.obj
-
-# target to build an object file
-src/game/BallObject.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.obj
-.PHONY : src/game/BallObject.cpp.obj
-
-src/game/BallObject.i: src/game/BallObject.cpp.i
-.PHONY : src/game/BallObject.i
-
-# target to preprocess a source file
-src/game/BallObject.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.i
-.PHONY : src/game/BallObject.cpp.i
-
-src/game/BallObject.s: src/game/BallObject.cpp.s
-.PHONY : src/game/BallObject.s
-
-# target to generate assembly for a file
-src/game/BallObject.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/BallObject.cpp.s
-.PHONY : src/game/BallObject.cpp.s
-
-src/game/Game.obj: src/game/Game.cpp.obj
-.PHONY : src/game/Game.obj
-
-# target to build an object file
-src/game/Game.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.obj
-.PHONY : src/game/Game.cpp.obj
-
-src/game/Game.i: src/game/Game.cpp.i
-.PHONY : src/game/Game.i
-
-# target to preprocess a source file
-src/game/Game.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.i
-.PHONY : src/game/Game.cpp.i
-
-src/game/Game.s: src/game/Game.cpp.s
-.PHONY : src/game/Game.s
-
-# target to generate assembly for a file
-src/game/Game.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/Game.cpp.s
-.PHONY : src/game/Game.cpp.s
 
 src/game/GameLevel.obj: src/game/GameLevel.cpp.obj
 .PHONY : src/game/GameLevel.obj
@@ -794,6 +770,9 @@ help:
 	@echo ... src/engine/Mesh.obj
 	@echo ... src/engine/Mesh.i
 	@echo ... src/engine/Mesh.s
+	@echo ... src/engine/MeshRenderer.obj
+	@echo ... src/engine/MeshRenderer.i
+	@echo ... src/engine/MeshRenderer.s
 	@echo ... src/engine/Model.obj
 	@echo ... src/engine/Model.i
 	@echo ... src/engine/Model.s
@@ -827,12 +806,6 @@ help:
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
-	@echo ... src/game/BallObject.obj
-	@echo ... src/game/BallObject.i
-	@echo ... src/game/BallObject.s
-	@echo ... src/game/Game.obj
-	@echo ... src/game/Game.i
-	@echo ... src/game/Game.s
 	@echo ... src/game/GameLevel.obj
 	@echo ... src/game/GameLevel.i
 	@echo ... src/game/GameLevel.s

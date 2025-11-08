@@ -51,23 +51,43 @@ Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath, bool sRGB)
     int width, height, channels;
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
+    if (!data) {
+        LOG_ERROR(LogCategory::Texture, "❌ Failed to load texture: ", filePath);
+        return texture;
+    }
+
+    if (width <= 0 || height <= 0) {
+        LOG_ERROR(LogCategory::Texture, "⚠️ Invalid texture size: ", filePath);
+        stbi_image_free(data);
+        return texture;
+    }
+
+    if (width > 4096 || height > 4096) {
+        LOG_WARN(LogCategory::Texture, "Skipping oversized texture: ", filePath);
+        stbi_image_free(data);
+        return texture;
+    }
+
     if (channels == 4) {
-        texture.InternalFormat = sRGB ? GL_SRGB_ALPHA : GL_RGBA;
+        texture.InternalFormat = sRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
         texture.ImageFormat = GL_RGBA;
     } else if (channels == 1) {
         texture.InternalFormat = GL_RED;
         texture.ImageFormat = GL_RED;
     } else {
-        texture.InternalFormat = sRGB ? GL_SRGB : GL_RGB;
+        texture.InternalFormat = sRGB ? GL_SRGB8 : GL_RGB8;
         texture.ImageFormat = GL_RGB;
     }
 
     if (data) {
         LOG_INFO(LogCategory::Texture, " Loaded : ", filePath);
+
+        LOG_INFO(LogCategory::Texture, "Generating texture for ", filePath);
         texture.Generate(width, height, data);
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR)
+            LOG_ERROR(LogCategory::Texture, "OpenGL error: ", err, " at ", filePath);
         stbi_image_free(data);
-    } else {
-        LOG_ERROR(LogCategory::Texture, "Failed to load texture : ", filePath);
     }
     return texture;
 }

@@ -1,26 +1,28 @@
 #pragma once
 
+#include "../engine/MeshRenderer.h"
 #include "../engine/SpriteRenderer.h"
 #include "../engine/Texture2D.h"
 #include "glm/glm.hpp"
 
 class GameObject {
    public:
-    glm::vec2 Position, Size, Velocity;
+    glm::vec3 Position, Size, Velocity;
     glm::vec4 Color;
     float Rotation;
     bool IsSolid;
     bool IsDestroyed;
-    // -- Maybe one day hold it's renderer ? or shader ? humm
     Texture2D Sprite;
+    MeshPrimitive MeshType;
 
     // -- Methods
     GameObject();
-    GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec4 color = glm::vec4(1.0f),
-               glm::vec2 velocity = glm::vec2(0.0f));
+    GameObject(glm::vec3 pos, glm::vec3 size, Texture2D sprite, glm::vec4 color = glm::vec4(1.0f),
+               glm::vec3 velocity = glm::vec3(0.0f), MeshPrimitive meshType = MeshPrimitive::Cube);
     ~GameObject();
 
     virtual void Draw(SpriteRenderer& renderer);
+    virtual void Draw(MeshRenderer& renderer);
 
     bool CheckForLeftBound();
     bool CheckForRightBound(unsigned int windowWidth);

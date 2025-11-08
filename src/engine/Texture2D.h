@@ -1,6 +1,7 @@
 #pragma once
-
 #include <glad/glad.h>
+
+#include "Logger.h"
 
 class Texture2D {
    public:

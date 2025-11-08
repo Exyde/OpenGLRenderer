@@ -20,10 +20,15 @@ void Texture2D::Generate(unsigned int width, unsigned int height, unsigned char*
     glTexImage2D(GL_TEXTURE_2D, 0, this->InternalFormat, this->Width, this->Height, 0, this->ImageFormat,
                  GL_UNSIGNED_BYTE, data);
 
+    glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->Filter_Mag);
+
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR)
+        LOG_ERROR(LogCategory::Texture, "OpenGL error in Generate(): ", err);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }

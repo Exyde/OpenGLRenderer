@@ -32,7 +32,7 @@ void ParticleEmitter::Init() {
     }
 }
 
-void ParticleEmitter::Update(float deltaTime, GameObject& object, unsigned int newParticles, glm::vec2 offset) {
+void ParticleEmitter::Update(float deltaTime, GameObject& object, unsigned int newParticles, glm::vec3 offset) {
     for (int i = 0; i < newParticles; ++i) {
         int particle = FirstAvailableParticle();
         RespawnParticle(particles[particle], object, offset);
@@ -92,10 +92,10 @@ unsigned int ParticleEmitter::FirstAvailableParticle() {
     return 0;
 }
 
-void ParticleEmitter::RespawnParticle(Particle& particle, GameObject& object, glm::vec2 offset) {
+void ParticleEmitter::RespawnParticle(Particle& particle, GameObject& object, glm::vec3 offset) {
     float random = ((rand() % 100) - 50) / 10.0f;
     float rColor = 0.5f + ((rand() % 100) / 100.0f);
-    particle.Position = object.Position + glm::vec2(random) + offset;
+    particle.Position = object.Position + glm::vec3(random) + offset;
     particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
     particle.Lifetime = 0.5f;
     particle.Velocity = object.Velocity * 0.1f;

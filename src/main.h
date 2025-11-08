@@ -13,19 +13,17 @@
 #include <thread>
 
 #include "engine/Engine.h"
-#include "game/Game.h"
 
 constexpr glm::vec4 ColorWhite = glm::vec4(1.0);
 constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
 constexpr glm::vec4 ColorGray = glm::vec4(0.5);
 
-enum class ApplicationMode { Engine, Game };
+enum class ApplicationMode { Engine };
 ApplicationMode appMode = ApplicationMode::Engine;
 
 const uint32_t SCREEN_WIDTH = 800, SCREEN_HEIGHT = 600;
 uint32_t CURRENT_WIDTH = 800, CURRENT_HEIGHT = 600;
 
-Game game(SCREEN_WIDTH, SCREEN_HEIGHT);
 Engine engine(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 bool FIRST_MOUSE = true;

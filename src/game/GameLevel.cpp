@@ -60,14 +60,14 @@ bool GameLevel::init(TileData data, unsigned int levelWidth, unsigned int levelH
     float cellWidth = levelWidth / static_cast<float>(width);
     float cellHeight = levelHeight / static_cast<float>(height);
 
-    glm::vec2 cellSize(cellWidth, cellHeight);
+    glm::vec3 cellSize(cellWidth, cellHeight, cellWidth);
     glm::vec4 solidColor(1.0, 0.0, 0.0, 1.0);
     glm::vec4 gameplayColor(0.25, 0.4, 0.6, 1.0);
 
     for (unsigned int y = 0; y < height; y++) {
         for (unsigned int x = 0; x < width; x++) {
             int currentTileCode = data.GetTileCode(y, x);
-            glm::vec2 pos(cellWidth * x, cellWidth * y);
+            glm::vec3 pos(cellWidth * x, cellWidth * y, 0);
             // -- Solid
             if (currentTileCode == 1) {
                 GameObject brick(pos, cellSize, ResourceLoader::GetTexture2D("block_solid"), solidColor);

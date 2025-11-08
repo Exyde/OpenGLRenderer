@@ -33,7 +33,7 @@ void GameLevel::Load(const char* filePath, unsigned int levelWidth, unsigned int
     }
 }
 
-void GameLevel::Draw(SpriteRenderer& renderer) {
+void GameLevel::Draw(MeshRenderer& renderer) {
     for (auto obj : Bricks) {
         if (!obj.IsDestroyed)
             obj.Draw(renderer);

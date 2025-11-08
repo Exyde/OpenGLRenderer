@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../game/GameObject.h"
+#include "GameObject.h"
 #include "Shader.h"
 #include "Texture2D.h"
 #include "glm.hpp"

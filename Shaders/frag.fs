@@ -64,6 +64,7 @@ in StagedData {
 uniform float uTime;
 uniform float T;
 uniform vec3 ViewPos;
+uniform vec4 tint;
 
 float LinearDepth(float depth);
 vec3 CalculateDirLight(DirLight light, vec3 normal, vec3 viewDirection);
@@ -81,18 +82,22 @@ void main()
     vec4 texColor = texture(mat.diffuse, uvs);
 
     FragColor = texture(mat.diffuse, uvs);
+    return;
     float h = (inData.Height)/  32.0f;
     FragColor = vec4(1.0,h,h, 1.0);
 
+    FragColor = tint;
 
     // UV's Debug
     FragColor = vec4(uvs, 0., 1.0);
+    return;
     FragColor = vec4(inData.FragPosWorldSpace, 1.0);
     
     vec3 normal = normalize(inData.Normal);
     vec3 viewDirection = normalize(ViewPos - inData.FragPosWorldSpace);
 
     FragColor = vec4(normal, 1.0);
+    
 
     //sif (gl_FrontFacing == false) return; // Draw normal for backfaces
 

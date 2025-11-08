@@ -10,6 +10,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/youne/Desktop/OpenGLRenderer/src/glad.c" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Engine.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameLevel.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj.d"
+  "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj.d"
@@ -24,8 +26,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/World.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/WorldObject.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj.d"
-  "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj.d"
-  "C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameObject.cpp" "CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_demo.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj.d"
   "C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_draw.cpp" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj" "gcc" "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj.d"

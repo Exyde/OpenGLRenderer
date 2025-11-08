@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Texture2D.h"
 
-// -- Could herit from Renderer ? To have Mesh Renderer per say
 class SpriteRenderer {
    public:
     SpriteRenderer(Shader& shader);

@@ -7,12 +7,13 @@
 // clang-format on
 #include <vector>
 
-#include "../game/GameObject.h"
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_glfw.h"
 #include "../imgui/imgui_impl_opengl3.h"
 #include "Camera.h"
+#include "GameObject.h"
 #include "Logger.h"
+#include "MeshRenderer.h"
 #include "Model.h"
 #include "ResourceLoader.h"
 #include "Shader.h"
@@ -78,7 +79,8 @@ class Engine {
     unsigned int Width, Height;
 
     GameObject* Player;
-    SpriteRenderer* Renderer;
+    MeshRenderer* Renderer;
+    SpriteRenderer* sprRenderer;
     PostProcessSettings postFX;
 
     Engine(unsigned int width, unsigned int height);

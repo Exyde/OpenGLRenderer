@@ -1,5 +1,8 @@
 #include "Engine.h"
 
+GameObject* TestObj;
+MeshRenderer* Renderer;
+
 Engine::~Engine() {}
 
 Engine::Engine(unsigned int width, unsigned int height)
@@ -30,7 +33,7 @@ void Engine::LoadTextures() {
 
     for (const auto& path : imagesPaths) {
         std::string filename = std::filesystem::path(path).stem().string();
-        ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+        // ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
     }
     LOG("FOUND IMAGES : ", imagesPaths.size());
 
@@ -48,7 +51,11 @@ void Engine::LoadTextures() {
         "Resources/Textures/skybox/front.png", "Resources/Textures/skybox/back.png",
     };
 
-    cubemapTexture = LoadCubeMap(cubemapPaths);
+    std::vector<std::string> cubemapPathsBox{
+        "Resources/Textures/wow.jpg", "Resources/Textures/wow.jpg", "Resources/Textures/wow.jpg",
+        "Resources/Textures/wow.jpg", "Resources/Textures/wow.jpg", "Resources/Textures/wow.jpg",
+    };
+    cubemapTexture = LoadCubeMap(cubemapPathsBox);
 }
 
 void Engine::LoadShaders() {
@@ -125,8 +132,9 @@ void Engine::Initialize() {
     LoadMeshes();
     InitOpenGlSettings();
 
-    // -- Setup Sprite Renderer -- Not used in 3D, legacy from Game :: Todo : Remove ?
-    Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
+    Renderer = new MeshRenderer(ResourceLoader::GetShader("phong"));
+    sprRenderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
+    TestObj = new GameObject();
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
@@ -317,12 +325,18 @@ void Engine::Render(float deltaTime) {
 
         // -- Draw Scene
         SetupPhongShader(viewMatrix, offsetedLightPos);
-        DrawGround();
-        DrawFloatingsCubes();
-        DrawBackpack();
-        DrawGrass(viewMatrix);
-        DrawLightsObjects(viewMatrix, offsetedLightPos);
-        DrawSkybox();
+
+        bool drawScene = true;
+        if (drawScene) {
+            DrawGround();
+            //   DrawFloatingsCubes();
+            DrawBackpack();
+            // DrawGrass(viewMatrix);
+            // DrawLightsObjects(viewMatrix, offsetedLightPos);
+            DrawSkybox();
+        }
+
+        TestObj->Draw(*Renderer);
 
         // -- Post Process
         PostProcessPass();
@@ -482,7 +496,7 @@ void Engine::DrawBackpack() {
 void Engine::DrawGround() {
     //-- DrawGround
     auto modelMatrix = glm::mat4(1.0F);
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(10, 10, 10));
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 1, 100));
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
     auto phongShader = ResourceLoader::GetShader("phong");
     phongShader.SetMat4("model", modelMatrix);

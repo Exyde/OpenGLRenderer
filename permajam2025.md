@@ -30,6 +30,7 @@ Mémoire, fragmentation, récursivité de la forme, récurisvité de la mémoire
 - Load random textures from game folder and bind it to random quads :
 - Sound de Sundae ou les miens pour rester dans le core core (+ remix / randomisation idk)
 - - On va avoir un pb de texture loading at some point
+- MeshRenderer : Passer le GO direct en param ? en ref ? pour user le prim type + update shader + chepakoi
 
 
 - Text Generation (maybe harder, but see if you find something) from md file

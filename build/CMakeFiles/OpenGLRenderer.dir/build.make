@@ -116,11 +116,41 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.s"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Engine.cpp -o CMakeFiles\OpenGLRenderer.dir\src\engine\Engine.cpp.s
 
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/flags.make
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameLevel.cpp
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\GameLevel.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\GameLevel.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameLevel.cpp
+
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameLevel.cpp > CMakeFiles\OpenGLRenderer.dir\src\engine\GameLevel.cpp.i
+
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameLevel.cpp -o CMakeFiles\OpenGLRenderer.dir\src\engine\GameLevel.cpp.s
+
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/flags.make
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.cpp
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\GameObject.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\GameObject.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameObject.cpp
+
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameObject.cpp > CMakeFiles\OpenGLRenderer.dir\src\engine\GameObject.cpp.i
+
+CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\engine\GameObject.cpp -o CMakeFiles\OpenGLRenderer.dir\src\engine\GameObject.cpp.s
+
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj: CMakeFiles/OpenGLRenderer.dir/flags.make
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Logger.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Logger.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Logger.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.i: cmake_force
@@ -135,7 +165,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj: CMakeFiles/OpenGLRenderer
 CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Mesh.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Mesh.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Mesh.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.i: cmake_force
@@ -150,7 +180,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj: CMakeFiles/OpenGL
 CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\MeshRenderer.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\MeshRenderer.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\MeshRenderer.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.i: cmake_force
@@ -165,7 +195,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj: CMakeFiles/OpenGLRendere
 CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Model.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Model.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Model.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Model.cpp.i: cmake_force
@@ -180,7 +210,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: CMakeFiles/OpenGLRen
 CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Particles.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Particles.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Particles.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Particles.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.i: cmake_force
@@ -195,7 +225,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj: CMakeFiles/OpenG
 CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/PostProcessor.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\PostProcessor.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\PostProcessor.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\PostProcessor.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.i: cmake_force
@@ -210,7 +240,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj: CMakeFiles/Open
 CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\ResourceLoader.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\ResourceLoader.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\ResourceLoader.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/ResourceLoader.cpp.i: cmake_force
@@ -225,7 +255,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj: CMakeFiles/OpenGLRender
 CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Shader.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Shader.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Shader.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Shader.cpp.i: cmake_force
@@ -240,7 +270,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj: CMakeFiles/Open
 CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\ShaderReloader.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\ShaderReloader.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\ShaderReloader.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/ShaderReloader.cpp.i: cmake_force
@@ -255,7 +285,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj: CMakeFiles/Open
 CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\SpriteRenderer.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\SpriteRenderer.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\SpriteRenderer.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/SpriteRenderer.cpp.i: cmake_force
@@ -270,7 +300,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj: CMakeFiles/OpenGLRen
 CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\Texture2D.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\Texture2D.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\Texture2D.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Texture2D.cpp.i: cmake_force
@@ -285,7 +315,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj: CMakeFiles/OpenGLRendere
 CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/World.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\World.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\World.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\World.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/World.cpp.i: cmake_force
@@ -300,7 +330,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj: CMakeFiles/OpenGLR
 CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/WorldObject.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\WorldObject.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\WorldObject.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\WorldObject.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/WorldObject.cpp.i: cmake_force
@@ -315,7 +345,7 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj: CMakeFiles/OpenGLRen
 CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.cpp
 CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\engine\stb_image.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\engine\stb_image.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\engine\stb_image.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.i: cmake_force
@@ -330,7 +360,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj: CMakeFiles/OpenGLRenderer
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui.cpp.i: cmake_force
@@ -345,7 +375,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj: CMakeFiles/OpenGLRen
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_demo.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_demo.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_demo.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_demo.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_demo.cpp.i: cmake_force
@@ -360,7 +390,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj: CMakeFiles/OpenGLRen
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_draw.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_draw.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_draw.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_draw.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_draw.cpp.i: cmake_force
@@ -375,7 +405,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Open
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_impl_glfw.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_impl_glfw.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_impl_glfw.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.i: cmake_force
@@ -390,7 +420,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/O
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_opengl3.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_impl_opengl3.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_impl_opengl3.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_impl_opengl3.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.i: cmake_force
@@ -405,7 +435,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj: CMakeFiles/OpenGLR
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_tables.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_tables.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_tables.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_tables.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.i: cmake_force
@@ -420,7 +450,7 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj: CMakeFiles/OpenGL
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_widgets.cpp
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_widgets.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_widgets.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_widgets.cpp
 
 CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.i: cmake_force
@@ -431,41 +461,13 @@ CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.s"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\imgui\imgui_widgets.cpp -o CMakeFiles\OpenGLRenderer.dir\src\imgui\imgui_widgets.cpp.s
 
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/flags.make
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameLevel.cpp
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\game\GameLevel.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\game\GameLevel.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameLevel.cpp
-
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameLevel.cpp > CMakeFiles\OpenGLRenderer.dir\src\game\GameLevel.cpp.i
-
-CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameLevel.cpp -o CMakeFiles\OpenGLRenderer.dir\src\game\GameLevel.cpp.s
-
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/flags.make
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/includes_CXX.rsp
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/game/GameObject.cpp
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj: CMakeFiles/OpenGLRenderer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\youne\Desktop\OpenGLRenderer\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj -MF CMakeFiles\OpenGLRenderer.dir\src\game\GameObject.cpp.obj.d -o CMakeFiles\OpenGLRenderer.dir\src\game\GameObject.cpp.obj -c C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameObject.cpp
-
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameObject.cpp > CMakeFiles\OpenGLRenderer.dir\src\game\GameObject.cpp.i
-
-CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\youne\Desktop\OpenGLRenderer\src\game\GameObject.cpp -o CMakeFiles\OpenGLRenderer.dir\src\game\GameObject.cpp.s
-
 # Object files for target OpenGLRenderer
 OpenGLRenderer_OBJECTS = \
 "CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj" \
+"CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj" \
+"CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj" \
@@ -486,9 +488,7 @@ OpenGLRenderer_OBJECTS = \
 "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_glfw.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj" \
 "CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj" \
-"CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj" \
-"CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj" \
-"CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj"
+"CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj"
 
 # External object files for target OpenGLRenderer
 OpenGLRenderer_EXTERNAL_OBJECTS =
@@ -496,6 +496,8 @@ OpenGLRenderer_EXTERNAL_OBJECTS =
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/glad.c.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj
+C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj
+C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/Mesh.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/engine/MeshRenderer.cpp.obj
@@ -517,8 +519,6 @@ C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRende
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_impl_opengl3.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_tables.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/imgui/imgui_widgets.cpp.obj
-C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj
-C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/build.make
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: C:/Users/youne/Desktop/OpenGLRenderer/lib/libglfw3dll.a
 C:/Users/youne/Desktop/OpenGLRenderer/OpenGLRenderer.exe: CMakeFiles/OpenGLRenderer.dir/linkLibs.rsp

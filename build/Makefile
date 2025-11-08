@@ -152,6 +152,54 @@ src/engine/Engine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.s
 .PHONY : src/engine/Engine.cpp.s
 
+src/engine/GameLevel.obj: src/engine/GameLevel.cpp.obj
+.PHONY : src/engine/GameLevel.obj
+
+# target to build an object file
+src/engine/GameLevel.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj
+.PHONY : src/engine/GameLevel.cpp.obj
+
+src/engine/GameLevel.i: src/engine/GameLevel.cpp.i
+.PHONY : src/engine/GameLevel.i
+
+# target to preprocess a source file
+src/engine/GameLevel.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.i
+.PHONY : src/engine/GameLevel.cpp.i
+
+src/engine/GameLevel.s: src/engine/GameLevel.cpp.s
+.PHONY : src/engine/GameLevel.s
+
+# target to generate assembly for a file
+src/engine/GameLevel.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.s
+.PHONY : src/engine/GameLevel.cpp.s
+
+src/engine/GameObject.obj: src/engine/GameObject.cpp.obj
+.PHONY : src/engine/GameObject.obj
+
+# target to build an object file
+src/engine/GameObject.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj
+.PHONY : src/engine/GameObject.cpp.obj
+
+src/engine/GameObject.i: src/engine/GameObject.cpp.i
+.PHONY : src/engine/GameObject.i
+
+# target to preprocess a source file
+src/engine/GameObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.i
+.PHONY : src/engine/GameObject.cpp.i
+
+src/engine/GameObject.s: src/engine/GameObject.cpp.s
+.PHONY : src/engine/GameObject.s
+
+# target to generate assembly for a file
+src/engine/GameObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.s
+.PHONY : src/engine/GameObject.cpp.s
+
 src/engine/Logger.obj: src/engine/Logger.cpp.obj
 .PHONY : src/engine/Logger.obj
 
@@ -488,54 +536,6 @@ src/engine/stb_image.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/engine/stb_image.cpp.s
 .PHONY : src/engine/stb_image.cpp.s
 
-src/game/GameLevel.obj: src/game/GameLevel.cpp.obj
-.PHONY : src/game/GameLevel.obj
-
-# target to build an object file
-src/game/GameLevel.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.obj
-.PHONY : src/game/GameLevel.cpp.obj
-
-src/game/GameLevel.i: src/game/GameLevel.cpp.i
-.PHONY : src/game/GameLevel.i
-
-# target to preprocess a source file
-src/game/GameLevel.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.i
-.PHONY : src/game/GameLevel.cpp.i
-
-src/game/GameLevel.s: src/game/GameLevel.cpp.s
-.PHONY : src/game/GameLevel.s
-
-# target to generate assembly for a file
-src/game/GameLevel.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameLevel.cpp.s
-.PHONY : src/game/GameLevel.cpp.s
-
-src/game/GameObject.obj: src/game/GameObject.cpp.obj
-.PHONY : src/game/GameObject.obj
-
-# target to build an object file
-src/game/GameObject.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.obj
-.PHONY : src/game/GameObject.cpp.obj
-
-src/game/GameObject.i: src/game/GameObject.cpp.i
-.PHONY : src/game/GameObject.i
-
-# target to preprocess a source file
-src/game/GameObject.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.i
-.PHONY : src/game/GameObject.cpp.i
-
-src/game/GameObject.s: src/game/GameObject.cpp.s
-.PHONY : src/game/GameObject.s
-
-# target to generate assembly for a file
-src/game/GameObject.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OpenGLRenderer.dir\build.make CMakeFiles/OpenGLRenderer.dir/src/game/GameObject.cpp.s
-.PHONY : src/game/GameObject.cpp.s
-
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
 
@@ -764,6 +764,12 @@ help:
 	@echo ... src/engine/Engine.obj
 	@echo ... src/engine/Engine.i
 	@echo ... src/engine/Engine.s
+	@echo ... src/engine/GameLevel.obj
+	@echo ... src/engine/GameLevel.i
+	@echo ... src/engine/GameLevel.s
+	@echo ... src/engine/GameObject.obj
+	@echo ... src/engine/GameObject.i
+	@echo ... src/engine/GameObject.s
 	@echo ... src/engine/Logger.obj
 	@echo ... src/engine/Logger.i
 	@echo ... src/engine/Logger.s
@@ -806,12 +812,6 @@ help:
 	@echo ... src/engine/stb_image.obj
 	@echo ... src/engine/stb_image.i
 	@echo ... src/engine/stb_image.s
-	@echo ... src/game/GameLevel.obj
-	@echo ... src/game/GameLevel.i
-	@echo ... src/game/GameLevel.s
-	@echo ... src/game/GameObject.obj
-	@echo ... src/game/GameObject.i
-	@echo ... src/game/GameObject.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s

@@ -26,6 +26,6 @@ void main()
     outData.Normal = mat3(transpose(inverse(model))) * aNormal; // -- Transpose normal to world space 
     outData.FragPosWorldSpace = vec3(model * vec4(aPos.x, aPos.y, aPos.y, 1.0));
     outData.Height = aPos.y;
-    gl_PointSize = gl_Position.z;
+    //gl_PointSize = gl_Position.z;
 }     
 

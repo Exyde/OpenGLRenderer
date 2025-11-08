@@ -120,7 +120,7 @@ bool InitializeGLFW() {
 GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
     LOG("Creating main window");
 
-    GLFWwindow* window = glfwCreateWindow(width, height, "Open GL Renderer v0.0.1", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(width, height, "What remain of ourselves", NULL, NULL);
     return window;
 }
 

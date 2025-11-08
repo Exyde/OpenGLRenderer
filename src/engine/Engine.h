@@ -17,7 +17,6 @@
 #include "ResourceLoader.h"
 #include "Shader.h"
 #include "ShaderReloader.h"
-#include "SlyMath.H"
 #include "SpriteRenderer.h"
 #include "World.h"
 #include "glm/glm.hpp"
@@ -96,6 +95,20 @@ class Engine {
     void UpdatePostProcessFrameBuffer(int width, int height);
     void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos);
 
+    // -- Game Specific
+    void InitScenePass();
+    void DrawFloatingsCubes();
+    void SetupPhongShader(glm::mat4 viewMatrix, glm::vec3 offsetedLightPos);
+    void DrawBackpack();
+    void DrawGround();
+    void DrawGrass(glm::mat4 viewMatrix);
+    void DrawSkybox();
+    void DrawLightsObjects(glm::mat4 viewMatrix, glm::vec3 offsetedLightPos);
+    void PostProcessPass();
+
+    void BeginImGuiFrame();
+    void RenderImGUI();
+
     //--Globals ? Todo : Classes ^ ^
     static inline unsigned int skyboxVAO, skyboxVBO;
     static inline GLuint terrainVAO, terrainVBO, terrainEBO;
@@ -107,6 +120,7 @@ class Engine {
     static inline std::vector<glm::vec3> vegetation;
     static inline unsigned int framebuffer;
     static inline glm::highp_mat4 projectionMatrix;
+    static inline glm::highp_mat4 viewMatrix;
     static inline double currentFPS = 0;
     static inline unsigned int renderTexture;
     static inline unsigned int rbo;
@@ -119,6 +133,7 @@ class Engine {
     static inline glm::vec3 flashLightAmbient;
     static inline glm::vec3 flashLightDiffuse;
     static inline glm::vec3 flashLightSpecular;
+    static inline glm::vec3 offsetedLightPos;
 
     static inline glm::vec3 LightPosition;
     static inline Camera cam;
@@ -129,7 +144,6 @@ class Engine {
 
 #pragma region UI EXPOSED
     // -- IMGUI EXPOSED
-
     inline static bool enablePostProcessing = true;
     static inline bool UI_rotateStuff = true;
     static inline float ambientLightColor[3] = {1.0, 1.0f, 1.0f};

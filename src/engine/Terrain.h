@@ -31,3 +31,56 @@ glDrawElements(GL_TRIANGLE_STRIP, terrainData.NUM_VERTS_PER_STRIP, GL_UNSIGNED_I
 }
 }
 */
+/*
+TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
+    TerrainData terrainData;
+
+    int width, height, channels;
+    unsigned short* data16 = stbi_load_16(filePath, &width, &height, &channels, 0);
+
+    if (data16) {
+        LOG(" [Terrain] - LoadHeightmap at", filePath, " -- W: ", width, " --H: ", height, " --Channels: ", channels);
+    } else {
+        LOG_ERROR(LogCategory::Engine, "Failed to load heightmap data:", filePath);
+    }
+
+    std::vector<float> vertices;
+    float yScale = 50.0f;
+    float yShift = 0.0F;
+
+    for (unsigned int i = 0; i < height; i++) {
+        for (unsigned int j = 0; j < width; j++) {
+            // -- Data 16
+            unsigned short value16 = data16[width * i + j];
+            float h = (float)value16 / 65535.0F;
+
+            float worldX = (i - width / 2.0F);
+            float worldZ = (j - height / 2.0F);
+            float worldY = h * yScale - yShift;
+
+            vertices.push_back(worldX);
+            vertices.push_back(worldY);
+            vertices.push_back(worldZ);
+        }
+    }
+
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < height - 1; i++) {
+        for (unsigned int j = 0; j < width; j++) {
+            for (unsigned int k = 0; k < 2; k++)  // for each side of the strip
+            {
+                indices.push_back(j + width * (i + k));
+            }
+        }
+    }
+
+    terrainData.vertices = vertices;
+    terrainData.indices = indices;
+    terrainData.NUM_STRIPS = height - 1;
+    terrainData.NUM_VERTS_PER_STRIP = width * 2;
+
+    stbi_image_free(data16);
+
+    return terrainData;
+}
+    */

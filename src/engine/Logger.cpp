@@ -12,6 +12,7 @@
 #define BOLD "\033[1m"
 
 void Logger::Log(const std::string& msg, LogCategory category, LogLevel level) {
+#ifdef DEV_BUILD
     if (level < s_MinLogLevel)
         return;
 
@@ -19,6 +20,7 @@ void Logger::Log(const std::string& msg, LogCategory category, LogLevel level) {
               << CategoryToString(category) << "] " << RESET << msg << RESET << std::endl;
 
     g_ImGuiConsole.Log(msg);
+#endif
 }
 
 void Logger::Shader(const std::string& msg, LogLevel level) {

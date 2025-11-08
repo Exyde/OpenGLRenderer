@@ -19,9 +19,13 @@ Mémoire, fragmentation, récursivité de la forme, récurisvité de la mémoire
 
 
 ##  GDD
-- Fork mon propre moteur + faire un git
-- FPS Control 
+- FPS Control  : Ok
+- Quad, Cubes, Mesh Loading : Ok
 - Quad Generation with images loading on it
+- Load md files :
+- Load random textures from game folder and bind it to random quads :
+
+
 - Text Generation (maybe harder, but see if you find something) from md file
 - maybe even http request + scrapping...
 - 3D Basic Obj Model Loading (Eyes...) 

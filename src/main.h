@@ -15,6 +15,8 @@
 #include "engine/Engine.h"
 #include "game/Game.h"
 
+// #define DEV_BUILD
+
 constexpr glm::vec4 ColorWhite = glm::vec4(1.0);
 constexpr glm::vec4 ColorBlack = glm::vec4(0.0);
 constexpr glm::vec4 ColorGray = glm::vec4(0.5);

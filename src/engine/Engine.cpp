@@ -1,17 +1,13 @@
 #include "Engine.h"
 
-// -- Player
-const glm::vec2 PLAYER_SIZE(100.0F, 20.0f);
-const float PLAYER_VELOCITY(500.0f);
-const std::string PLAYER_TEXTURE = "player";
+Engine::~Engine() {}
 
 Engine::Engine(unsigned int width, unsigned int height)
     : State(EngineState::ACTIVE), Keys(), Width(width), Height(height) {
     LOG_INFO(LogCategory::Engine, "Creating Engine Mode...");
 }
 
-Engine::~Engine() {}
-
+#pragma region LoadingResources
 void Engine::LoadTextures() {
     // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", "skybox");
@@ -39,33 +35,18 @@ void Engine::LoadShaders() {
     // -- Shaders
     ResourceLoader::LoadShader("Shaders/vert.vs", "Shaders/frag.fs", nullptr, "phong");
     ResourceLoader::LoadShader("Shaders/grass.vs", "Shaders/grass.fs", nullptr, "grass");
-    ResourceLoader::LoadShader("Shaders/skybox.vs", "Shaders/skybox.fs", nullptr, "skybox");
     ResourceLoader::LoadShader("Shaders/light.vs", "Shaders/light.fs", nullptr, "light");
     ResourceLoader::LoadShader("Shaders/postprocess.vs", "Shaders/postprocess.fs", nullptr, "postProcess");
-    ResourceLoader::LoadShader("Shaders/water.vs", "Shaders/water.fs", nullptr, "water");
 
+    ResourceLoader::LoadShader("Shaders/skybox.vs", "Shaders/skybox.fs", nullptr, "skybox");
     ResourceLoader::GetShader("skybox").Use().SetInt("skybox", 0);
 }
 
 void LoadMeshes() {
     ResourceLoader::LoadModel("Resources/Models/backpack/backpack.obj", "backpack");
-    ResourceLoader::LoadModel("Resources/Models/Water/waterplane.obj", "water");
-    ResourceLoader::LoadModel("Resources/Models/WindWaker/Windfall/Windfall.obj", "mercantile");
-
-#ifdef WIND_WAKER  // -- TODO
-    wwModels.push_back(Model("Resources/Models/WindWaker/Ariel/lshand.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Crab/Crab.dae"));
-    wwModels.push_back(
-        Model("Resources/Models/WindWaker/HelmarocKing/"
-              "HelmarocKingMask.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Medoli/MedliWithHarp.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/PhantomSword/pg_sword.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Shield/Shield.obj"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Valoo/dr.dae"));
-    wwModels.push_back(Model("Resources/Models/WindWaker/Windfall/Windfall.obj"));
-#endif
 }
 
+#pragma endregion
 void Engine::InitStatics() {
     pointLightAmbient = glm::vec3(0.05f);
     pointLightDiffuse = glm::vec3(0.0f, 0.2f, 0.7f);
@@ -76,6 +57,12 @@ void Engine::InitStatics() {
     LightPosition = glm::vec3(-2.0f, 1.5F, 3.3F);
     cam = Camera(Vector3(0.0f, 0.0f, 0.0f));
     checkInterval = std::chrono::milliseconds(500);
+
+    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 }
 
 void Engine::InitOpenGlSettings() {
@@ -115,18 +102,6 @@ void Engine::Initialize() {
 
     // -- Setup Sprite Renderer -- Not used in 3D, legacy from Game :: Todo : Remove ?
     Renderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
-    // -- Create Player
-    glm::vec2 playerPos(this->Width / 2.0f - PLAYER_SIZE.x / 2.0F, this->Height - PLAYER_SIZE.y);
-    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceLoader::GetTexture2D(PLAYER_TEXTURE));
-
-    /// -- World Elements --- ?
-
-    // -- TODO : Move this
-    vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
-    vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
-    vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
-    vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
-    vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
@@ -219,7 +194,6 @@ void Engine::Initialize() {
 
 #pragma endregion
 
-    // -- Log
     LOG_INFO(LogCategory::Game, "Initialized !");
 }
 
@@ -283,6 +257,16 @@ void Engine::Update(float deltaTime) {
         }
     }
 
+#pragma region SunUpdate
+    // -- Transformed positions
+    float sunSpeed = deltaTime * userSunSpeed;
+    if (updateSun)
+        sunTheta += sunSpeed;
+    glm::vec3 sunYaw = glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
+    glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
+    offsetedLightPos = LightPosition + sunYaw + sunPitch;
+#pragma endregion
+
     World::Update(deltaTime);
 }
 
@@ -293,46 +277,12 @@ void Engine::Render(float deltaTime) {
         // -- Our Goal
         World::Render();
 
-#pragma region SunUpdate
-        // -- Transformed positions
-        float sunSpeed = deltaTime * userSunSpeed;
-        if (updateSun)
-            sunTheta += sunSpeed;
-        glm::vec3 sunYaw = glm::vec3(cos(sunTheta) * sunRadius, 0, sin(sunTheta) * sunRadius);
-        glm::vec3 sunPitch = glm::vec3(0, cos(sunTheta) * sunRadius, sin(sunTheta) * sunRadius);
-        auto offsetedLightPos = LightPosition + sunYaw + sunPitch;
-#pragma endregion
-#pragma region ImGui Begin
-        // -- UI IMGUI
-        // 1. New Frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-#pragma endregion
-#pragma region FIRST PASS
+#ifdef DEV_BUILD
+        BeginImGuiFrame();
+#endif
+        InitScenePass();
 
-        //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING
-        if (enablePostProcessing) {
-            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        } else {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        }
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
-
-        if (projectionModeSelection == 0) {
-            projectionMatrix =
-                glm::perspective(glm::radians(cam.Fov), (float)Width / (float)Height, NearPlane, FarPlane);
-        } else {
-            projectionMatrix = glm::ortho(0.0f, (float)Width, 0.0f, (float)Height, -1.0f, 1.0f);
-        }
-        glm::mat4 viewMatrix = cam.GetViewMatrix();
-        glm::mat4 modelMatrix = glm::mat4(1.0F);
-
-        // -- Textures Units ?
+        // -- Textures Units -- Binds for Basic boxes, but need to be upgraded.
         glActiveTexture(GL_TEXTURE0);
         ResourceLoader::GetTexture2D("diffuse").Bind();
         glActiveTexture(GL_TEXTURE1);
@@ -340,261 +290,20 @@ void Engine::Render(float deltaTime) {
         glActiveTexture(GL_TEXTURE2);
         ResourceLoader::GetTexture2D("emmisive").Bind();
 
-        // -- Phong Shader
-        auto phongShader = ResourceLoader::GetShader("phong");
-        phongShader.Use();
-        phongShader.SetMat4("view", viewMatrix);
-        phongShader.SetMat4("projection", projectionMatrix);
-        if (lightModeSelection == 1)
-            phongShader.SetBool("ToonShading", true);
-        else
-            phongShader.SetBool("ToonShading", false);
+        // -- Draw Scene
+        SetupPhongShader(viewMatrix, offsetedLightPos);
+        DrawGround();
+        DrawFloatingsCubes();
+        DrawBackpack();
+        DrawGrass(viewMatrix);
+        DrawLightsObjects(viewMatrix, offsetedLightPos);
+        DrawSkybox();
 
-        // -- Material
-        phongShader.SetInt("mat.diffuse", 0);
-        phongShader.SetInt("mat.specular", 1);
-        phongShader.SetInt("mat.emissive", 2);
-        phongShader.SetFloat("mat.shininess", 32.0F);
-
-        // -- User Data
-        phongShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-        phongShader.SetFloat("T", userLeftRight);
-        phongShader.SetVec3("ViewPos", cam.Position.GLM());
-
-        SetShaderLightsDatas(phongShader, offsetedLightPos);
-
-        //-- DrawGround
-        modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(10, 10, 10));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
-        phongShader.SetMat4("model", modelMatrix);
-        glBindVertexArray(CubeVAO);
-        OpenGlDraw(GL_TRIANGLES, 0, 36);
-
-        // -- Multiples Floating Cubes
-        glBindVertexArray(CubeVAO);
-        for (unsigned int i = 0; i < 10; i++) {
-            modelMatrix = glm::mat4(1.0f);
-            modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
-            float angle = 20.0f * i;
-            if (UI_rotateStuff) {
-                modelMatrix =
-                    glm::rotate(modelMatrix, glm::radians(angle + ElapsedTime() * 100), glm::vec3(1.0f, 0.3f, 0.5f));
-            }
-            phongShader.SetMat4("model", modelMatrix);
-
-            OpenGlDraw(GL_POINTS, 0, 36);
-        }
-
-        modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
-        phongShader.SetMat4("model", modelMatrix);
-        ResourceLoader::GetModel("backpack").Draw(phongShader);
-        ResourceLoader::GetModel("mercantile").Draw(phongShader);
-
-#ifdef WIND_WAKER
-        // Todo : Current WW Models Reload ? Sorte de cache
+        // -- Post Process
+        PostProcessPass();
+#ifdef DEV_BUILD
+        RenderImGUI();
 #endif
-
-        auto waterShader = ResourceLoader::GetShader("water");
-        waterShader.Use();
-        modelMatrix = glm::mat4(1.0F);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(1000.0f));
-        waterShader.SetMat4("model", modelMatrix);
-        waterShader.SetMat4("view", viewMatrix);
-        waterShader.SetMat4("projection", projectionMatrix);
-        waterShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-        // -- Water
-        ResourceLoader::GetModel("water").Draw(waterShader);
-
-        // -- Grass
-        auto grassShader = ResourceLoader::GetShader("grass");
-        grassShader.Use();
-        glActiveTexture(GL_TEXTURE0);
-        ResourceLoader::GetTexture2D("grass").Bind();
-        grassShader.SetMat4("view", viewMatrix);
-        grassShader.SetMat4("projection", projectionMatrix);
-        grassShader.SetInt("mat.diffuse", 0);
-        // -- User Data
-        grassShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-        grassShader.SetFloat("T", userLeftRight);
-        grassShader.SetVec3("ViewPos", cam.Position.GLM());
-        glBindVertexArray(QuadVAO);
-
-        for (unsigned int i = 0; i < vegetation.size(); i++) {
-            float grassCount = 8;
-            for (int rot = 0; rot < grassCount; rot++) {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, vegetation[i]);
-                float angle = (double)glm::two_pi<float>() / grassCount * rot;
-                model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-                grassShader.SetMat4("model", model);
-                OpenGlDraw(GL_TRIANGLES, 0, 6);
-            }
-        }
-
-        // -- Light Object -- //
-        auto lightShader = ResourceLoader::GetShader("light").Use();
-        glm::mat4 lightModel = glm::mat4(1.0f);
-        lightModel = glm::translate(lightModel, offsetedLightPos);
-        lightModel = glm::scale(lightModel, glm::vec3(25.0f));
-        lightShader.SetMat4("model", lightModel);
-        lightShader.SetMat4("view", viewMatrix);
-        lightShader.SetMat4("projection", projectionMatrix);
-        lightShader.SetVec3("LightPos", offsetedLightPos);
-        lightShader.SetVec3("LightColor",
-                            Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
-        glBindVertexArray(lightVAO);
-        OpenGlDraw(GL_TRIANGLES, 0, 36);
-
-        for (int i = 0; i < 4; i++) {
-            lightModel = glm::mat4(1.0F);
-            lightModel = glm::translate(lightModel, pointLightPositions[i]);
-            lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-            lightShader.SetMat4("model", lightModel);
-            lightShader.SetVec3("LightPos", pointLightPositions[i]);
-            lightShader.SetVec3("LightColor",
-                                Vector3(pointLightDiffuse[0], pointLightDiffuse[1], pointLightDiffuse[2]).GLM());
-
-            OpenGlDraw(GL_TRIANGLES, 0, 36);
-        }
-
-        // -- Skybox
-        glDepthFunc(GL_LEQUAL);
-        auto skyboxShader = ResourceLoader::GetShader("skybox").Use();
-        glBindVertexArray(skyboxVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        glm::mat4 skyboxViewWithoutTranslation = glm::mat4(glm::mat3(cam.GetViewMatrix()));
-        skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
-        skyboxShader.SetMat4("projection", projectionMatrix);
-        OpenGlDraw(GL_TRIANGLES, 0, 36);
-        glDepthFunc(GL_LESS);
-
-#pragma endregion
-
-#pragma region SECOND PASS POST PROCESS
-        if (enablePostProcessing) {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
-            glClear(GL_COLOR_BUFFER_BIT);
-            auto postProcessShader = ResourceLoader::GetShader("postProcess");
-            postProcessShader.Use();
-            postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
-            postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
-            postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
-            postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
-            postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
-            postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
-            postProcessShader.SetInt("uKernelType", postFX.kernelType);
-            postProcessShader.SetInt("uCorrectGamma", postFX.correctGamma);
-
-            glBindVertexArray(ndcQuadVAO);
-            glDisable(GL_DEPTH_TEST);
-            glBindTexture(GL_TEXTURE_2D, renderTexture);
-            OpenGlDraw(GL_TRIANGLES, 0, 6);
-        }
-
-#pragma endregion
-
-#pragma region IMGUI
-        ImGui::Begin("Scene");
-        ImGui::End();
-
-        ImGui::Begin("Buttons");
-        if (ImGui::Button("Load Model (.obj)")) {
-        }
-        ImGui::End();
-
-        ImGui::Begin("Inspector");
-
-        if (ImGui::CollapsingHeader("Performance")) {
-            ImGui::Text("FPS : %1f", currentFPS);
-            ImGui::Text("FrameTime: %3f ms", 1000.0 / currentFPS);
-            ImGui::Text("DrawCall: %d", DrawCallsCounter);
-            ImGui::Text("Instancing: Incoming.");
-        }
-
-        if (ImGui::CollapsingHeader("User Settings")) {
-            if (ImGui ::Combo("Light Model", &lightModeSelection, lightModeSelected, IM_ARRAYSIZE(lightModeSelected))) {
-            }
-
-            ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
-            ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
-        }
-
-        if (ImGui::CollapsingHeader("Post Processing")) {
-            ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
-            ImGui::Checkbox("Invert Colors", &postFX.enableInvert);
-            ImGui::Checkbox("Grayscale", &postFX.enableGrayscale);
-
-            ImGui::Separator();
-
-            ImGui::Checkbox("Chromatic Aberration", &postFX.enableChromaticAberration);
-            if (postFX.enableChromaticAberration)
-                ImGui::SliderFloat("Chroma Intensity", &postFX.chromaIntensity, 0.0f, 0.02f);
-
-            ImGui::Separator();
-
-            ImGui::Checkbox("Correct Gamma", &postFX.correctGamma);
-
-            ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
-            if (postFX.enableKernel) {
-                const char* kernels[] = {"Blur", "Sharpen", "BoxBlur", "Emboss"};
-                ImGui::Combo("Kernel Type", &postFX.kernelType, kernels, IM_ARRAYSIZE(kernels));
-            }
-        }
-
-        if (ImGui::CollapsingHeader("Sun")) {
-            ImGui::Checkbox("Update Sun", &updateSun);
-            ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0, glm::two_pi<float>());
-            ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
-            ImGui::SliderFloat("Sun Speed", &userSunSpeed, 0.0, 1.0f);
-        }
-
-        if (ImGui::CollapsingHeader("Meshes & Models")) {
-            ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
-            if (ImGui::Combo("Choose View Mode", &viewMode, viewModes, IM_ARRAYSIZE(viewModes))) {
-                if (viewMode == 0) {
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                } else if (viewMode == 1) {
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                }
-            }
-            ImGui ::Combo("Choose Object to Draw", &objectViewSelection, objectSelected, IM_ARRAYSIZE(objectSelected));
-
-            ImGui ::Combo("Choose Wind Waker Asset", &windWakerSelection, windWakerSelected,
-                          IM_ARRAYSIZE(windWakerSelected));
-        }
-
-        if (ImGui::CollapsingHeader("Lights")) {
-            ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
-            ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
-            ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
-            ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
-            ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
-            ImGui::ColorEdit3("Specular Light Color", specularLightColor);
-        }
-
-        if (ImGui::CollapsingHeader("Camera Settings")) {
-            ImGui::SliderFloat("Camera Speed", &cam.MovementSpeed, Camera::MIN_SPEED, Camera::MAX_SPEED);
-            if (ImGui ::Combo("Camera Mode", &cameraModeSelection, cameraModeSelected,
-                              IM_ARRAYSIZE(cameraModeSelected))) {
-                cam.type = (CameraType)cameraModeSelection;
-            }
-            if (ImGui ::Combo("Projection", &projectionModeSelection, projectionModeSelected,
-                              IM_ARRAYSIZE(projectionModeSelected))) {
-            }
-        }
-
-        g_ImGuiConsole.Draw("Console");
-
-        ImGui::End();
-
-// -- UI Render
-#pragma endregion
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }
 
@@ -602,58 +311,6 @@ void Engine::Exit() {
     LOG("Exit engine...");
     glDeleteFramebuffers(1, &framebuffer);
     ResourceLoader::Clear();
-}
-
-TerrainData GetTerrainDataFromHeightMap(const char* filePath) {
-    TerrainData terrainData;
-
-    int width, height, channels;
-    unsigned short* data16 = stbi_load_16(filePath, &width, &height, &channels, 0);
-
-    if (data16) {
-        LOG(" [Terrain] - LoadHeightmap at", filePath, " -- W: ", width, " --H: ", height, " --Channels: ", channels);
-    } else {
-        LOG_ERROR(LogCategory::Engine, "Failed to load heightmap data:", filePath);
-    }
-
-    std::vector<float> vertices;
-    float yScale = 50.0f;
-    float yShift = 0.0F;
-
-    for (unsigned int i = 0; i < height; i++) {
-        for (unsigned int j = 0; j < width; j++) {
-            // -- Data 16
-            unsigned short value16 = data16[width * i + j];
-            float h = (float)value16 / 65535.0F;
-
-            float worldX = (i - width / 2.0F);
-            float worldZ = (j - height / 2.0F);
-            float worldY = h * yScale - yShift;
-
-            vertices.push_back(worldX);
-            vertices.push_back(worldY);
-            vertices.push_back(worldZ);
-        }
-    }
-
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < height - 1; i++) {
-        for (unsigned int j = 0; j < width; j++) {
-            for (unsigned int k = 0; k < 2; k++)  // for each side of the strip
-            {
-                indices.push_back(j + width * (i + k));
-            }
-        }
-    }
-
-    terrainData.vertices = vertices;
-    terrainData.indices = indices;
-    terrainData.NUM_STRIPS = height - 1;
-    terrainData.NUM_VERTS_PER_STRIP = width * 2;
-
-    stbi_image_free(data16);
-
-    return terrainData;
 }
 
 void Engine::SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
@@ -747,4 +404,283 @@ unsigned int LoadCubeMap(std::vector<std::string> facePaths) {
 
     stbi_set_flip_vertically_on_load(true);
     return textureID;
+}
+
+void Engine::InitScenePass() {
+    //-- FIRST PASS -- NORMAL SCENE BUT OF SCREEN RENDERING
+    if (enablePostProcessing) {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    } else {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0F);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    if (projectionModeSelection == 0) {
+        projectionMatrix = glm::perspective(glm::radians(cam.Fov), (float)Width / (float)Height, NearPlane, FarPlane);
+    } else {
+        projectionMatrix = glm::ortho(0.0f, (float)Width, 0.0f, (float)Height, -1.0f, 1.0f);
+    }
+
+    viewMatrix = cam.GetViewMatrix();
+}
+
+void Engine::DrawFloatingsCubes() {
+    // Todo : Bind correct textures
+    // -- Multiples Floating Cubes
+    auto phongShader = ResourceLoader::GetShader("phong");
+    glBindVertexArray(CubeVAO);
+    for (unsigned int i = 0; i < 10; i++) {
+        auto modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, cubePositions[i]);
+        float angle = 20.0f * i;
+        if (UI_rotateStuff) {
+            modelMatrix =
+                glm::rotate(modelMatrix, glm::radians(angle + ElapsedTime() * 100), glm::vec3(1.0f, 0.3f, 0.5f));
+        }
+        phongShader.SetMat4("model", modelMatrix);
+
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
+    }
+}
+
+void Engine::DrawBackpack() {
+    auto modelMatrix = glm::mat4(1.0F);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
+    auto phongShader = ResourceLoader::GetShader("phong");
+    phongShader.SetMat4("model", modelMatrix);
+    ResourceLoader::GetModel("backpack").Draw(phongShader);
+}
+
+void Engine::DrawGround() {
+    //-- DrawGround
+    auto modelMatrix = glm::mat4(1.0F);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(10, 10, 10));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1, 0));
+    auto phongShader = ResourceLoader::GetShader("phong");
+    phongShader.SetMat4("model", modelMatrix);
+    glBindVertexArray(CubeVAO);
+    OpenGlDraw(GL_TRIANGLES, 0, 36);
+}
+
+void Engine::DrawGrass(glm::mat4 viewMatrix) {
+    // -- Grass
+    auto grassShader = ResourceLoader::GetShader("grass");
+    grassShader.Use();
+    glActiveTexture(GL_TEXTURE0);
+    ResourceLoader::GetTexture2D("grass").Bind();
+    grassShader.SetMat4("view", viewMatrix);
+    grassShader.SetMat4("projection", projectionMatrix);
+    grassShader.SetInt("mat.diffuse", 0);
+    // -- User Data
+    grassShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+    grassShader.SetFloat("T", userLeftRight);
+    grassShader.SetVec3("ViewPos", cam.Position.GLM());
+    glBindVertexArray(QuadVAO);
+
+    for (unsigned int i = 0; i < vegetation.size(); i++) {
+        float grassCount = 8;
+        for (int rot = 0; rot < grassCount; rot++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, vegetation[i]);
+            float angle = (double)glm::two_pi<float>() / grassCount * rot;
+            model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+            grassShader.SetMat4("model", model);
+            OpenGlDraw(GL_TRIANGLES, 0, 6);
+        }
+    }
+}
+
+void Engine::DrawLightsObjects(glm::mat4 viewMatrix, glm::vec3 offsetedLightPos) {
+    // -- Light Object -- //
+    auto lightShader = ResourceLoader::GetShader("light").Use();
+    glm::mat4 lightModel = glm::mat4(1.0f);
+    lightModel = glm::translate(lightModel, offsetedLightPos);
+    lightModel = glm::scale(lightModel, glm::vec3(25.0f));
+    lightShader.SetMat4("model", lightModel);
+    lightShader.SetMat4("view", viewMatrix);
+    lightShader.SetMat4("projection", projectionMatrix);
+    lightShader.SetVec3("LightPos", offsetedLightPos);
+    lightShader.SetVec3("LightColor", Vector3(diffuseLightColor[0], diffuseLightColor[1], diffuseLightColor[2]).GLM());
+    glBindVertexArray(lightVAO);
+    OpenGlDraw(GL_TRIANGLES, 0, 36);
+
+    for (int i = 0; i < 4; i++) {
+        lightModel = glm::mat4(1.0F);
+        lightModel = glm::translate(lightModel, pointLightPositions[i]);
+        lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+        lightShader.SetMat4("model", lightModel);
+        lightShader.SetVec3("LightPos", pointLightPositions[i]);
+        lightShader.SetVec3("LightColor",
+                            Vector3(pointLightDiffuse[0], pointLightDiffuse[1], pointLightDiffuse[2]).GLM());
+
+        OpenGlDraw(GL_TRIANGLES, 0, 36);
+    }
+}
+
+void Engine::DrawSkybox() {
+    // -- Skybox
+    glDepthFunc(GL_LEQUAL);
+    auto skyboxShader = ResourceLoader::GetShader("skybox").Use();
+    glBindVertexArray(skyboxVAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+    glm::mat4 skyboxViewWithoutTranslation = glm::mat4(glm::mat3(cam.GetViewMatrix()));
+    skyboxShader.SetMat4("view", skyboxViewWithoutTranslation);
+    skyboxShader.SetMat4("projection", projectionMatrix);
+    OpenGlDraw(GL_TRIANGLES, 0, 36);
+    glDepthFunc(GL_LESS);
+}
+
+void Engine::SetupPhongShader(glm::mat4 viewMatrix, glm::vec3 offsetedLightPos) {
+    // -- Phong Shader
+    auto phongShader = ResourceLoader::GetShader("phong");
+    phongShader.Use();
+    phongShader.SetMat4("view", viewMatrix);
+    phongShader.SetMat4("projection", projectionMatrix);
+    if (lightModeSelection == 1)
+        phongShader.SetBool("ToonShading", true);
+    else
+        phongShader.SetBool("ToonShading", false);
+
+    // -- Material
+    phongShader.SetInt("mat.diffuse", 0);
+    phongShader.SetInt("mat.specular", 1);
+    phongShader.SetInt("mat.emissive", 2);
+    phongShader.SetFloat("mat.shininess", 32.0F);
+
+    // -- User Data
+    phongShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+    phongShader.SetFloat("T", userLeftRight);
+    phongShader.SetVec3("ViewPos", cam.Position.GLM());
+
+    SetShaderLightsDatas(phongShader, offsetedLightPos);
+}
+
+void Engine::PostProcessPass() {
+    if (enablePostProcessing) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(1.0f, 1.0F, 1.0F, 1.0F);
+        glClear(GL_COLOR_BUFFER_BIT);
+        auto postProcessShader = ResourceLoader::GetShader("postProcess");
+        postProcessShader.Use();
+        postProcessShader.SetFloat("uTime", ElapsedTime() * userUpDown);
+        postProcessShader.SetBool("uEnableChroma", postFX.enableChromaticAberration);
+        postProcessShader.SetFloat("uChromaIntensity", postFX.chromaIntensity);
+        postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
+        postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
+        postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
+        postProcessShader.SetInt("uKernelType", postFX.kernelType);
+        postProcessShader.SetInt("uCorrectGamma", postFX.correctGamma);
+
+        glBindVertexArray(ndcQuadVAO);
+        glDisable(GL_DEPTH_TEST);
+        glBindTexture(GL_TEXTURE_2D, renderTexture);
+        OpenGlDraw(GL_TRIANGLES, 0, 6);
+    }
+}
+
+void Engine::BeginImGuiFrame() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+}
+void Engine::RenderImGUI() {
+#pragma region IMGUI
+    ImGui::Begin("Scene");
+    ImGui::End();
+
+    ImGui::Begin("Buttons");
+    if (ImGui::Button("Load Model (.obj)")) {
+    }
+    ImGui::End();
+
+    ImGui::Begin("Inspector");
+
+    if (ImGui::CollapsingHeader("Performance")) {
+        ImGui::Text("FPS : %1f", currentFPS);
+        ImGui::Text("FrameTime: %3f ms", 1000.0 / currentFPS);
+        ImGui::Text("DrawCall: %d", DrawCallsCounter);
+        ImGui::Text("Instancing: Incoming.");
+    }
+
+    if (ImGui::CollapsingHeader("User Settings")) {
+        if (ImGui ::Combo("Light Model", &lightModeSelection, lightModeSelected, IM_ARRAYSIZE(lightModeSelected))) {
+        }
+
+        ImGui::SliderFloat("TimeScale", &userUpDown, 0.0, 1.0);
+        ImGui::SliderFloat("User T", &userLeftRight, 0.0, 1.0);
+    }
+
+    if (ImGui::CollapsingHeader("Post Processing")) {
+        ImGui::Checkbox("Enable Post Processing", &enablePostProcessing);
+        ImGui::Checkbox("Invert Colors", &postFX.enableInvert);
+        ImGui::Checkbox("Grayscale", &postFX.enableGrayscale);
+
+        ImGui::Separator();
+
+        ImGui::Checkbox("Chromatic Aberration", &postFX.enableChromaticAberration);
+        if (postFX.enableChromaticAberration)
+            ImGui::SliderFloat("Chroma Intensity", &postFX.chromaIntensity, 0.0f, 0.02f);
+
+        ImGui::Separator();
+
+        ImGui::Checkbox("Correct Gamma", &postFX.correctGamma);
+
+        ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
+        if (postFX.enableKernel) {
+            const char* kernels[] = {"Blur", "Sharpen", "BoxBlur", "Emboss"};
+            ImGui::Combo("Kernel Type", &postFX.kernelType, kernels, IM_ARRAYSIZE(kernels));
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Sun")) {
+        ImGui::Checkbox("Update Sun", &updateSun);
+        ImGui::SliderFloat("Sun Theta", &sunTheta, 0.0, glm::two_pi<float>());
+        ImGui::SliderFloat("Sun Radius", &sunRadius, 1.0, 500.0);
+        ImGui::SliderFloat("Sun Speed", &userSunSpeed, 0.0, 1.0f);
+    }
+
+    if (ImGui::CollapsingHeader("Meshes & Models")) {
+        ImGui::Checkbox("Rotate Stuffs", &UI_rotateStuff);
+        if (ImGui::Combo("Choose View Mode", &viewMode, viewModes, IM_ARRAYSIZE(viewModes))) {
+            if (viewMode == 0) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            } else if (viewMode == 1) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+        }
+        ImGui ::Combo("Choose Object to Draw", &objectViewSelection, objectSelected, IM_ARRAYSIZE(objectSelected));
+    }
+
+    if (ImGui::CollapsingHeader("Lights")) {
+        ImGui::SliderFloat("FlashLight Radius", &flashLightRadius, 1.0, 20.0f);
+        ImGui::SliderFloat("Attenuation Linear ", &attenuation[1], 0.014, 0.7);
+        ImGui::SliderFloat("Attenuation Quadratic ", &attenuation[2], 0.000007, 1.8);
+        ImGui::ColorEdit3("Ambient Light Color", ambientLightColor);
+        ImGui::ColorEdit3("Diffuse Light Color", diffuseLightColor);
+        ImGui::ColorEdit3("Specular Light Color", specularLightColor);
+    }
+
+    if (ImGui::CollapsingHeader("Camera Settings")) {
+        ImGui::SliderFloat("Camera Speed", &cam.MovementSpeed, Camera::MIN_SPEED, Camera::MAX_SPEED);
+        if (ImGui ::Combo("Camera Mode", &cameraModeSelection, cameraModeSelected, IM_ARRAYSIZE(cameraModeSelected))) {
+            cam.type = (CameraType)cameraModeSelection;
+        }
+        if (ImGui ::Combo("Projection", &projectionModeSelection, projectionModeSelected,
+                          IM_ARRAYSIZE(projectionModeSelected))) {
+        }
+    }
+
+    g_ImGuiConsole.Draw("Console");
+
+    ImGui::End();
+
+// -- UI Render
+#pragma endregion
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

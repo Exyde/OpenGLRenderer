@@ -22,6 +22,8 @@
 #include "glm/glm.hpp"
 #include "stb_image.h"
 
+#define DEV_BUILD
+
 struct PostProcessSettings {
     bool enableChromaticAberration = false;
     float chromaIntensity = 0.02f;

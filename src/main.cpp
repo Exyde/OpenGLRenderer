@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define DEV_BUILD
+
 int main() {
 #pragma region Init
 

@@ -11,6 +11,8 @@
 #define WHITE "\033[37m"
 #define BOLD "\033[1m"
 
+#define DEV_BUILD
+
 void Logger::Log(const std::string& msg, LogCategory category, LogLevel level) {
 #ifdef DEV_BUILD
     if (level < s_MinLogLevel)

@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Core Images
+Resources/Textures/CoreImages/

@@ -8,7 +8,32 @@ Engine::Engine(unsigned int width, unsigned int height)
 }
 
 #pragma region LoadingResources
+
+std::vector<std::string> GetImagesPath(const std::string& rootDir) {
+    std::vector<std::string> paths;
+
+    for (const auto& entry : fs::recursive_directory_iterator(rootDir)) {
+        if (entry.is_regular_file()) {
+            auto ext = entry.path().extension().string();
+            if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
+                paths.push_back(entry.path().string());
+            }
+        }
+    }
+    return paths;
+}
+
 void Engine::LoadTextures() {
+    // -- Load Jam Textures from main root
+    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages");
+    int imageID = 0;
+
+    for (const auto& path : imagesPaths) {
+        std::string filename = std::filesystem::path(path).stem().string();
+        ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+    }
+    LOG("FOUND IMAGES : ", imagesPaths.size());
+
     // -- Load Textures
     ResourceLoader::LoadTexture2D("Resources/Textures/skybox/back.png", "skybox");
     ResourceLoader::LoadTexture2D("Resources/Textures/grass.png", "grass", true);

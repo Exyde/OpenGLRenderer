@@ -5,21 +5,20 @@ Texture2D::Texture2D()
       Height(0),
       InternalFormat(GL_RGB),
       ImageFormat(GL_RGB),
-      Wrap_S(GL_REPEAT),
-      Wrap_T(GL_REPEAT),
+      Wrap_S(GL_CLAMP_TO_BORDER),
+      Wrap_T(GL_CLAMP_TO_BORDER),
       Filter_Min(GL_LINEAR),
       Filter_Mag(GL_LINEAR) {
     glGenTextures(1, &this->ID);
 }
 
-void Texture2D::Generate(unsigned int width, unsigned int height,
-                         unsigned char* data) {
+void Texture2D::Generate(unsigned int width, unsigned int height, unsigned char* data) {
     this->Width = width;
     this->Height = height;
 
     glBindTexture(GL_TEXTURE_2D, this->ID);
-    glTexImage2D(GL_TEXTURE_2D, 0, this->InternalFormat, this->Width,
-                 this->Height, 0, this->ImageFormat, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, this->InternalFormat, this->Width, this->Height, 0, this->ImageFormat,
+                 GL_UNSIGNED_BYTE, data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->Wrap_S);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->Wrap_T);
@@ -29,4 +28,6 @@ void Texture2D::Generate(unsigned int width, unsigned int height,
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::Bind() const { glBindTexture(GL_TEXTURE_2D, this->ID); }
+void Texture2D::Bind() const {
+    glBindTexture(GL_TEXTURE_2D, this->ID);
+}

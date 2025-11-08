@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../engine/MeshRenderer.h"
-#include "../engine/SpriteRenderer.h"
-#include "../engine/Texture2D.h"
+#include "MeshRenderer.h"
+#include "SpriteRenderer.h"
+#include "Texture2D.h"
 #include "glm/glm.hpp"
 
 class GameObject {

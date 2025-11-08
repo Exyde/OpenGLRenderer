@@ -119,10 +119,7 @@ void Engine::InitOpenGlSettings() {
 void Engine::Initialize() {
     // -- Log
     LOG_INFO(LogCategory::Engine, "Initializing Engine Mode...");
-
     stbi_set_flip_vertically_on_load(true);
-
-    // -- Create Projection Matrix // -- Todo : Remove this ?
     float w = static_cast<float>(this->Width);
     float h = static_cast<float>(this->Height);
 
@@ -134,7 +131,14 @@ void Engine::Initialize() {
 
     Renderer = new MeshRenderer(ResourceLoader::GetShader("phong"));
     sprRenderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
-    TestObj = new GameObject();
+
+    for (int i = 0; i < 50; i++) {
+        glm::vec3 pos(i * 10, i * 5, 1);
+        glm::vec3 size(10.0);
+
+        CoreImagesPlanes.push_back(
+            new GameObject(pos, size, Texture2D(), glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec3(0.1)));
+    }
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
 
@@ -336,7 +340,8 @@ void Engine::Render(float deltaTime) {
             DrawSkybox();
         }
 
-        TestObj->Draw(*Renderer);
+        // -- Render all Core Images
+        for (auto o : CoreImagesPlanes) o->Draw(*Renderer);
 
         // -- Post Process
         PostProcessPass();

@@ -216,17 +216,6 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj: C:/Users/youne/Desktop/
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec3.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec4.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vector_relational.hpp \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h \
@@ -467,6 +456,16 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Engine.cpp.obj: C:/Users/youne/Desktop/
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Camera.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Engine.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/World.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/WorldObject.h \
@@ -689,12 +688,10 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: C:/Users/youne/Deskt
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
@@ -933,7 +930,9 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/GameLevel.cpp.obj: C:/Users/youne/Deskt
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameLevel.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.cpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/KHR/khrplatform.h \
@@ -1149,17 +1148,6 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: C:/Users/youne/Desk
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec3.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec4.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vector_relational.hpp \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
   C:/msys64/mingw64/include/_mingw.h \
@@ -1395,7 +1383,18 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/GameObject.cpp.obj: C:/Users/youne/Desk
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/Logger.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.cpp \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
@@ -3050,17 +3049,6 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: C:/Users/youne/Deskt
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec3.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec4.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vector_relational.hpp \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
   C:/msys64/mingw64/include/_mingw.h \
@@ -3297,7 +3285,18 @@ CMakeFiles/OpenGLRenderer.dir/src/engine/Particles.cpp.obj: C:/Users/youne/Deskt
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Particles.h
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Particles.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h
 
 CMakeFiles/OpenGLRenderer.dir/src/engine/PostProcessor.cpp.obj: C:/Users/youne/Desktop/OpenGLRenderer/src/engine/PostProcessor.cpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/KHR/khrplatform.h \
@@ -8453,17 +8452,6 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec3.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec4.hpp \
   C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vector_relational.hpp \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
-  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/stb_image.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imconfig.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h \
@@ -8707,6 +8695,16 @@ CMakeFiles/OpenGLRenderer.dir/src/main.cpp.obj: C:/Users/youne/Desktop/OpenGLRen
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Camera.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Engine.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Logger.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ResourceLoader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h \
+  C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/World.h \
   C:/Users/youne/Desktop/OpenGLRenderer/src/engine/WorldObject.h \
@@ -9444,43 +9442,23 @@ C:/Users/youne/Desktop/OpenGLRenderer/include/glm/vec4.hpp:
 
 C:/msys64/mingw64/include/c++/15.2.0/x86_64-w64-mingw32/bits/gthr-default.h:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h:
+C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h:
 
 C:/msys64/mingw64/include/_mingw.h:
 
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h:
-
-C:/msys64/mingw64/include/ddeml.h:
-
-C:/msys64/mingw64/include/c++/15.2.0/bits/hashtable.h:
-
-C:/msys64/mingw64/include/c++/15.2.0/codecvt:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h:
-
-C:/msys64/mingw64/include/winsock.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h:
-
-C:/msys64/mingw64/include/c++/15.2.0/bits/ptr_traits.h:
-
-C:/msys64/mingw64/include/combaseapi.h:
-
-C:/msys64/mingw64/include/_mingw_off_t.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h:
-
-C:/Users/youne/Desktop/OpenGLRenderer/src/imgui/imgui_impl_glfw.h:
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ImGuiConsole.h:
 
 C:/msys64/mingw64/include/_mingw_mac.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/node_handle.h:
+
+C:/msys64/mingw64/include/c++/15.2.0/bits/ptr_traits.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/ShaderReloader.h:
+
+C:/msys64/mingw64/include/combaseapi.h:
+
+C:/msys64/mingw64/include/_mingw_off_t.h:
 
 C:/msys64/mingw64/include/_mingw_secapi.h:
 
@@ -9565,6 +9543,12 @@ C:/msys64/mingw64/include/c++/15.2.0/bits/locale_classes.tcc:
 C:/msys64/mingw64/include/c++/15.2.0/bits/functexcept.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/hash_bytes.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Mesh.h:
+
+C:/msys64/mingw64/include/ddeml.h:
+
+C:/msys64/mingw64/include/c++/15.2.0/bits/hashtable.h:
 
 C:/msys64/mingw64/include/c++/15.2.0/bits/stl_construct.h:
 
@@ -9675,6 +9659,10 @@ C:/msys64/mingw64/include/c++/15.2.0/cctype:
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameLevel.cpp:
 
 C:/msys64/mingw64/include/c++/15.2.0/climits:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/MeshRenderer.h:
+
+C:/msys64/mingw64/include/c++/15.2.0/codecvt:
 
 C:/msys64/mingw64/include/c++/15.2.0/concepts:
 
@@ -9889,6 +9877,16 @@ C:/msys64/mingw64/include/pshpack2.h:
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Camera.h:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/GameObject.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Model.h:
+
+C:/msys64/mingw64/include/winsock.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Shader.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/SpriteRenderer.h:
+
+C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Texture2D.h:
 
 C:/Users/youne/Desktop/OpenGLRenderer/src/engine/Vector.h:
 

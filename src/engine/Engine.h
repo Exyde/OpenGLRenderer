@@ -79,6 +79,7 @@ class Engine {
     unsigned int Width, Height;
 
     GameObject* Player;
+    std::vector<GameObject*> CoreImagesPlanes;
     MeshRenderer* Renderer;
     SpriteRenderer* sprRenderer;
     PostProcessSettings postFX;

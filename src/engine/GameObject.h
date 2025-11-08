@@ -18,7 +18,7 @@ class GameObject {
     // -- Methods
     GameObject();
     GameObject(glm::vec3 pos, glm::vec3 size, Texture2D sprite, glm::vec4 color = glm::vec4(1.0f),
-               glm::vec3 velocity = glm::vec3(0.0f), MeshPrimitive meshType = MeshPrimitive::Quad);
+               glm::vec3 velocity = glm::vec3(0.0f), MeshPrimitive meshType = MeshPrimitive::Cube);
     ~GameObject();
 
     virtual void Draw(SpriteRenderer& renderer);

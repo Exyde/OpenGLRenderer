@@ -28,12 +28,12 @@ std::vector<std::string> GetImagesPath(const std::string& rootDir) {
 
 void Engine::LoadTextures() {
     // -- Load Jam Textures from main root
-    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages/Art");
+    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages/Nature");
     int imageID = 0;
 
     for (const auto& path : imagesPaths) {
         std::string filename = std::filesystem::path(path).stem().string();
-        // ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+        ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
     }
     LOG("FOUND IMAGES : ", imagesPaths.size());
 
@@ -136,8 +136,8 @@ void Engine::Initialize() {
         glm::vec3 pos(i * 10, i * 5, 1);
         glm::vec3 size(10.0);
 
-        CoreImagesPlanes.push_back(
-            new GameObject(pos, size, Texture2D(), glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec3(0.1)));
+        CoreImagesPlanes.push_back(new GameObject(pos, size, ResourceLoader::GetTexture2D("skybox"),
+                                                  glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec3(0.1)));
     }
 
 #pragma region CUBE AND LIGHTS VAOS VBOS

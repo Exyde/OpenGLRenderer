@@ -6,6 +6,8 @@
   - [Intro : Blinn-Phong](#intro--blinn-phong)
   - [Gamma Correction](#gamma-correction)
   - [Shadows](#shadows)
+    - [Shadow Mapping](#shadow-mapping)
+    - [Point Shadow](#point-shadow)
   - [Normal Mapping](#normal-mapping)
   - [HDR](#hdr)
   - [Bloom](#bloom)
@@ -79,6 +81,13 @@ vec3 diffuseColor = pow (texture(diffuse, UV).rgb, vec3(gamma)); // manual corre
 ``` 
 
 ## Shadows
+
+### Shadow Mapping
+Of course, shadows are absence of light, due to occlusion. When a light ray get blocked by an object, all hidden objects are actually in shadows.
+We'll start with Shadow Mapping, which is kinda easy, don't cost that much, and can be extend into Omnidirectionnal Shadow Maps or [Cascaded Shadow Maps](https://learnopengl.com/Guest-Articles/2021/CSM)
+
+
+### Point Shadow
 ## Normal Mapping
 ## HDR
 ## Bloom

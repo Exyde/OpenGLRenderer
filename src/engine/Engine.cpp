@@ -1,7 +1,8 @@
 #include "Engine.h"
 
-GameObject* TestObj;
-MeshRenderer* Renderer;
+// -- Randomness
+std::random_device rd;
+std::mt19937 gen(rd());
 
 Engine::~Engine() {}
 
@@ -15,11 +16,17 @@ Engine::Engine(unsigned int width, unsigned int height)
 std::vector<std::string> GetImagesPath(const std::string& rootDir) {
     std::vector<std::string> paths;
 
+    int i = 0;
+    int max = 40;
+
     for (const auto& entry : fs::recursive_directory_iterator(rootDir)) {
+        if (i >= max)
+            break;
         if (entry.is_regular_file()) {
             auto ext = entry.path().extension().string();
-            if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
+            if (ext == ".jpeg" || ext == ".png" /*|| ext == ".jpeg"*/) {
                 paths.push_back(entry.path().string());
+                i++;
             }
         }
     }
@@ -28,12 +35,13 @@ std::vector<std::string> GetImagesPath(const std::string& rootDir) {
 
 void Engine::LoadTextures() {
     // -- Load Jam Textures from main root
-    auto imagesPaths = GetImagesPath("Resources/Textures/CoreImages/Nature");
+    auto imagesPaths = GetImagesPath("Resources/Textures/Resized/256/");
     int imageID = 0;
 
     for (const auto& path : imagesPaths) {
         std::string filename = std::filesystem::path(path).stem().string();
         ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+        CoreImagesKeys.push_back(filename);
     }
     LOG("FOUND IMAGES : ", imagesPaths.size());
 
@@ -132,12 +140,17 @@ void Engine::Initialize() {
     Renderer = new MeshRenderer(ResourceLoader::GetShader("phong"));
     sprRenderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
+    std::uniform_int_distribution<> distrib(0, CoreImagesKeys.size() - 1);
+
     for (int i = 0; i < 50; i++) {
-        glm::vec3 pos(i * 10, i * 5, 1);
+        glm::vec3 pos(i * 10, 1, 1);
         glm::vec3 size(10.0);
 
-        CoreImagesPlanes.push_back(new GameObject(pos, size, ResourceLoader::GetTexture2D("skybox"),
-                                                  glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec3(0.1)));
+        std::string key = CoreImagesKeys[distrib(gen)];
+        auto texRef = ResourceLoader::GetTexture2D(key);
+        auto tint = glm::vec4(1.0, 0.0, 0.0, 1.0);
+
+        CoreImagesPlanes.push_back(new GameObject(pos, size, texRef, tint, glm::vec3(0.0)));
     }
 
 #pragma region CUBE AND LIGHTS VAOS VBOS

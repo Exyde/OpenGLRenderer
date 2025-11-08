@@ -21,15 +21,14 @@ Mémoire, fragmentation, récursivité de la forme, récurisvité de la mémoire
 ##  GDD
 - FPS Control  : Ok
 - Quad, Cubes, Mesh Loading : Ok
+- Randomiser la pose des quads
 - Generate level from file with full Cubes // ground like things
 - Filtrer les images (Dithering, blur, post process...)
 - Ptet des quads full randoms avec la capacité de voler en vrai ?
-- Load md files :
-- Load random textures from game folder and bind it to random quads :
 - Sound de Sundae ou les miens pour rester dans le core core (+ remix / randomisation idk)
-- - On va avoir un pb de texture loading at some point
+- Puis on voit
 
-
+- Load md files :
 - Text Generation (maybe harder, but see if you find something) from md file
 - maybe even http request + scrapping...
 - 3D Basic Obj Model Loading (Eyes...) 

@@ -9,7 +9,7 @@ GameObject::GameObject()
       Sprite(),
       IsSolid(false),
       IsDestroyed(false),
-      MeshType(MeshPrimitive::Cube) {}
+      MeshType(MeshPrimitive::Quad) {}
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 size, Texture2D sprite, glm::vec4 color, glm::vec3 velocity,
                        MeshPrimitive meshType)

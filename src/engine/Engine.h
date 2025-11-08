@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 
 // clang-format on
+#include <random>
 #include <vector>
 
 #include "../imgui/imgui.h"
@@ -26,32 +27,23 @@
 #define DEV_BUILD
 
 struct PostProcessSettings {
-    bool enableChromaticAberration = false;
+    bool enableChromaticAberration = true;
     float chromaIntensity = 0.02f;
     bool enableGrayscale;
 
-    bool enableBlur = false;
+    bool enableBlur = true;
     float blurRadius = 1.0f;
 
     bool enableInvert = false;
-    bool correctGamma = false;
-    bool enableKernel;
+    bool correctGamma = true;
+    bool enableKernel = true;
     int kernelType = 0;
-};
-
-struct TerrainData {
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
-
-    unsigned int NUM_STRIPS;
-    unsigned int NUM_VERTS_PER_STRIP;
 };
 
 // -- Prototypes
 void GetInputs(GLFWwindow* window);
 void Keyboard_Callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 unsigned int LoadCubeMap(std::vector<std::string> facePaths);
-TerrainData GetTerrainDataFromHeightMap(const char* filePath);
 
 // -- Implemented --
 inline float ElapsedTime() {
@@ -80,6 +72,7 @@ class Engine {
 
     GameObject* Player;
     std::vector<GameObject*> CoreImagesPlanes;
+    std::vector<std::string> CoreImagesKeys;
     MeshRenderer* Renderer;
     SpriteRenderer* sprRenderer;
     PostProcessSettings postFX;

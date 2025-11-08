@@ -1,4 +1,15 @@
 #pragma once
+#include <vector>
+
+struct TerrainData {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+
+    unsigned int NUM_STRIPS;
+    unsigned int NUM_VERTS_PER_STRIP;
+};
+
+TerrainData GetTerrainDataFromHeightMap(const char* filePath);
 
 // -- Terrain
 /*

@@ -4,8 +4,11 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include <windows.h>
 // clang-format on
 
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")  // Nécessaire pour PlaySound
 #include <random>
 #include <vector>
 

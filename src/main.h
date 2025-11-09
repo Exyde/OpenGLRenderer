@@ -38,5 +38,5 @@ void FrameBuffer_Size_Callback(GLFWwindow* window, int width, int height);
 void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
 void Mouse_Callback(GLFWwindow* window, double xposin, double yposin);
 bool InitializeGLFW();
-GLFWwindow* CreateWindow(uint32_t width, uint32_t height);
+GLFWwindow* CreateMainWindow(uint32_t width, uint32_t height);
 void InitIMGUI(GLFWwindow* window);

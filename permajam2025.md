@@ -24,15 +24,15 @@ Mémoire, fragmentation, récursivité de la forme, récurisvité de la mémoire
 - Randomiser la pose des quads : ok
 - Ptet des quads full randoms avec la capacité de voler en vrai  : ok
 - Filtrer les images (Dithering, blur, post process...) : todo + de post proces + odio : ok
-- Rajouter du son => Core : Peace - Myst c'est marrant, voir mes sons... : CORE
-- Fix le glitch
-- 
+- Rajouter du son => Core : Peace - Myst c'est marrant, voir mes sons... : ok *
+  
+**Last Hours**
+- Tweak & Rebuild without logs and IMGUI ? or use I'mgui to... ?
+- Expliquer les ctrl, page itch, build etc...
 - Faire grossir les quad jusqu'a leur size normal ou les pops au fur et a mesure ça peut être cool 
 - Donner un user control pour accelerer la scroll speed du shader scrolling uvs + gérer le blur ou faire varier le blur en sine pour que ça soit net un peu des fois
-- Expliquer les ctrl, page itch, build etc...
-- Septune : 4mn et des patates...
-- avoir des textes serait vraiment cool
 
+- avoir des textes serait vraiment cool
 - Generate level from file with full Cubes // ground like things : moé 
 - Load md files :
 - Text Generation (maybe harder, but see if you find something) from md file

@@ -13,7 +13,7 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = CreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
+    GLFWwindow* window = CreateMainWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     if (window == NULL) {
         LOG_ERROR(LogCategory::Engine, "Failed to create GLFW window");
@@ -98,7 +98,7 @@ bool InitializeGLFW() {
     return true;
 }
 
-GLFWwindow* CreateWindow(uint32_t width, uint32_t height) {
+GLFWwindow* CreateMainWindow(uint32_t width, uint32_t height) {
     LOG("Creating main window");
 
     GLFWwindow* window = glfwCreateWindow(width, height, "What remain of ourselves", NULL, NULL);

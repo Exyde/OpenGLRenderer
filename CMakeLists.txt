@@ -30,7 +30,7 @@ add_executable(OpenGLRenderer
 
 # === Libraries ===
 target_link_directories(OpenGLRenderer PRIVATE ${CMAKE_SOURCE_DIR}/lib)
-target_link_libraries(OpenGLRenderer PRIVATE ${CMAKE_SOURCE_DIR}/lib/libglfw3dll.a opengl32)
+target_link_libraries(OpenGLRenderer PRIVATE ${CMAKE_SOURCE_DIR}/lib/libglfw3dll.a opengl32 winmm)
 
 # Assimp
 target_include_directories(OpenGLRenderer PRIVATE "C:/msys64/mingw64/include")

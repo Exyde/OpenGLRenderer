@@ -258,6 +258,8 @@ void Engine::Initialize() {
 
 #pragma endregion
 
+    PlaySound(TEXT("Resources/Audio/septune.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+
     LOG_INFO(LogCategory::Game, "Initialized !");
 }
 

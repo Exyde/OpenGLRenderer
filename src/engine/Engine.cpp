@@ -40,7 +40,7 @@ void Engine::LoadTextures() {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         CoreImagesKeys.push_back(filename);
         imageID++;
-        LOG(imageID);
+        // LOG(imageID);
     }
     LOG("FOUND IMAGES : ", imagesPaths.size());
 
@@ -141,8 +141,9 @@ void Engine::Initialize() {
 
     std::uniform_int_distribution<> distribTex(0, CoreImagesKeys.size() - 1);
     std::uniform_real_distribution<float> distribPos(-100.0f, 100.0f);
-    std::uniform_real_distribution<float> distribSize(10.0f, 50.0f);
+    std::uniform_real_distribution<float> distribSize(5.0f, 40.0f);
     std::uniform_real_distribution<float> distribRot(0.0, 360.0);
+    std::uniform_real_distribution<float> distribColor(0.0, 1.0);
 
     for (int i = 0; i < 104; i++) {
         glm::vec3 pos(distribPos(gen), distribPos(gen), distribPos(gen));
@@ -150,15 +151,20 @@ void Engine::Initialize() {
 
         std::string key = CoreImagesKeys[i];
         auto texRef = ResourceLoader::GetTexture2D(key);
-        auto tint = glm::vec4(1.0, 0.0, 0.0, 1.0);
+        auto tint = glm::vec4(distribColor(gen), distribColor(gen), distribColor(gen), 1.0);
         float rot = distribRot(gen);
 
         if (std::isnan(rot)) {
             LOG("NaN detected at i=", i);
             continue;
         }
-
-        CoreImagesPlanes.push_back(new GameObject(pos, size, texRef, tint, glm::vec3(0.0), MeshPrimitive::Quad, rot));
+        if (i % 10 == 0) {
+            CoreImagesPlanes.push_back(
+                new GameObject(pos, size, texRef, tint, glm::vec3(0.0), MeshPrimitive::Cube, rot));
+        } else {
+            CoreImagesPlanes.push_back(
+                new GameObject(pos, size, texRef, tint, glm::vec3(0.0), MeshPrimitive::Quad, rot));
+        }
     }
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
@@ -318,6 +324,8 @@ void Engine::Update(float deltaTime) {
     // -- Update Core Images
     for (auto i : CoreImagesPlanes) i->Rotation += 1.0 * deltaTime;
 
+    UpdatePostProcessState(deltaTime);
+
 #pragma region SunUpdate
     // -- Transformed positions
     float sunSpeed = deltaTime * userSunSpeed;
@@ -432,6 +440,54 @@ void Engine::SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos) {
     shader.SetFloat("flashLight.constant", attenuation[0]);
     shader.SetFloat("flashLight.linear", attenuation[1]);
     shader.SetFloat("flashLight.quadratic", attenuation[2]);
+}
+
+void Engine::UpdatePostProcessState(float dt) {
+    ppState.timer += dt;
+
+    static int currentEffect = 1;
+
+    if (ppState.timer >= ppState.duration) {
+        ppState.effect = rand() % 5;  // blur, chroma, dither, glitch, lowcolor
+        ppState.timer = 0;
+        ppState.duration = 1.0f + (rand() % 3000) / 1000.f;
+        currentEffect = rand() % 6;
+    }
+
+    // reset
+    postFX.enableKernel = false;
+    postFX.enableChromaticAberration = false;
+    postFX.enableDither = false;
+    postFX.enableGlitch = false;
+    postFX.enableInvert = false;
+    postFX.enableLowColor = false;
+
+    float t = ppState.timer / ppState.duration;
+    float intensity = sin(t * 3.1415);
+    postFX.chromaIntensity *= intensity;
+    postFX.blurRadius *= intensity;
+
+    switch (currentEffect) {
+        case 0:
+            postFX.enableKernel = true;
+            // postFX.kernelType = rand() % 4;
+            break;
+        case 1:
+            postFX.enableChromaticAberration = true;
+            break;
+        case 2:
+            postFX.enableDither = true;
+            break;
+        case 3:
+            postFX.enableGlitch = true;
+            break;
+        case 4:
+            postFX.enableInvert = true;
+            break;
+        case 5:
+            postFX.enableLowColor = true;
+            break;
+    }
 }
 
 void Engine::UpdatePostProcessFrameBuffer(int width, int height) {
@@ -640,8 +696,12 @@ void Engine::PostProcessPass() {
         postProcessShader.SetBool("uEnableInvert", postFX.enableInvert);
         postProcessShader.SetBool("uEnableGrayscale", postFX.enableGrayscale);
         postProcessShader.SetBool("uEnableKernel", postFX.enableKernel);
+        postProcessShader.SetBool("uEnableDither", postFX.enableDither);
+        postProcessShader.SetBool("uEnableGlitch", postFX.enableGlitch);
         postProcessShader.SetInt("uKernelType", postFX.kernelType);
-        postProcessShader.SetInt("uCorrectGamma", postFX.correctGamma);
+        postProcessShader.SetBool("uCorrectGamma", postFX.correctGamma);
+        postProcessShader.SetBool("uEnableLowColor", postFX.enableLowColor);
+        postProcessShader.SetFloat("colorDepth", postFX.colorDepth);
 
         glBindVertexArray(ndcQuadVAO);
         glDisable(GL_DEPTH_TEST);
@@ -697,6 +757,9 @@ void Engine::RenderImGUI() {
         ImGui::Separator();
 
         ImGui::Checkbox("Correct Gamma", &postFX.correctGamma);
+        ImGui::Checkbox("Dither", &postFX.enableDither);
+        ImGui::Checkbox("Glitch", &postFX.enableGlitch);
+        ImGui::Checkbox("Low Color", &postFX.enableLowColor);
 
         ImGui::Checkbox("Enable Kernel", &postFX.enableKernel);
         if (postFX.enableKernel) {

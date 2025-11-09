@@ -23,12 +23,15 @@ Mémoire, fragmentation, récursivité de la forme, récurisvité de la mémoire
 - Quad, Cubes, Mesh Loading : Ok
 - Randomiser la pose des quads : ok
 - Ptet des quads full randoms avec la capacité de voler en vrai  : ok
-- Faire grossir les quad jusqu'a leur size normal
+- Filtrer les images (Dithering, blur, post process...) : todo + de post proces + odio : ok
+- Rajouter du son => Core : Peace - Myst c'est marrant, voir mes sons... : CORE
+- Fix le glitch
+- 
+- Faire grossir les quad jusqu'a leur size normal ou les pops au fur et a mesure ça peut être cool 
 - Donner un user control pour accelerer la scroll speed du shader scrolling uvs + gérer le blur ou faire varier le blur en sine pour que ça soit net un peu des fois
-- Filtrer les images (Dithering, blur, post process...) : todo + de post proces + odio
-- Sound de Sundae ou les miens pour rester dans le core core (+ remix / randomisation idk) -- rajouter du son & du glitch = core pour le proto v1 
-- avoir des textes serait vraiment cool
 - Expliquer les ctrl, page itch, build etc...
+- Septune : 4mn et des patates...
+- avoir des textes serait vraiment cool
 
 - Generate level from file with full Cubes // ground like things : moé 
 - Load md files :

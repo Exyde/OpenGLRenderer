@@ -9,7 +9,11 @@ uniform float uChromaIntensity;
 
 uniform bool uEnableInvert;
 uniform bool uEnableGrayscale;
+uniform bool uEnableDither;
+uniform bool uEnableGlitch;
 uniform bool uCorrectGamma;
+uniform bool uEnableLowColor;
+uniform float colorDepth;
 
 uniform bool uEnableKernel;
 uniform int uKernelType; // 0=blur, 1=sharpen, 2=boxBlur, 3=emboss
@@ -98,6 +102,35 @@ void main(){
             }
             
             finalColor = mix(finalColor, vec4(color, 1.0), .5);
+        }
+
+         // === DITHERING 4x4 ===
+        if (uEnableDither) {
+            float dither4x4[16] = float[16](
+            0.0,  8.0,  2.0, 10.0,
+            12.0, 4.0, 14.0, 6.0,
+            3.0, 11.0, 1.0, 9.0,
+            15.0, 7.0, 13.0, 5.0
+            );
+            int xi = int(mod(gl_FragCoord.x, 4.0));
+            int yi = int(mod(gl_FragCoord.y, 4.0));
+            float threshold = (dither4x4[yi * 4 + xi] + 0.5) / 16.0;
+            finalColor.rgb = floor(finalColor.rgb + threshold);
+        }
+
+        if (uEnableLowColor){
+            vec3 quantized = floor(finalColor.rgb * colorDepth) / colorDepth;
+            finalColor.rgb = quantized;
+        }
+
+        // === GLITCH FX ===
+        if (uEnableGlitch) {
+            vec2 uv = TexCoord;
+            float glitch = step(0.95, fract(sin(dot(uv * uTime, vec2(12.9898, 78.233))) * 43758.5453));
+            if (glitch > 0.0) {
+                uv.x += sin(uv.y * 1000.0 + uTime * 50.0) * 0.02;
+            }
+            finalColor = texture(screenTexture, uv);
         }
     }
 

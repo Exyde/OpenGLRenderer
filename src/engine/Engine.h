@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 
 // clang-format on
+
 #include <random>
 #include <vector>
 
@@ -23,8 +24,15 @@
 #include "World.h"
 #include "glm/glm.hpp"
 #include "stb_image.h"
+#pragma comment(lib, "winmm.lib")
 
 #define DEV_BUILD
+
+struct PostProcesState {
+    int effect = 0;
+    float timer = 0.0f;
+    float duration = 3.0f;
+};
 
 struct PostProcessSettings {
     bool enableChromaticAberration = true;
@@ -37,6 +45,10 @@ struct PostProcessSettings {
     bool enableInvert = false;
     bool correctGamma = true;
     bool enableKernel = true;
+    bool enableGlitch = true;
+    bool enableDither = true;
+    bool enableLowColor = true;
+    float colorDepth = 16.0;
     int kernelType = 2;
 };
 
@@ -76,6 +88,7 @@ class Engine {
     MeshRenderer* Renderer;
     SpriteRenderer* sprRenderer;
     PostProcessSettings postFX;
+    PostProcesState ppState;
 
     Engine(unsigned int width, unsigned int height);
     ~Engine();
@@ -90,6 +103,7 @@ class Engine {
     void Render(float deltaTime);
     void Exit();
 
+    void UpdatePostProcessState(float dt);
     void UpdatePostProcessFrameBuffer(int width, int height);
     void SetShaderLightsDatas(Shader& shader, glm::vec3 lightPos);
 

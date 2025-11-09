@@ -78,10 +78,10 @@ void main()
 {
     vec2 uvs = inData.TexCoord;
 
-    vec2 scrollingUV = uvs + vec2(0, -uTime); 
-    vec4 texColor = texture(mat.diffuse, uvs);
+    vec2 scrollingUV = uvs + vec2(0, (-uTime)) ; 
+    vec4 texColor = texture(mat.diffuse, scrollingUV);
 
-    FragColor = texture(mat.diffuse, uvs);
+    FragColor = texture(mat.diffuse, scrollingUV);
     return;
     float h = (inData.Height)/  32.0f;
     FragColor = vec4(1.0,h,h, 1.0);

@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <thread>
+
 // -- Randomness
 std::random_device rd;
 std::mt19937 gen(rd());
@@ -16,17 +18,11 @@ Engine::Engine(unsigned int width, unsigned int height)
 std::vector<std::string> GetImagesPath(const std::string& rootDir) {
     std::vector<std::string> paths;
 
-    int i = 0;
-    int max = 40;
-
     for (const auto& entry : fs::recursive_directory_iterator(rootDir)) {
-        if (i >= max)
-            break;
         if (entry.is_regular_file()) {
             auto ext = entry.path().extension().string();
-            if (ext == ".jpeg" || ext == ".png" /*|| ext == ".jpeg"*/) {
+            if (ext == ".jpeg" || ext == ".png" || ext == ".jpg") {
                 paths.push_back(entry.path().string());
-                i++;
             }
         }
     }
@@ -35,13 +31,16 @@ std::vector<std::string> GetImagesPath(const std::string& rootDir) {
 
 void Engine::LoadTextures() {
     // -- Load Jam Textures from main root
-    auto imagesPaths = GetImagesPath("Resources/Textures/Resized/256/");
+    auto imagesPaths = GetImagesPath("Resources/Textures/Resized/");
     int imageID = 0;
 
     for (const auto& path : imagesPaths) {
         std::string filename = std::filesystem::path(path).stem().string();
-        ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+        auto tex = ResourceLoader::LoadTexture2D(path.c_str(), filename, true);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         CoreImagesKeys.push_back(filename);
+        imageID++;
+        LOG(imageID);
     }
     LOG("FOUND IMAGES : ", imagesPaths.size());
 
@@ -140,17 +139,26 @@ void Engine::Initialize() {
     Renderer = new MeshRenderer(ResourceLoader::GetShader("phong"));
     sprRenderer = new SpriteRenderer(ResourceLoader::GetShader("spriteShader"));
 
-    std::uniform_int_distribution<> distrib(0, CoreImagesKeys.size() - 1);
+    std::uniform_int_distribution<> distribTex(0, CoreImagesKeys.size() - 1);
+    std::uniform_real_distribution<float> distribPos(-100.0f, 100.0f);
+    std::uniform_real_distribution<float> distribSize(10.0f, 50.0f);
+    std::uniform_real_distribution<float> distribRot(0.0, 360.0);
 
-    for (int i = 0; i < 50; i++) {
-        glm::vec3 pos(i * 10, 1, 1);
-        glm::vec3 size(10.0);
+    for (int i = 0; i < 104; i++) {
+        glm::vec3 pos(distribPos(gen), distribPos(gen), distribPos(gen));
+        glm::vec3 size(distribSize(gen));
 
-        std::string key = CoreImagesKeys[distrib(gen)];
+        std::string key = CoreImagesKeys[i];
         auto texRef = ResourceLoader::GetTexture2D(key);
         auto tint = glm::vec4(1.0, 0.0, 0.0, 1.0);
+        float rot = distribRot(gen);
 
-        CoreImagesPlanes.push_back(new GameObject(pos, size, texRef, tint, glm::vec3(0.0)));
+        if (std::isnan(rot)) {
+            LOG("NaN detected at i=", i);
+            continue;
+        }
+
+        CoreImagesPlanes.push_back(new GameObject(pos, size, texRef, tint, glm::vec3(0.0), MeshPrimitive::Quad, rot));
     }
 
 #pragma region CUBE AND LIGHTS VAOS VBOS
@@ -307,6 +315,9 @@ void Engine::Update(float deltaTime) {
         }
     }
 
+    // -- Update Core Images
+    for (auto i : CoreImagesPlanes) i->Rotation += 1.0 * deltaTime;
+
 #pragma region SunUpdate
     // -- Transformed positions
     float sunSpeed = deltaTime * userSunSpeed;
@@ -345,11 +356,11 @@ void Engine::Render(float deltaTime) {
 
         bool drawScene = true;
         if (drawScene) {
-            DrawGround();
-            //   DrawFloatingsCubes();
-            DrawBackpack();
-            // DrawGrass(viewMatrix);
-            // DrawLightsObjects(viewMatrix, offsetedLightPos);
+            // DrawGround();
+            //    DrawFloatingsCubes();
+            // DrawBackpack();
+            //  DrawGrass(viewMatrix);
+            //  DrawLightsObjects(viewMatrix, offsetedLightPos);
             DrawSkybox();
         }
 

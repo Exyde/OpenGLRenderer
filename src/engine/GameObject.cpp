@@ -5,20 +5,20 @@ GameObject::GameObject()
       Size(1.0),
       Velocity(0),
       Color(1.0f),
-      Rotation(0),
+      Rotation(0.0),
       Sprite(),
       IsSolid(false),
       IsDestroyed(false),
       MeshType(MeshPrimitive::Quad) {}
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 size, Texture2D sprite, glm::vec4 color, glm::vec3 velocity,
-                       MeshPrimitive meshType)
+                       MeshPrimitive meshType, float rotation)
     : Position(pos),
       Size(size),
-      Velocity(velocity),
+      Velocity(0.0),
       Color(color),
       Sprite(sprite),
-      Rotation(0.0f),
+      Rotation(rotation),
       IsSolid(false),
       MeshType(meshType),
       IsDestroyed(false) {}

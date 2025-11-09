@@ -21,7 +21,7 @@ out StagedData {
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0f);
+    gl_Position = projection * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0f); + vec4(vec3(sin(uTime) * 1), 0);
     outData.TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     outData.Normal = mat3(transpose(inverse(model))) * aNormal; // -- Transpose normal to world space 
     outData.FragPosWorldSpace = vec3(model * vec4(aPos.x, aPos.y, aPos.y, 1.0));

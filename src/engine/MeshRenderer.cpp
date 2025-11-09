@@ -19,6 +19,7 @@ void MeshRenderer::DrawMesh(MeshPrimitive meshtype, Texture2D& texture, glm::vec
 
     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
     model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0, 0.0, 1.0));
+    model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0, 1.0, 0.0));
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
     // -- Scaling

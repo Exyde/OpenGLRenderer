@@ -80,9 +80,9 @@ Texture2D ResourceLoader::LoadTexture2DFromFile(const char* filePath, bool sRGB)
     }
 
     if (data) {
-        LOG_INFO(LogCategory::Texture, " Loaded : ", filePath);
+        // LOG_INFO(LogCategory::Texture, " Loaded : ", filePath);
 
-        LOG_INFO(LogCategory::Texture, "Generating texture for ", filePath);
+        // LOG_INFO(LogCategory::Texture, "Generating texture for ", filePath);
         texture.Generate(width, height, data);
         GLenum err = glGetError();
         if (err != GL_NO_ERROR)

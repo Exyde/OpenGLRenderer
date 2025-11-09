@@ -28,7 +28,7 @@
 
 struct PostProcessSettings {
     bool enableChromaticAberration = true;
-    float chromaIntensity = 0.02f;
+    float chromaIntensity = 0.01f;
     bool enableGrayscale;
 
     bool enableBlur = true;
@@ -37,7 +37,7 @@ struct PostProcessSettings {
     bool enableInvert = false;
     bool correctGamma = true;
     bool enableKernel = true;
-    int kernelType = 0;
+    int kernelType = 2;
 };
 
 // -- Prototypes

@@ -5,8 +5,8 @@ Texture2D::Texture2D()
       Height(0),
       InternalFormat(GL_RGB),
       ImageFormat(GL_RGB),
-      Wrap_S(GL_CLAMP_TO_BORDER),
-      Wrap_T(GL_CLAMP_TO_BORDER),
+      Wrap_S(GL_REPEAT),
+      Wrap_T(GL_REPEAT),
       Filter_Min(GL_LINEAR),
       Filter_Mag(GL_LINEAR) {
     glGenTextures(1, &this->ID);

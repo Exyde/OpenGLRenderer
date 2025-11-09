@@ -67,7 +67,7 @@ class Camera {
         if (direction == DOWN)
             Position -= Up * velocity;
 
-        if (true || type == CameraType::FPS)
+        if (type == CameraType::FPS)
             Position.y = 0;
     }
 
